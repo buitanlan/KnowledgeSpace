@@ -8,5 +8,9 @@
     <Folder Include="Data\Entities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+  </ItemGroup>
+
 
 </Project>
