@@ -40,7 +40,21 @@ namespace KnownledgeSpace.BackendServer.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<Pagination<RoleVm>>> GetAllRoles(string keyword, int pageSize, int pageIndex)
+        public async Task<IActionResult> GetRoles()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            var rolevms = roles.Select(r => new RoleVm()
+            {
+                Id = r.Id,
+                Name = r.Name
+            });
+            return Ok(rolevms);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<Pagination<RoleVm>>> GetRolesPaging(string keyword, int pageSize, int pageIndex)
         {
             var query = _roleManager.Roles;
             if( !string.IsNullOrEmpty(keyword))
