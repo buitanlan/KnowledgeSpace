@@ -15,46 +15,47 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("Relational:Sequence:.KnowledgeBaseSequence", "'KnowledgeBaseSequence', '', '1', '1', '', '', 'Int64', 'False'")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.HasSequence("KnowledgeBaseSequence");
 
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.ActivityLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EntityId")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("EntityName")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -66,7 +67,7 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
@@ -76,21 +77,21 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 
                     b.Property<string>("FileType")
                         .IsRequired()
-                        .HasColumnType("varchar(4)")
-                        .HasMaxLength(4);
+                        .HasMaxLength(4)
+                        .HasColumnType("varchar(4)");
 
                     b.Property<int?>("KnowledgeBaseId")
                         .HasColumnType("int");
@@ -100,8 +101,8 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("varchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
 
@@ -113,12 +114,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("NumberOfTickets")
                         .HasColumnType("int");
@@ -128,12 +129,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
 
                     b.Property<string>("SeoAlias")
                         .IsRequired()
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("SeoDescription")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
@@ -146,13 +147,13 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.Command", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -162,12 +163,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.CommandInFunction", b =>
                 {
                     b.Property<string>("CommandId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("FunctionId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("CommandId", "FunctionId");
 
@@ -179,12 +180,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -196,8 +197,8 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OwnwerUserId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -207,25 +208,25 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.Function", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ParentId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -237,7 +238,7 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -246,16 +247,16 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Environment")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Labels")
                         .HasColumnType("nvarchar(max)");
@@ -277,29 +278,29 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
 
                     b.Property<string>("OwnerUserId")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Problem")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("SeoAlias")
                         .IsRequired()
-                        .HasColumnType("varchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("StepToReproduce")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Workaround")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -309,12 +310,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.Label", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -324,8 +325,8 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.LabelInKnowledgeBase", b =>
                 {
                     b.Property<string>("LabelId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("KnowledgeBaseId")
                         .HasColumnType("int");
@@ -338,16 +339,16 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.Permission", b =>
                 {
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("FunctionId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("CommandId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("RoleId", "FunctionId", "CommandId");
 
@@ -359,14 +360,14 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -381,12 +382,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReportUserId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -396,9 +397,9 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("KnowledgeSpace.BackendServer.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -411,21 +412,21 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -434,12 +435,12 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int?>("NumberOfKnowledgeBases")
                         .HasColumnType("int");
@@ -466,17 +467,17 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
+                        .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
@@ -488,8 +489,8 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -505,27 +506,27 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
+                        .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
@@ -536,7 +537,7 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -560,7 +561,7 @@ namespace KnownledgeSpace.BackendServer.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");

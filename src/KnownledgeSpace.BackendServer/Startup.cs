@@ -10,14 +10,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using KnownledgeSpace.BackendServer.Extensions;
+using KnownledgeSpace.BackendServer.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace KnownledgeSpace.BackendServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IConfiguration _config;
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,6 +30,13 @@ namespace KnownledgeSpace.BackendServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<ApplicationDbContext>(opt =>
+            {
+                opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            });
+            services.AddApplicationServices();
+            services.AddIdentityServices(_config);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
