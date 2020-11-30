@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/KnownledgeSpace.BackendServer/bin/Debug/net5.0/KnownledgeSpace.BackendServer.dll",
+            "program": "${workspaceFolder}/src/KnowledgeSpace.BackendServer/bin/Debug/net5.0/KnowledgeSpace.BackendServer.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/KnownledgeSpace.BackendServer",
+            "cwd": "${workspaceFolder}/src/KnowledgeSpace.BackendServer",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
