@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeSpace.ViewModels;
-using KnowledgeSpace.ViewModels.System;
+using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

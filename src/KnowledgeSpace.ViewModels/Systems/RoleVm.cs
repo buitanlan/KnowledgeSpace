@@ -1,4 +1,4 @@
-namespace KnowledgeSpace.ViewModels.System
+namespace KnowledgeSpace.ViewModels.Systems
 {
     public class RoleVm
     {
