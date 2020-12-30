@@ -36,6 +36,7 @@ namespace KnowledgeSpace.BackendServer
             });
             services.AddApplicationServices();
             services.AddIdentityServices(_config);
+            services.AddSwaggerDocument();
 
         }
 
@@ -45,6 +46,7 @@ namespace KnowledgeSpace.BackendServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwaggerDocument();
             }
 
             app.UseHttpsRedirection();
