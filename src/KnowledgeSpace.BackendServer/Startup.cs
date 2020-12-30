@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using KnowledgeSpace.BackendServer.Extensions;
 using KnowledgeSpace.BackendServer.Data;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
 
 namespace KnowledgeSpace.BackendServer
 {
@@ -29,7 +30,8 @@ namespace KnowledgeSpace.BackendServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>()); ;
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
