@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using KnowledgeSpace.BackendServer.Extensions;
 using KnowledgeSpace.BackendServer.Data;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
+using KnowledgeSpace.ViewModels.Systems;
 
 namespace KnowledgeSpace.BackendServer
 {
@@ -24,14 +18,12 @@ namespace KnowledgeSpace.BackendServer
         {
             _config = config;
         }
-
-        public IConfiguration Configuration { get; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>()); ;
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>());
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));

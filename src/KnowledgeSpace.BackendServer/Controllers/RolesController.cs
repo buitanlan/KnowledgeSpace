@@ -44,12 +44,12 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var roles = await _roleManager.Roles.ToListAsync();
 
-            var rolevms = roles.Select(r => new RoleVm()
+            var roleVms = roles.Select(r => new RoleVm()
             {
                 Id = r.Id,
                 Name = r.Name
             });
-            return Ok(rolevms);
+            return Ok(roleVms);
         }
 
 

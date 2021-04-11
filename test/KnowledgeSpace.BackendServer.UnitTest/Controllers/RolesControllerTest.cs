@@ -1,6 +1,5 @@
 ﻿using KnowledgeSpace.BackendServer.Controllers;
 using KnowledgeSpace.BackendServer.UnitTest.Extensions;
-using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,7 +16,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
     {
         private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
 
-        private List<IdentityRole> _roleSources = new List<IdentityRole>(){
+        private readonly List<IdentityRole> _roleSources = new List<IdentityRole>(){
                              new IdentityRole("test1"),
                              new IdentityRole("test2"),
                              new IdentityRole("test3"),
@@ -77,9 +75,11 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
                 .Returns(_roleSources.AsAsyncQueryable());
             var rolesController = new RolesController(_mockRoleManager.Object);
             var result = await rolesController.GetRoles();
-            var okResult = result as OkObjectResult;
-            var roleVms = okResult.Value as IEnumerable<RoleVm>;
-            Assert.True(roleVms.Count() > 0);
+            if (result is OkObjectResult okResult)
+            {
+                var roleVms = okResult.Value as IEnumerable<RoleVm>;
+                Assert.True((roleVms ?? Array.Empty<RoleVm>()).Any());
+            }
         }
 
         [Fact]
@@ -144,9 +144,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var roleVm = okResult.Value as RoleVm;
-
-            Assert.Equal("test1", roleVm.Name);
+            if (okResult.Value is RoleVm roleVm) Assert.Equal("test1", roleVm.Name);
         }
 
         [Fact]

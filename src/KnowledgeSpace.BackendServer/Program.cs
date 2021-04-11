@@ -15,7 +15,7 @@ namespace KnowledgeSpace.BackendServer
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                             .Enrich.FromLogContext()
@@ -30,7 +30,7 @@ namespace KnowledgeSpace.BackendServer
                 await context.Database.MigrateAsync();
                 Log.Information("Seeding data...");
                 var dbInitializer = services.GetService<DbInitializer>();
-                dbInitializer.Seed().Wait();
+                if (dbInitializer != null) dbInitializer.Seed().Wait();
             }
             catch(Exception ex)
             {

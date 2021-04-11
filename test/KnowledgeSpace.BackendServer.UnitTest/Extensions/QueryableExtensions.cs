@@ -1,8 +1,6 @@
 using KnowledgeSpace.BackendServer.UnitTest.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace KnowledgeSpace.BackendServer.UnitTest.Extensions
 {
