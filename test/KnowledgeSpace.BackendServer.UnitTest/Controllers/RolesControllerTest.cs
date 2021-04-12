@@ -1,5 +1,4 @@
 ﻿using KnowledgeSpace.BackendServer.Controllers;
-using KnowledgeSpace.BackendServer.UnitTest.Extensions;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.ViewModels;
+using MockQueryable.Moq;
 using Xunit;
 
 namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
@@ -72,7 +73,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task GetRoles_HasData_ReturnSuccess()
         {
             _mockRoleManager.Setup(x => x.Roles)
-                .Returns(_roleSources.AsAsyncQueryable());
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
             var rolesController = new RolesController(_mockRoleManager.Object);
             var result = await rolesController.GetRoles();
             if (result is OkObjectResult okResult)
@@ -92,33 +93,37 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             await Assert.ThrowsAnyAsync<Exception>(async () => await rolesController.GetRoles());
         }
 
-        // [Fact]
-        // public async Task GetRolesPaging_NoFilter_ReturnSuccess()
-        // {
-        //     _mockRoleManager.Setup(x => x.Roles)
-        //         .Returns(_roleSources.AsAsyncQueryable());
+        [Fact]
+        public async Task GetRolesPaging_NoFilter_ReturnSuccess()
+        {
+            _mockRoleManager.Setup(x => x.Roles)
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
 
-        //     var rolesController = new RolesController(_mockRoleManager.Object);
-        //     var result = await rolesController.GetRolesPaging(null, 1, 2);
-        //     var okResult = result as OkObjectResult;
-        //     var roleVms = okResult.Value as Pagination<RoleVm>;
-        //     Assert.Equal(4, roleVms.TotalRecords);
-        //     Assert.Equal(2, roleVms.Items.Count);
-        // }
+            var rolesController = new RolesController(_mockRoleManager.Object);
+            var result = await rolesController.GetRolesPaging(null, 1, 2);
+            OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+            if (okResult is {Value: Pagination<RoleVm> roleVms})
+            {
+                Assert.Equal(4, roleVms.TotalRecords);
+                Assert.Equal(2, roleVms.Items.Count);
+            }
+        }
 
-        // [Fact]
-        // public async Task GetRolesPaging_HasFilter_ReturnSuccess()
-        // {
-        //     _mockRoleManager.Setup(x => x.Roles)
-        //         .Returns(_roleSources.AsAsyncQueryable());
+        [Fact]
+        public async Task GetRolesPaging_HasFilter_ReturnSuccess()
+        {
+            _mockRoleManager.Setup(x => x.Roles)
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
 
-        //     var rolesController = new RolesController(_mockRoleManager.Object);
-        //     var result = await rolesController.GetRolesPaging("test3", 1, 2);
-        //     var okResult = result as OkObjectResult;
-        //     var roleVms = okResult.Value as Pagination<RoleVm>;
-        //     Assert.Equal(1, roleVms.TotalRecords);
-        //     Assert.Single(roleVms.Items);
-        // }
+            var rolesController = new RolesController(_mockRoleManager.Object);
+            var result = await rolesController.GetRolesPaging("test3", 1, 2);
+            OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+            if (okResult.Value is Pagination<RoleVm> roleVms)
+            {
+                Assert.Equal(1, roleVms.TotalRecords);
+                Assert.Single(roleVms.Items);
+            }
+        }
 
         [Fact]
         public async Task GetRolesPaging_ThrowException_Failed()
