@@ -30,7 +30,7 @@ namespace KnowledgeSpace.BackendServer
                 await context.Database.MigrateAsync();
                 Log.Information("Seeding data...");
                 var dbInitializer = services.GetService<DbInitializer>();
-                if (dbInitializer != null) dbInitializer.Seed().Wait();
+                dbInitializer?.Seed().Wait();
             }
             catch(Exception ex)
             {
@@ -41,7 +41,7 @@ namespace KnowledgeSpace.BackendServer
             await host.RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
