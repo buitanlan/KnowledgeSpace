@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 
 namespace KnowledgeSpace.BackendServer.Extensions
 {
@@ -31,18 +32,28 @@ namespace KnowledgeSpace.BackendServer.Extensions
                 {
                     Description = "JWT Auth Bearer Scheme",
                     Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    Reference = new OpenApiReference
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        Implicit = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("https://localhost:5000/connect/authorize"),
+                            Scopes = new Dictionary<string, string>{{"api.knowledgespace", "KnowledgeSpace API"}}
+                        }
                     }
+                    
                 };
                 c.AddSecurityDefinition("Bearer", securitySchema);
-                var securityRequirement = new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } } };
-                c.AddSecurityRequirement(securityRequirement);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new List<string>{ "api.knowledgespace" }
+                    }
+                });
             });
             return services;
         }
@@ -51,6 +62,7 @@ namespace KnowledgeSpace.BackendServer.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
+                c.OAuthClientId("swagger");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeBase API v1");
             });
             return app;

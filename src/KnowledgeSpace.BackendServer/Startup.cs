@@ -26,24 +26,20 @@ namespace KnowledgeSpace.BackendServer
         {
             services.AddControllersWithViews()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>());
-            services.AddRazorPages();
-            services.AddDbContext<ApplicationDbContext>(opt =>
+            services.AddRazorPages(options =>
             {
-                opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
-            });
-            services.AddApplicationServices();
-            services.AddIdentityServices(_config);
-            var builder = services.AddIdentityServer(options =>
+                options.Conventions.AddAreaFolderRouteModelConvention("Identity", "/Account/", model =>
                 {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                })
-                .AddInMemoryApiResources(Config.Apis)
-                .AddInMemoryClients(Config.Clients)
-                .AddInMemoryIdentityResources(Config.Ids)
-                .AddAspNetIdentity<User>();
+                    foreach (var selector in model.Selectors)
+                    {
+                        var attributeRouteModel = selector.AttributeRouteModel;
+                        attributeRouteModel.Order = -1;
+                        attributeRouteModel.Template = attributeRouteModel.Template.Remove(0,"Identity".Length);
+                    }
+                });
+            });
+            services.AddIdentityServices(_config);
+            services.AddApplicationServices();
             services.AddSwaggerDocument();
 
         }
@@ -54,7 +50,6 @@ namespace KnowledgeSpace.BackendServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwaggerDocument();
             }
 
             app.UseStaticFiles();
@@ -74,6 +69,9 @@ namespace KnowledgeSpace.BackendServer
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
+            
+            app.UseSwaggerDocument();
+
         }
     }
 }
