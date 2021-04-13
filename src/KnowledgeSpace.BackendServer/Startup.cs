@@ -7,6 +7,8 @@ using KnowledgeSpace.BackendServer.Extensions;
 using KnowledgeSpace.BackendServer.Data;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
+using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.IdentityServer;
 using KnowledgeSpace.ViewModels.Systems;
 
 namespace KnowledgeSpace.BackendServer
@@ -22,14 +24,26 @@ namespace KnowledgeSpace.BackendServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
+            services.AddControllersWithViews()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>());
+            services.AddRazorPages();
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
             services.AddApplicationServices();
             services.AddIdentityServices(_config);
+            var builder = services.AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                })
+                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryIdentityResources(Config.Ids)
+                .AddAspNetIdentity<User>();
             services.AddSwaggerDocument();
 
         }
@@ -43,6 +57,12 @@ namespace KnowledgeSpace.BackendServer
                 app.UseSwaggerDocument();
             }
 
+            app.UseStaticFiles();
+
+            app.UseIdentityServer();
+
+            app.UseAuthentication();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -51,7 +71,8 @@ namespace KnowledgeSpace.BackendServer
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }
