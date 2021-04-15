@@ -19,7 +19,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostRole(UserCreateRequest  request)
+        public async Task<IActionResult> PostUser(UserCreateRequest  request)
         {
             var user = new User()
             {
@@ -135,7 +135,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRole(string id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
