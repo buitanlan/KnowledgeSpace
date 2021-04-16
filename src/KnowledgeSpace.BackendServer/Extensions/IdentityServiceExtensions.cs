@@ -13,11 +13,11 @@ namespace KnowledgeSpace.BackendServer.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
+            //1. Set up Ef core
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
-            //1. Set up Ef core
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
@@ -41,7 +41,7 @@ namespace KnowledgeSpace.BackendServer.Extensions
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                 })
-                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryApiScopes(Config.Apis)
                 .AddInMemoryClients(Config.Clients)
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddAspNetIdentity<User>()
