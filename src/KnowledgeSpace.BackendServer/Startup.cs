@@ -25,7 +25,7 @@ namespace KnowledgeSpace.BackendServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleVmValidator>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleCreateRequestValidator>());
             services.AddRazorPages(options =>
             {
                 options.Conventions.AddAreaFolderRouteModelConvention("Identity", "/Account/", model =>
