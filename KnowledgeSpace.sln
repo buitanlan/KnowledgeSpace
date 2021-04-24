@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeSpace.WebPortal", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeSpace.BackendServer.UnitTest", "test\KnowledgeSpace.BackendServer.UnitTest\KnowledgeSpace.BackendServer.UnitTest.csproj", "{DCCD9FD7-E30A-4029-969C-649531D61143}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeSpace.ViewModels.UnitTest", "test\KnowledgeSpace.ViewModels.UnitTest\KnowledgeSpace.ViewModels.UnitTest.csproj", "{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +37,17 @@ Global
 		{DCCD9FD7-E30A-4029-969C-649531D61143}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCCD9FD7-E30A-4029-969C-649531D61143}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCCD9FD7-E30A-4029-969C-649531D61143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DCCD9FD7-E30A-4029-969C-649531D61143} = {029ABB1D-4BD5-4946-867B-6828CD2A6033}
+		{1F98B3ED-56FE-4083-A8DC-FD8CD84B26DC} = {029ABB1D-4BD5-4946-867B-6828CD2A6033}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E17C67E-A878-4C86-BA73-D010F812E8C3}

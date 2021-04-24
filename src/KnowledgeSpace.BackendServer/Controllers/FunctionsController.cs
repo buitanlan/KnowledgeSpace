@@ -20,6 +20,10 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [HttpPost]
         public async Task<IActionResult> PostFunction([FromBody]FunctionCreateRequest  request)
         {
+            var dbFunction = await _context.Functions.FindAsync(request.Id);
+            if (dbFunction is not null)
+                return BadRequest($"Function with id {request.Id} is existed!");
+            
             var function = new Function()
             {
                 Id = request.Id,
