@@ -11,6 +11,7 @@ namespace KnowledgeSpace.BackendServer.Extensions
         {
             services.AddTransient<DbInitializer>();
             services.AddTransient<IEmailSender, EmailSenderService>();
+            services.AddTransient<ISequenceService, SequenceService>();
             return services;
         }
     }
