@@ -45,6 +45,7 @@ namespace KnowledgeSpace.BackendServer.Extensions
                 .AddInMemoryClients(Config.Clients)
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddAspNetIdentity<User>()
+                .AddProfileService<IdentityProfileService>()
                 .AddDeveloperSigningCredential();
             services.AddAuthentication()
                 .AddLocalApi("Bearer", options =>

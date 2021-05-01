@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using KnowledgeSpace.BackendServer.Authorization;
+using KnowledgeSpace.BackendServer.Contants;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -19,6 +21,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
 		}
 
 		[HttpGet]
+		[ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
+
 		public async Task<IActionResult> GetCommandViews()
 		{
 			await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));

@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Authorization;
+using KnowledgeSpace.BackendServer.Contants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;
@@ -17,7 +19,10 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             _context = context;
         }
+        
+        
         [HttpPost]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Create)]
         public async Task<IActionResult> PostFunction([FromBody]FunctionCreateRequest  request)
         {
             var dbFunction = await _context.Functions.FindAsync(request.Id);
@@ -45,6 +50,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpGet]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
         public async Task<IActionResult> GetFunctions()
         {
             var functions = _context.Functions;
@@ -62,6 +68,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
  
 
         [HttpGet("filter")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
+
         public async Task<ActionResult<Pagination<RoleVm>>> GetFunctionsPaging(string filter, int pageSize, int pageIndex)
         {
             var query = _context.Functions.AsQueryable();
@@ -94,6 +102,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpGet("{id}")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
         public async Task<IActionResult> GetById(string id)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -111,6 +120,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpPut("{id}")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
         public async Task<IActionResult> PutFunction(string id, [FromBody] FunctionCreateRequest request)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -130,6 +140,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpDelete("{id}")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Delete)]
         public async Task<IActionResult> DeleteFunction(string id)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -152,6 +163,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         
         [HttpGet("{functionId}/commands")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
         public async Task<IActionResult> GetCommands(string functionId)
         {
             var query =
@@ -177,6 +189,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         
         [HttpGet("{functionId}/commands/not-in-function")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
         public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
         {
             var query =
@@ -202,6 +215,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         
         [HttpPost("{functionId}/commands")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Create)]
         public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(request.CommandId, request.FunctionId);
@@ -225,6 +239,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpDelete("{functionId}/commands/{commandId}")]
+        [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
         public async Task<IActionResult> PostCommandToFunction(string functionId, string commandId)
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(functionId, commandId);

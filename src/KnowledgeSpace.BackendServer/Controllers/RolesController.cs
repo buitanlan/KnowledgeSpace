@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Authorization;
+using KnowledgeSpace.BackendServer.Contants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;
@@ -22,7 +24,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _context = context;
         }
 
+        
         [HttpPost]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.Create)]
         public async Task<IActionResult> PostRole(RoleCreateRequest request)
         {
             var role = new IdentityRole()
@@ -36,10 +40,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return CreatedAtAction(nameof(GetById), new {id = role.Id}, request);
             }
-            else
-            {
-                return BadRequest(result.Errors);
-            }
+            return BadRequest(result.Errors);
         }
 
 
@@ -58,6 +59,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpGet("filter")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.View)]
         public async Task<ActionResult<Pagination<RoleVm>>> GetRolesPaging(string keyword, int pageSize, int pageIndex)
         {
             var query = _roleManager.Roles;
@@ -86,6 +88,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpGet("{id}")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.View)]
         public async Task<IActionResult> GetById(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -100,6 +103,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpPut("{id}")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.Update)]
         public async Task<IActionResult> PutRole(string id, [FromBody] RoleCreateRequest roleVm) 
         {
             if(id  != roleVm.Id) return BadRequest();
@@ -118,6 +122,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
 
         [HttpDelete("{id}")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.Delete)]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -139,6 +144,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         
         [HttpGet("{roleId}/permissions")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.View)]
         public async Task<IActionResult> GetPermissionByRoleId(string roleId)
         {
             var permissions = from p in _context.Permissions
@@ -157,6 +163,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         [HttpPut("{roleId}/permissions")]
+        [ClaimRequirement(FunctionCode.SystemRole, CommandCode.View)]
         public async Task<IActionResult> PutPermissionByRoleId(string roleId, [FromBody] UpdatePermissionRequest request)
         {
             //create new permission list from user changed

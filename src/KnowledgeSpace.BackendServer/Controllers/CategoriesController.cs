@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Authorization;
+using KnowledgeSpace.BackendServer.Contants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;
@@ -18,7 +20,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _context = context;
         }
 
+        
         [HttpPost]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Create)]
         public async Task<IActionResult> PostCategory([FromBody] CategoryCreateRequest request)
         {
             var category = new Category()
@@ -36,23 +40,24 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return CreatedAtAction(nameof(GetById), new { id = category.Id }, request);
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
+        
         [HttpGet]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
         public async Task<IActionResult> GetCategories()
         {
-            var categorys = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
 
-            var categoryvms = categorys.Select(c => CreateCategoryVm(c)).ToList();
+            var categoryVms = categories.Select(CreateCategoryVm).ToList();
 
-            return Ok(categoryvms);
+            return Ok(categoryVms);
         }
 
+        
         [HttpGet("filter")]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
         public async Task<IActionResult> GetCategoriesPaging(string filter, int pageIndex, int pageSize)
         {
             var query = _context.Categories.AsQueryable();
@@ -65,7 +70,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var items = await query.Skip((pageIndex - 1 * pageSize))
                 .Take(pageSize).ToListAsync();
 
-            var data = items.Select(c => CreateCategoryVm(c)).ToList();
+            var data = items.Select(CreateCategoryVm).ToList();
 
             var pagination = new Pagination<CategoryVm>
             {
@@ -74,6 +79,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             };
             return Ok(pagination);
         }
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
@@ -82,11 +88,13 @@ namespace KnowledgeSpace.BackendServer.Controllers
             if (category == null)
                 return NotFound();
 
-            CategoryVm categoryvm = CreateCategoryVm(category);
+            CategoryVm categoryVm = CreateCategoryVm(category);
 
-            return Ok(categoryvm);
+            return Ok(categoryVm);
         }
 
+        
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Update)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
         {
@@ -115,6 +123,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
             return BadRequest();
         }
 
+        
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(string id)
         {
@@ -126,15 +136,15 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var result = await _context.SaveChangesAsync();
             if (result > 0)
             {
-                CategoryVm categoryvm = CreateCategoryVm(category);
-                return Ok(categoryvm);
+                CategoryVm categoryVm = CreateCategoryVm(category);
+                return Ok(categoryVm);
             }
             return BadRequest();
         }
 
         private static CategoryVm CreateCategoryVm(Category category)
         {
-            return new CategoryVm()
+            return new()
             {
                 Id = category.Id,
                 Name = category.Name,
