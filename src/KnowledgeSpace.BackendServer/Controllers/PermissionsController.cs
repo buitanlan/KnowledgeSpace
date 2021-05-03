@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using KnowledgeSpace.BackendServer.Authorization;
-using KnowledgeSpace.BackendServer.Contants;
+using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;

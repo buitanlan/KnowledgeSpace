@@ -18,13 +18,13 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
     {
         private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
 
-        private readonly List<IdentityRole> _roleSources = new List<IdentityRole>
-                        {
-                             new IdentityRole("test1"),
-                             new IdentityRole("test2"),
-                             new IdentityRole("test3"),
-                             new IdentityRole("test4")
-                        };
+        private readonly List<IdentityRole> _roleSources = new()
+        {
+             new IdentityRole("test1"),
+             new IdentityRole("test2"),
+             new IdentityRole("test3"),
+             new IdentityRole("test4")
+        };
 
         private readonly ApplicationDbContext _context;
 

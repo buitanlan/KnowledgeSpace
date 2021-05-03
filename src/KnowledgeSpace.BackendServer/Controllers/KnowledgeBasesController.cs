@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using KnowledgeSpace.BackendServer.Authorization;
-using KnowledgeSpace.BackendServer.Contants;
+using KnowledgeSpace.BackendServer.Constants;
 
 namespace KnowledgeSpace.BackendServer.Controllers
 {
@@ -26,7 +26,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         public KnowledgeBasesController(ApplicationDbContext context, 
             ISequenceService sequenceService,
-            StorageService storageService)
+            IStorageService storageService)
         {
             _context = context;
             _sequenceService = sequenceService;
@@ -177,7 +177,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         private static KnowledgeBaseVm CreateKnowledgeBaseVm(KnowledgeBase knowledgeBase)
         {
-            return new KnowledgeBaseVm()
+            return new()
             {
                 Id = knowledgeBase.CategoryId,
 

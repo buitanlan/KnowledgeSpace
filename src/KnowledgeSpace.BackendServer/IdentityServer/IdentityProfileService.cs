@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using KnowledgeSpace.BackendServer.Contants;
+using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-
 namespace KnowledgeSpace.BackendServer.IdentityServer
 {
     public class IdentityProfileService: IProfileService
@@ -59,7 +58,7 @@ namespace KnowledgeSpace.BackendServer.IdentityServer
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
             claims.Add(new Claim(ClaimTypes.Role, string.Join(";", roles)));
-            claims.Add(new Claim(SystemConstants.Claims.Permissions, JsonConvert.SerializeObject(permissions)));
+            claims.Add(new Claim(SystemConstants.Claims.Permissions, JsonSerializer.Serialize(permissions)));
 
             context.IssuedClaims = claims;
         }

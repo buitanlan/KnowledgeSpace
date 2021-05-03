@@ -4,11 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using KnowledgeSpace.BackendServer.Extensions;
-using KnowledgeSpace.BackendServer.Data;
-using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
-using KnowledgeSpace.BackendServer.Data.Entities;
-using KnowledgeSpace.BackendServer.IdentityServer;
 using KnowledgeSpace.ViewModels.Systems;
 
 namespace KnowledgeSpace.BackendServer

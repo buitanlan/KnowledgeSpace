@@ -1,4 +1,4 @@
-﻿namespace KnowledgeSpace.BackendServer.Contants
+﻿namespace KnowledgeSpace.BackendServer.Constants
 {
     public class SystemConstants
     {

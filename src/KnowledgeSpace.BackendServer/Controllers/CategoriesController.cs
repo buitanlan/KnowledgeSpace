@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeSpace.BackendServer.Authorization;
-using KnowledgeSpace.BackendServer.Contants;
+using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;

@@ -25,7 +25,7 @@ namespace KnowledgeSpace.BackendServer.Services
                 Directory.CreateDirectory(_userContentFolder);
 
             var filePath = Path.Combine(_userContentFolder, fileName);
-            using var output = new FileStream(filePath, FileMode.Create);
+            await using var output = new FileStream(filePath, FileMode.Create);
             await mediaBinaryStream.CopyToAsync(output);
         }
 

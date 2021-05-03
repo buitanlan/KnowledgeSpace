@@ -1,4 +1,4 @@
-﻿using KnowledgeSpace.BackendServer.Contants;
+﻿using KnowledgeSpace.BackendServer.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeSpace.BackendServer.Authorization

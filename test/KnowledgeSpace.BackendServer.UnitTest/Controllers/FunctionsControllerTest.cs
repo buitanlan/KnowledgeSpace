@@ -86,7 +86,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             _context.Functions.AddRange(new List<Function>()
             {
-                new Function(){
+                new(){
                     Id = "PostUser_ValidInput_Failed",
                     ParentId = null,
                     Name = "PostUser_ValidInput_Failed",
@@ -114,7 +114,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             _context.Functions.AddRange(new List<Function>()
             {
-                new Function(){
+                new(){
                     Id = "GetFunction_HasData_ReturnSuccess",
                     ParentId = null,
                     Name = "GetFunction_HasData_ReturnSuccess",
@@ -203,7 +203,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             _context.Functions.AddRange(new List<Function>()
             {
-                new Function(){
+                new(){
                     Id = "GetById_HasData_ReturnSuccess",
                     ParentId = null,
                     Name = "GetById_HasData_ReturnSuccess",
@@ -228,7 +228,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             _context.Functions.AddRange(new List<Function>()
             {
-                new Function(){
+                new(){
                     Id = "PutUser_ValidInput_Success",
                     ParentId = null,
                     Name = "PutUser_ValidInput_Success",
@@ -268,7 +268,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             _context.Functions.AddRange(new List<Function>()
             {
-                new Function(){
+                new(){
                     Id = "DeleteUser_ValidInput_Success",
                     ParentId = null,
                     Name = "DeleteUser_ValidInput_Success",

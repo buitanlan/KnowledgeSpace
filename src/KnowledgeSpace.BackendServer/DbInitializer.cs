@@ -13,8 +13,8 @@ namespace KnowledgeSpace.BackendServer
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly string AdminRoleName = "Admin";
-        private readonly string UserRoleName = "Member";
+        private const string AdminRoleName = "Admin";
+        private const string UserRoleName = "Member";
 
         public DbInitializer(ApplicationDbContext context,
           UserManager<User> userManager,
@@ -75,27 +75,25 @@ namespace KnowledgeSpace.BackendServer
             {
                 _context.Functions.AddRange(new List<Function>
                 {
-                    new Function {Id = "DASHBOARD", Name = "Thống kê", ParentId = null, SortOrder = 1,Url = "/dashboard"  },
+                    new() {Id = "Dashboard", Name = "Thống kê", ParentId = null, SortOrder = 1,Url = "/dashboard"  },
 
-                    new Function {Id = "CONTENT",Name = "Nội dung",ParentId = null,Url = "/content" },
+                    new() {Id = "Content",Name = "Nội dung",ParentId = null,Url = "/content" },
 
-                    new Function {Id = "CONTENT_CATEGORY",Name = "Danh mục",ParentId ="CONTENT",Url = "/content/category"  },
-                    new Function {Id = "CONTENT_KNOWLEDGEBASE",Name = "Bài viết",ParentId = "CONTENT",SortOrder = 2,Url = "/content/kb" },
-                    new Function {Id = "CONTENT_COMMENT",Name = "Trang",ParentId = "CONTENT",SortOrder = 3,Url = "/content/comment" },
-                    new Function {Id = "CONTENT_REPORT",Name = "Báo xấu",ParentId = "CONTENT",SortOrder = 3,Url = "/content/report" },
+                    new() {Id = "ContentCategory",Name = "Danh mục",ParentId ="Content",Url = "/content/category"  },
+                    new() {Id = "ContentKnowledgeBase",Name = "Bài viết",ParentId = "Content",SortOrder = 2,Url = "/content/kb" },
+                    new() {Id = "ContentComment",Name = "Trang",ParentId = "Content",SortOrder = 3,Url = "/content/comment" },
+                    new() {Id = "ContentReport",Name = "Báo xấu",ParentId = "Content",SortOrder = 3,Url = "/content/report" },
 
-                    new Function {Id = "STATISTIC",Name = "Thống kê", ParentId = null, Url = "/statistic" },
+                    new() {Id = "Statistic",Name = "Thống kê", ParentId = null, Url = "/statistic" },
+                    new() {Id = "StatisticMonthlyNewMember",Name = "Đăng ký từng tháng",ParentId = "Statistic",SortOrder = 1,Url = "/statistic/monthly-register"},
+                    new() {Id = "StatisticMonthlyNewKnowledgeBase",Name = "Bài đăng hàng tháng",ParentId = "Statistic",SortOrder = 2,Url = "/statistic/monthly-newkb"},
+                    new() {Id = "StatisticMonthlyComment",Name = "Comment theo tháng",ParentId = "Statistic",SortOrder = 3,Url = "/statistic/monthly-comment" },
 
-                    new Function {Id = "STATISTIC_MONTHLY_NEWMEMBER",Name = "Đăng ký từng tháng",ParentId = "STATISTIC",SortOrder = 1,Url = "/statistic/monthly-register"},
-                    new Function {Id = "STATISTIC_MONTHLY_NEWKB",Name = "Bài đăng hàng tháng",ParentId = "STATISTIC",SortOrder = 2,Url = "/statistic/monthly-newkb"},
-                    new Function {Id = "STATISTIC_MONTHLY_COMMENT",Name = "Comment theo tháng",ParentId = "STATISTIC",SortOrder = 3,Url = "/statistic/monthly-comment" },
-
-                    new Function {Id = "SYSTEM", Name = "Hệ thống", ParentId = null, Url = "/system" },
-
-                    new Function {Id = "SYSTEM_USER", Name = "Người dùng",ParentId = "SYSTEM",Url = "/system/user"},
-                    new Function {Id = "SYSTEM_ROLE", Name = "Nhóm quyền",ParentId = "SYSTEM",Url = "/system/role"},
-                    new Function {Id = "SYSTEM_FUNCTION", Name = "Chức năng",ParentId = "SYSTEM",Url = "/system/function"},
-                    new Function {Id = "SYSTEM_PERMISSION", Name = "Quyền hạn",ParentId = "SYSTEM",Url = "/system/permission"},
+                    new() {Id = "System", Name = "Hệ thống", ParentId = null, Url = "/system" },
+                    new() {Id = "SystemUser", Name = "Người dùng",ParentId = "System",Url = "/system/user"},
+                    new() {Id = "SystemRole", Name = "Nhóm quyền",ParentId = "System",Url = "/system/role"},
+                    new() {Id = "SystemFunction", Name = "Chức năng",ParentId = "System",Url = "/system/function"},
+                    new() {Id = "SystemPermission", Name = "Quyền hạn",ParentId = "System",Url = "/system/permission"},
                 });
                 await _context.SaveChangesAsync();
             }
@@ -104,11 +102,11 @@ namespace KnowledgeSpace.BackendServer
             {
                 _context.Commands.AddRange(new List<Command>()
                 {
-                    new Command(){Id = "VIEW", Name = "Xem"},
-                    new Command(){Id = "CREATE", Name = "Thêm"},
-                    new Command(){Id = "UPDATE", Name = "Sửa"},
-                    new Command(){Id = "DELETE", Name = "Xoá"},
-                    new Command(){Id = "APPROVE", Name = "Duyệt"},
+                    new() {Id = "View", Name = "Xem"},
+                    new() {Id = "Create", Name = "Thêm"},
+                    new() {Id = "Update", Name = "Sửa"},
+                    new() {Id = "Delete", Name = "Xoá"},
+                    new() {Id = "Approve", Name = "Duyệt"},
                 });
             }
 
@@ -122,27 +120,27 @@ namespace KnowledgeSpace.BackendServer
                 {
                     var createAction = new CommandInFunction()
                     {
-                        CommandId = "CREATE",
+                        CommandId = "Create",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(createAction);
 
                     var updateAction = new CommandInFunction()
                     {
-                        CommandId = "UPDATE",
+                        CommandId = "Update",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(updateAction);
                     var deleteAction = new CommandInFunction()
                     {
-                        CommandId = "DELETE",
+                        CommandId = "Delete",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(deleteAction);
 
                     var viewAction = new CommandInFunction()
                     {
-                        CommandId = "VIEW",
+                        CommandId = "View",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(viewAction);
@@ -154,10 +152,10 @@ namespace KnowledgeSpace.BackendServer
                 var adminRole = await _roleManager.FindByNameAsync(AdminRoleName);
                 foreach (var function in functions)
                 {
-                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "CREATE"));
-                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "UPDATE"));
-                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "DELETE"));
-                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "VIEW"));
+                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Create"));
+                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Update"));
+                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Delete"));
+                    _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "View"));
                 }
             }
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using KnowledgeSpace.BackendServer.Contants;
+using System.Text.Json;
+using KnowledgeSpace.BackendServer.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json;
 
 namespace KnowledgeSpace.BackendServer.Authorization
 {
@@ -22,10 +22,10 @@ namespace KnowledgeSpace.BackendServer.Authorization
         {
             var permissionsClaim = context.HttpContext.User.Claims
                 .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);
-            if (permissionsClaim != null)
+            if (permissionsClaim is not null)
             {
-                var permissions = JsonConvert.DeserializeObject<List<string>>(permissionsClaim.Value);
-                if (!permissions.Contains(_functionCode + "_" + _commandCode))
+                var permissions = JsonSerializer.Deserialize<List<string>>(permissionsClaim.Value);
+                if (permissions is not null && !permissions.Contains(_functionCode + "_" + _commandCode))
                 {
                     context.Result = new ForbidResult();
                 }
