@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KnowledgeSpace.BackendServer.Helpers
@@ -19,6 +20,13 @@ namespace KnowledgeSpace.BackendServer.Helpers
 
             Errors = modelState.SelectMany(x => x.Value.Errors)
                 .Select(x => x.ErrorMessage).ToArray();
+        }
+        
+        public ApiBadRequestResponse(IdentityResult identityResult)
+            : base(400)
+        {
+            Errors = identityResult.Errors
+                .Select(x => x.Code + " - " + x.Description).ToArray();
         }
 
         public ApiBadRequestResponse(string message)

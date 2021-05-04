@@ -5,6 +5,7 @@ using KnowledgeSpace.BackendServer.Authorization;
 using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +29,10 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _userManager = userManager;
         }
 
+        
         [HttpPost]
         [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Create)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostUser(UserCreateRequest  request)
         {
             var user = new User()
@@ -48,10 +51,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return CreatedAtAction(nameof(GetById), new {id = user.Id}, request);
             }
-            else
-            {
-                return BadRequest(result.Errors);
-            }
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
 
@@ -115,7 +115,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         public async Task<IActionResult> GetById(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
             var userVm = new UserVm()
             {
                 Id = user.Id,
@@ -135,7 +135,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         public async Task<IActionResult> PutUser(string id, [FromBody] UserCreateRequest request)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if(user == null) return NotFound();
+            if(user == null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
@@ -145,7 +145,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded) return NoContent();
-            return BadRequest(result.Errors);
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
 
@@ -155,7 +155,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
             var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
@@ -163,7 +163,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(result.Errors);
+            return BadRequest(new ApiBadRequestResponse(result));
         }
         
 

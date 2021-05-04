@@ -14,8 +14,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 {
     public class CategoriesController: BaseController
     {
-          private readonly ApplicationDbContext _context;
-
+        private readonly ApplicationDbContext _context;
         public CategoriesController(ApplicationDbContext context)
         {
             _context = context;
@@ -42,7 +41,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return CreatedAtAction(nameof(GetById), new { id = category.Id }, request);
             }
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse("Create category failed"));
         }
 
         
@@ -51,9 +50,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
-
             var categoryVms = categories.Select(CreateCategoryVm).ToList();
-
             return Ok(categoryVms);
         }
 
@@ -90,10 +87,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Category with id: {id} is not found"));
 
             CategoryVm categoryVm = CreateCategoryVm(category);
-
             return Ok(categoryVm);
         }
 
@@ -109,7 +105,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             if (id == request.ParentId)
             {
-                return BadRequest("Category cannot be a child itself.");
+                return BadRequest(new ApiBadRequestResponse("Category cannot be a child itself."));
             }
 
             category.Name = request.Name;
@@ -125,7 +121,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse("Update category failed"));
         }
 
         
@@ -144,7 +140,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 CategoryVm categoryVm = CreateCategoryVm(category);
                 return Ok(categoryVm);
             }
-            return BadRequest();
+            return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
         }
 
         private static CategoryVm CreateCategoryVm(Category category)

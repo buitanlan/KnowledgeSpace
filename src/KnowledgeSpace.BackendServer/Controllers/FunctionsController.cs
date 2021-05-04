@@ -151,7 +151,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _context.Functions.Remove(function);
             var result = await _context.SaveChangesAsync();
 
-            if (result <= 0) return BadRequest();
+            if (result <= 0) return BadRequest(new ApiBadRequestResponse("Delete function failed"));
             var functionVm = new FunctionVm
             {
                 Id = function.Id,
@@ -166,7 +166,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         [HttpGet("{functionId}/commands")]
         [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
-        public async Task<IActionResult> GetCommands(string functionId)
+        public async Task<IActionResult> GetCommandsInFunction(string functionId)
         {
             var query =
                 from c in _context.Commands
@@ -218,6 +218,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         [HttpPost("{functionId}/commands")]
         [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Create)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(request.CommandId, request.FunctionId);
@@ -242,6 +243,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         [HttpDelete("{functionId}/commands/{commandId}")]
         [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
+        [ApiValidationFilter]
         public async Task<IActionResult> DeleteCommandToFunction(string functionId, string commandId)
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(functionId, commandId);
@@ -260,7 +262,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return Ok();
             }
-            return BadRequest("Delete command to function failed");
+            return BadRequest(new ApiBadRequestResponse("Delete command to function failed"));
         }
     }
 }
