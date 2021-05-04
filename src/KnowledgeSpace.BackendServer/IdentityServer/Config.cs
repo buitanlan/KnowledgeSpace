@@ -16,13 +16,13 @@ namespace KnowledgeSpace.BackendServer.IdentityServer
         public static IEnumerable<ApiScope> Apis =>
             new List<ApiScope>
             {
-                new ApiScope("api.knowledgespace", "KnowledgeSpace API")
+                new("api.knowledgespace", "KnowledgeSpace API")
             };
 
         public static IEnumerable<Client> Clients => 
-            new Client[]
+            new[]
             {
-                new Client
+                new()
                 {
                     ClientId = "webportal",
                     ClientSecrets = {new Secret("secret".Sha256())},
@@ -66,7 +66,7 @@ namespace KnowledgeSpace.BackendServer.IdentityServer
                         "api.knowledgespace"
                     }
                 },
-                new Client
+                new()
                 {
                     ClientName = "Angular Admin",
                     ClientId = "angular_admin",

@@ -12,9 +12,7 @@ namespace KnowledgeSpace.BackendServer.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int? KnowledgeBaseId { get; set; }
-
-        public int? CommentId { get; set; }
+        public int KnowledgeBaseId { get; set; }
 
         [MaxLength(500)]
         public string Content { get; set; }
@@ -27,9 +25,5 @@ namespace KnowledgeSpace.BackendServer.Data.Entities
         public DateTime? LastModifiedDate { get; set; }
 
         public bool IsProcessed { get; set; }
-
-        [MaxLength(50)]
-        [Column(TypeName = "varchar(50)")]
-        public string Type { get; set; }
     }
 }
