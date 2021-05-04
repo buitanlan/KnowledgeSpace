@@ -4,6 +4,7 @@ using KnowledgeSpace.BackendServer.Authorization;
 using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         
         [HttpPost]
         [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Create)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostCategory([FromBody] CategoryCreateRequest request)
         {
             var category = new Category()
@@ -79,9 +81,11 @@ namespace KnowledgeSpace.BackendServer.Controllers
             };
             return Ok(pagination);
         }
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
+        
 
         [HttpGet("{id}")]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
+        [ApiValidationFilter]
         public async Task<IActionResult> GetById(string id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -94,8 +98,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Update)]
         [HttpPut("{id}")]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Update)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -124,8 +129,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
         [HttpDelete("{id}")]
+        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
         public async Task<IActionResult> DeleteCategory(string id)
         {
             var category = await _context.Categories.FindAsync(id);

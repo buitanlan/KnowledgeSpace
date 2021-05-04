@@ -48,6 +48,8 @@ namespace KnowledgeSpace.BackendServer
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseErrorWrapping();
+            
             app.UseStaticFiles();
 
             app.UseIdentityServer();
