@@ -33,16 +33,16 @@ namespace KnowledgeSpace.BackendServer.Extensions
                 options.Password.RequireDigit = true;
                 options.Password.RequireUppercase = true;
                 options.User.RequireUniqueEmail = true;
-            });
-            var builder = services.AddIdentityServer(options =>
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                })
+            }); 
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+            })
                 .AddInMemoryApiScopes(Config.Apis)
-                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryClients(config.GetSection("IdentityServer:Clients"))
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddAspNetIdentity<User>()
                 .AddProfileService<IdentityProfileService>()

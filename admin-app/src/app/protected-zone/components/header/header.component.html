@@ -2,7 +2,7 @@
     <a class="navbar-brand" href="#">Knowledge Space </a>
     <button (click)="toggleSidebar()" class="navbar-toggler" type="button">
         <!-- <span class="navbar-toggler-icon"></span> -->
-        <i aria-hidden="true" class="fa fa-bars text-muted"></i>
+        <i aria-hidden="true" class="fas fa-bars text-muted"></i>
     </button>
     <div class="collapse navbar-collapse">
         <form class="form-inline my-2 my-lg-0">
@@ -11,7 +11,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown" ngbDropdown>
                 <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fa fa-envelope"></i> <b class="caret"></b><span class="sr-only">(current)</span>
+                    <i class="fas fa-envelope"></i> <b class="caret"></b><span class="sr-only">(current)</span>
                 </a>
                 <ul class="dropdown-menu-right messages" ngbDropdownMenu>
                     <li class="media">
@@ -22,7 +22,7 @@
                         />
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
                             <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
                         </div>
                     </li>
@@ -34,7 +34,7 @@
                         />
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
                             <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
                         </div>
                     </li>
@@ -46,7 +46,7 @@
                         />
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
                             <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
                         </div>
                     </li>
@@ -54,7 +54,7 @@
             </li>
             <li class="nav-item dropdown" ngbDropdown>
                 <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fa fa-bell"></i> <b class="caret"></b><span class="sr-only">(current)</span>
+                    <i class="fas fa-bell"></i> <b class="caret"></b><span class="sr-only">(current)</span>
                 </a>
                 <div class="dropdown-menu-right" ngbDropdownMenu>
                     <a class="dropdown-item" href="javascript:void(0)">
@@ -74,7 +74,7 @@
             </li>
             <li class="nav-item dropdown" ngbDropdown>
                 <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fa fa-language"></i> {{ 'Language' | translate }} <b class="caret"></b>
+                    <i class="fas fa-globe"></i> {{ 'Language' | translate }} <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu-right" ngbDropdownMenu>
                     <a (click)="changeLang('en')" class="dropdown-item" href="javascript:void(0)">
@@ -105,20 +105,20 @@
             </li>
             <li class="nav-item dropdown" ngbDropdown>
                 <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fa fa-user"></i> John Smith <b class="caret"></b>
+                    <i class="fas fa-user"></i> John Smith <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu-right" ngbDropdownMenu>
                     <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}
+                        <i class="fas fa-fw fa-user"></i> {{ 'Profile' | translate }}
                     </a>
                     <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fa fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}
+                        <i class="fas fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}
                     </a>
                     <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fa fa-fw fa-gear"></i> {{ 'Settings' | translate }}
+                        <i class="fas fa-fw fa-cog"></i> {{ 'Settings' | translate }}
                     </a>
                     <a (click)="onLoggedout()" [routerLink]="['/login']" class="dropdown-item">
-                        <i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
+                        <i class="fas fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
                     </a>
                 </div>
             </li>

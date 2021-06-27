@@ -8,7 +8,8 @@ const routes: Routes = [
         loadChildren: () => import('./protected-zone/proted-zone.module').then((m) => m.ProtectedZoneModule),
         canActivate: [AuthGuard]
     },
-    { path: 'login', loadChildren: () => import('./login/login.module').then((m) => m.LoginModule) },
+    { path: 'login',
+        loadChildren: () => import('./login/login.module').then((m) => m.LoginModule) },
     {
         path: 'access-denied',
         loadChildren: () => import('./access-denied/access-denied.module').then((m) => m.AccessDeniedModule)

@@ -34,11 +34,11 @@ namespace KnowledgeSpace.BackendServer.Controllers
 			var sql = @"SELECT f.Id,
 	                       f.Name,
 	                       f.ParentId,
-	                       sum(case when sa.Id = 'CREATE' then 1 else 0 end) as HasCreate,
-	                       sum(case when sa.Id = 'UPDATE' then 1 else 0 end) as HasUpdate,
-	                       sum(case when sa.Id = 'DELETE' then 1 else 0 end) as HasDelete,
-	                       sum(case when sa.Id = 'VIEW' then 1 else 0 end) as HasView,
-	                       sum(case when sa.Id = 'APPROVE' then 1 else 0 end) as HasApprove
+	                       sum(case when sa.Id = 'Create' then 1 else 0 end) as HasCreate,
+	                       sum(case when sa.Id = 'Update' then 1 else 0 end) as HasUpdate,
+	                       sum(case when sa.Id = 'Delete' then 1 else 0 end) as HasDelete,
+	                       sum(case when sa.Id = 'View' then 1 else 0 end) as HasView,
+	                       sum(case when sa.Id = 'Approve' then 1 else 0 end) as HasApprove
                         from Functions f join CommandInFunctions cif on f.Id = cif.FunctionId
 		                    left join Commands sa on cif.CommandId = sa.Id
                         group by f.Id,f.Name, f.ParentId
