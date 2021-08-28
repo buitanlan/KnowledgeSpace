@@ -16,7 +16,7 @@
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <partial name="_ManageNav" />
+            <partial name="" />
         </div>
         <div class="col-md-9">
             @RenderBody()
@@ -25,5 +25,5 @@
 </div>
 
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 }

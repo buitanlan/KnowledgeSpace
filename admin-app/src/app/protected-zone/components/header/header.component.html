@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-brand" href="#">Knowledge Space </a>
+    <a class="navbar-brand ms-3" href="#">Knowledge Space </a>
     <button (click)="toggleSidebar()" class="navbar-toggler" type="button">
         <!-- <span class="navbar-toggler-icon"></span> -->
         <i aria-hidden="true" class="fas fa-bars text-muted"></i>
     </button>
-    <div class="collapse navbar-collapse">
+    <div class="me-3 collapse navbar-collapse justify-content-end">
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" placeholder="{{ 'Search' | translate }}" type="text" />
         </form>
@@ -105,7 +105,7 @@
             </li>
             <li class="nav-item dropdown" ngbDropdown>
                 <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fas fa-user"></i> John Smith <b class="caret"></b>
+                    <i class="fas fa-user"></i> {{userName}} <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu-right" ngbDropdownMenu>
                     <a class="dropdown-item" href="javascript:void(0)">
@@ -117,7 +117,7 @@
                     <a class="dropdown-item" href="javascript:void(0)">
                         <i class="fas fa-fw fa-cog"></i> {{ 'Settings' | translate }}
                     </a>
-                    <a (click)="onLoggedout()" [routerLink]="['/login']" class="dropdown-item">
+                    <a (click)="signout()" [routerLink]="['/login']" class="dropdown-item">
                         <i class="fas fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
                     </a>
                 </div>
