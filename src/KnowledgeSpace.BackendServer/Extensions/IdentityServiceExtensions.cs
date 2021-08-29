@@ -60,6 +60,7 @@ namespace KnowledgeSpace.BackendServer.Extensions
                     policy.RequireAuthenticatedUser();
                 });
             });
+            
             return services;
         }
     }

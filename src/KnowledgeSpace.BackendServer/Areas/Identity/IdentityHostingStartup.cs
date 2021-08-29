@@ -7,8 +7,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
-            });
+            builder.ConfigureServices((_, _) => {});
         }
     }
 }

@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
 {
-    public class Disable2faModel : PageModel
+    public class Disable2FaModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<Disable2faModel> _logger;
+        private readonly ILogger<Disable2FaModel> _logger;
 
-        public Disable2faModel(
+        public Disable2FaModel(
             UserManager<User> userManager,
-            ILogger<Disable2faModel> logger)
+            ILogger<Disable2FaModel> logger)
         {
             _userManager = userManager;
             _logger = logger;
@@ -48,8 +48,8 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
-            if (!disable2faResult.Succeeded)
+            var disable2FaResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            if (!disable2FaResult.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(User)}'.");
             }

@@ -11,6 +11,8 @@ namespace KnowledgeSpace.BackendServer
 {
     public class Startup
     {
+        private const string KspSpecificOrigins = "KspSpecificOrigins";
+
         private readonly IConfiguration _config;
         public Startup(IConfiguration config)
         {
@@ -37,6 +39,16 @@ namespace KnowledgeSpace.BackendServer
             services.AddIdentityServices(_config);
             services.AddApplicationServices();
             services.AddSwaggerDocument();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(KspSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins(_config["AllowOrigins"])
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
 
         }
 
@@ -61,6 +73,8 @@ namespace KnowledgeSpace.BackendServer
             app.UseRouting();
 
             app.UseAuthorization();
+            
+            app.UseCors(KspSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {
