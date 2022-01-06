@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KnowledgeSpace.BackendServer.Data.Interfaces;
+﻿namespace KnowledgeSpace.BackendServer.Data.Interfaces;
 
 public interface IDateTracking
 {

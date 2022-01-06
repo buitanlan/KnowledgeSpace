@@ -1,7 +1,6 @@
 using KnowledgeSpace.BackendServer.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace KnowledgeSpace.BackendServer.Extensions;
 

@@ -1,13 +1,10 @@
 ﻿using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
 using KnowledgeSpace.BackendServer.Authorization;
 using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 

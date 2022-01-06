@@ -1,5 +1,4 @@
 ﻿using KnowledgeSpace.BackendServer.Areas.Identity;
-using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(IdentityHostingStartup))]
 namespace KnowledgeSpace.BackendServer.Areas.Identity;
