@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
-using Microsoft.AspNetCore.Authorization;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Logging;
 
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account
@@ -115,7 +117,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account
 
             if (User?.Identity is not {IsAuthenticated: true}) return vm;
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-            if (idp is null or IdentityServer4.IdentityServerConstants.LocalIdentityProvider) return vm;
+            if (idp is null or IdentityServerConstants.LocalIdentityProvider) return vm;
             var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
             if (!providerSupportsSignout) return vm;
             vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
@@ -157,7 +159,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account
         public static bool AutomaticRedirectAfterSignOut = false;
 
         // specify the Windows authentication scheme being used
-        public static readonly string WindowsAuthenticationSchemeName = Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme;
+        public static readonly string WindowsAuthenticationSchemeName = IISDefaults.AuthenticationScheme;
 
         // if user uses windows auth, should we load the groups from windows
         public static bool IncludeWindowsGroups = false;

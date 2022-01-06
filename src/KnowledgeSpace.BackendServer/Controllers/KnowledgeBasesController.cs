@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Authorization;
+using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.BackendServer.Helpers;
@@ -9,8 +11,6 @@ using KnowledgeSpace.ViewModels.Contents;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using KnowledgeSpace.BackendServer.Authorization;
-using KnowledgeSpace.BackendServer.Constants;
 
 namespace KnowledgeSpace.BackendServer.Controllers
 {
@@ -97,21 +97,21 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         private async Task ProcessLabel(KnowledgeBaseCreateRequest request, KnowledgeBase knowledgeBase)
         {
-            string[] labels = request.Labels.Split(',');
+            var labels = request.Labels.Split(',');
             foreach (var labelText in labels)
             {
                 var labelId = TextHelper.ToUnsignedString(labelText);
                 var existingLabel = await _context.Labels.FindAsync(labelId);
                 if (existingLabel == null)
                 {
-                    var labelEntity = new Label()
+                    var labelEntity = new Label
                     {
                         Id = labelId,
                         Name = labelText
                     };
                     _context.Labels.Add(labelEntity);
                 }
-                var labelInKnowledgeBase = new LabelInKnowledgeBase()
+                var labelInKnowledgeBase = new LabelInKnowledgeBase
                 {
                     KnowledgeBaseId = knowledgeBase.Id,
                     LabelId = labelId
@@ -126,7 +126,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         public async Task<IActionResult> GetKnowledgeBases()
         {
             var knowledgeBases = _context.KnowledgeBases;
-            var knowledgeBaseVms = await knowledgeBases.Select(u => new KnowledgeBaseQuickVm()
+            var knowledgeBaseVms = await knowledgeBases.Select(u => new KnowledgeBaseQuickVm
             {
                 Id = u.Id,
                 CategoryId = u.CategoryId,
@@ -151,7 +151,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var totalRecords = await query.CountAsync();
             var items = await query.Skip((pageIndex - 1 * pageSize))
                 .Take(pageSize)
-                .Select(u => new KnowledgeBaseQuickVm()
+                .Select(u => new KnowledgeBaseQuickVm
                 {
                     Id = u.Id,
                     CategoryId = u.CategoryId,
@@ -230,7 +230,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(new ApiBadRequestResponse($"Update knowledge base failed"));
+            return BadRequest(new ApiBadRequestResponse("Update knowledge base failed"));
         }
 
 
@@ -249,7 +249,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 var knowledgeBaseVm = CreateKnowledgeBaseVm(knowledgeBase);
                 return Ok(knowledgeBaseVm);
             }
-            return BadRequest(new ApiBadRequestResponse($"Cannot delete this knowledge Base"));
+            return BadRequest(new ApiBadRequestResponse("Cannot delete this knowledge Base"));
         }
         
         private static void UpdateKnowledgeBase(KnowledgeBaseCreateRequest request, KnowledgeBase knowledgeBase)

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using KnowledgeSpace.WebPortal.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeSpace.WebPortal.Controllers
 {

@@ -29,7 +29,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [ClaimRequirement(FunctionCode.SystemRole, CommandCode.Create)]
         public async Task<IActionResult> PostRole(RoleCreateRequest request)
         {
-            var role = new IdentityRole()
+            var role = new IdentityRole
             {
                 Id = request.Id,
                 Name = request.Name,
@@ -49,7 +49,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var roles = _roleManager.Roles;
 
-            var roleVms = await roles.Select(r => new RoleVm()
+            var roleVms = await roles.Select(r => new RoleVm
             {
                 Id = r.Id,
                 Name = r.Name
@@ -71,13 +71,13 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var totalRecords = await query.CountAsync();
             var items = await query.Skip(pageIndex - 1 * pageSize)
                 .Take(pageSize)
-                .Select(x => new RoleVm()
+                .Select(x => new RoleVm
                 {
                     Id = x.Id,
                     Name = x.Name
                 }).ToListAsync();
 
-            var pagination = new Pagination<RoleVm>()
+            var pagination = new Pagination<RoleVm>
             {
                 Items = items,
                 TotalRecords = totalRecords
@@ -93,7 +93,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
-            var roleVm = new RoleVm()
+            var roleVm = new RoleVm
             {
                 Id = role.Id,
                 Name = role.Name
@@ -133,7 +133,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             if (result.Succeeded) 
             {
-                var roleVm = new RoleVm()
+                var roleVm = new RoleVm
                 {
                     Id = role.Id,
                     Name = role.Name
@@ -154,7 +154,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 join a in _context.Commands
                     on p.CommandId equals a.Id
                 where p.RoleId == roleId
-                select new PermissionVm()
+                select new PermissionVm
                 {
                     FunctionId = p.FunctionId,
                     CommandId = p.CommandId,

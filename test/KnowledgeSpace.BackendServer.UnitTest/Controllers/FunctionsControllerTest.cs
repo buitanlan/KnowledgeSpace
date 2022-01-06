@@ -69,7 +69,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PostFunction_ValidInput_Success()
         {
             var usersController = new FunctionsController(_context);
-            var result = await usersController.PostFunction(new FunctionCreateRequest()
+            var result = await usersController.PostFunction(new FunctionCreateRequest
             {
                 Id = "PostFunction_ValidInput_Success",
                 ParentId = null,
@@ -84,7 +84,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         [Fact]
         public async Task PostUser_ValidInput_Failed()
         {
-            _context.Functions.AddRange(new List<Function>()
+            _context.Functions.AddRange(new List<Function>
             {
                 new(){
                     Id = "PostUser_ValidInput_Failed",
@@ -97,7 +97,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             await _context.SaveChangesAsync();
             var functionsController = new FunctionsController(_context);
 
-            var result = await functionsController.PostFunction(new FunctionCreateRequest()
+            var result = await functionsController.PostFunction(new FunctionCreateRequest
             {
                 Id = "PostUser_ValidInput_Failed",
                 ParentId = null,
@@ -112,7 +112,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
          [Fact]
         public async Task GetFunction_HasData_ReturnSuccess()
         {
-            _context.Functions.AddRange(new List<Function>()
+            _context.Functions.AddRange(new List<Function>
             {
                 new(){
                     Id = "GetFunction_HasData_ReturnSuccess",
@@ -201,7 +201,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         [Fact]
         public async Task GetById_HasData_ReturnSuccess()
         {
-            _context.Functions.AddRange(new List<Function>()
+            _context.Functions.AddRange(new List<Function>
             {
                 new(){
                     Id = "GetById_HasData_ReturnSuccess",
@@ -226,7 +226,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         [Fact]
         public async Task PutUser_ValidInput_Success()
         {
-            _context.Functions.AddRange(new List<Function>()
+            _context.Functions.AddRange(new List<Function>
             {
                 new(){
                     Id = "PutUser_ValidInput_Success",
@@ -238,7 +238,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             });
             await _context.SaveChangesAsync();
             var functionsController = new FunctionsController(_context);
-            var result = await functionsController.PutFunction("PutUser_ValidInput_Success", new FunctionCreateRequest()
+            var result = await functionsController.PutFunction("PutUser_ValidInput_Success", new FunctionCreateRequest
             {
                 ParentId = null,
                 Name = "PutUser_ValidInput_Success updated",
@@ -253,7 +253,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         {
             var functionsController = new FunctionsController(_context);
 
-            var result = await functionsController.PutFunction("PutUser_ValidInput_Failed", new FunctionCreateRequest()
+            var result = await functionsController.PutFunction("PutUser_ValidInput_Failed", new FunctionCreateRequest
             {
                 ParentId = null,
                 Name = "PutUser_ValidInput_Failed update",
@@ -266,7 +266,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         [Fact]
         public async Task DeleteUser_ValidInput_Success()
         {
-            _context.Functions.AddRange(new List<Function>()
+            _context.Functions.AddRange(new List<Function>
             {
                 new(){
                     Id = "DeleteUser_ValidInput_Success",

@@ -1,10 +1,10 @@
-﻿using KnowledgeSpace.BackendServer.Data.Entities;
-using KnowledgeSpace.BackendServer.Data;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Data;
+using KnowledgeSpace.BackendServer.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace KnowledgeSpace.BackendServer
 {
@@ -100,7 +100,7 @@ namespace KnowledgeSpace.BackendServer
 
             if (!_context.Commands.Any())
             {
-                _context.Commands.AddRange(new List<Command>()
+                _context.Commands.AddRange(new List<Command>
                 {
                     new() {Id = "View", Name = "Xem"},
                     new() {Id = "Create", Name = "Thêm"},
@@ -118,27 +118,27 @@ namespace KnowledgeSpace.BackendServer
             {
                 foreach (var function in functions)
                 {
-                    var createAction = new CommandInFunction()
+                    var createAction = new CommandInFunction
                     {
                         CommandId = "Create",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(createAction);
 
-                    var updateAction = new CommandInFunction()
+                    var updateAction = new CommandInFunction
                     {
                         CommandId = "Update",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(updateAction);
-                    var deleteAction = new CommandInFunction()
+                    var deleteAction = new CommandInFunction
                     {
                         CommandId = "Delete",
                         FunctionId = function.Id
                     };
                     _context.CommandInFunctions.Add(deleteAction);
 
-                    var viewAction = new CommandInFunction()
+                    var viewAction = new CommandInFunction
                     {
                         CommandId = "View",
                         FunctionId = function.Id

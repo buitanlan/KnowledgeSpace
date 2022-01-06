@@ -1,11 +1,11 @@
+using FluentValidation.AspNetCore;
+using KnowledgeSpace.BackendServer.Extensions;
+using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using KnowledgeSpace.BackendServer.Extensions;
-using FluentValidation.AspNetCore;
-using KnowledgeSpace.ViewModels.Systems;
 
 namespace KnowledgeSpace.BackendServer
 {
@@ -31,8 +31,10 @@ namespace KnowledgeSpace.BackendServer
                     foreach (var selector in model.Selectors)
                     {
                         var attributeRouteModel = selector.AttributeRouteModel;
+                        if (attributeRouteModel == null) continue;
                         attributeRouteModel.Order = -1;
-                        attributeRouteModel.Template = attributeRouteModel.Template.Remove(0,"Identity".Length);
+                        if (attributeRouteModel.Template != null)
+                            attributeRouteModel.Template = attributeRouteModel.Template.Remove(0, "Identity".Length);
                     }
                 });
             });

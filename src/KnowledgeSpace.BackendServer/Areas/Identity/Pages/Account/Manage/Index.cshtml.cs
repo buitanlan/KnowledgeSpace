@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
 {
-    public partial class IndexModel : PageModel
+    public class IndexModel : PageModel
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;

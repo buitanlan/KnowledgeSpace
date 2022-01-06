@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace KnowledgeSpace.BackendServer.Services
@@ -7,7 +8,7 @@ namespace KnowledgeSpace.BackendServer.Services
     {
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

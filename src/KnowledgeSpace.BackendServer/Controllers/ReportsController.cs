@@ -24,7 +24,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var totalRecords = await query.CountAsync();
             var items = await query.Skip((pageIndex - 1 * pageSize))
                 .Take(pageSize)
-                .Select(c => new ReportVm()
+                .Select(c => new ReportVm
                 {
                     Id = c.Id,
                     Content = c.Content,
@@ -51,7 +51,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             if (report == null)
                 return NotFound();
 
-            var reportVm = new ReportVm()
+            var reportVm = new ReportVm
             {
                 Id = report.Id,
                 Content = report.Content,
@@ -69,7 +69,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [ApiValidationFilter]
         public async Task<IActionResult> PostReport(int knowledgeBaseId, [FromBody] ReportCreateRequest request)
         {
-            var report = new Report()
+            var report = new Report
             {
                 Content = request.Content,
                 KnowledgeBaseId = knowledgeBaseId,
@@ -89,7 +89,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return Ok();
             }
-            return BadRequest(new ApiBadRequestResponse($"Create report failed"));
+            return BadRequest(new ApiBadRequestResponse("Create report failed"));
         }
 
         [HttpPut("{knowledgeBaseId}/reports/{reportId}")]
@@ -111,7 +111,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(new ApiBadRequestResponse($"Update report failed"));
+            return BadRequest(new ApiBadRequestResponse("Update report failed"));
         }
 
         [HttpDelete("{knowledgeBaseId}/reports/{reportId}")]
@@ -134,7 +134,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return Ok();
             }
-            return BadRequest(new ApiBadRequestResponse($"Delete report failed"));
+            return BadRequest(new ApiBadRequestResponse("Delete report failed"));
         }
 
         #endregion Reports

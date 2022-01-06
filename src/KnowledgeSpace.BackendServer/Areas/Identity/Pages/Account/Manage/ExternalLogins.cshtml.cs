@@ -37,7 +37,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID 'user.Id'.");
+                return NotFound("Unable to load user with ID 'user.Id'.");
             }
 
             CurrentLogins = await _userManager.GetLoginsAsync(user);
@@ -53,7 +53,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID 'user.Id'.");
+                return NotFound("Unable to load user with ID 'user.Id'.");
             }
 
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
@@ -84,7 +84,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID 'user.Id'.");
+                return NotFound("Unable to load user with ID 'user.Id'.");
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);

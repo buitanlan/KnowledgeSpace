@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeSpace.BackendServer.Controllers
@@ -6,7 +7,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
     {
         public IActionResult Logout(string logoutid)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

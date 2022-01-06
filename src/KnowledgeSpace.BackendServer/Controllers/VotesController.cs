@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using KnowledgeSpace.BackendServer.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers
@@ -17,7 +17,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var votes = await _context.Votes
                 .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
-                .Select(x => new VoteVm()
+                .Select(x => new VoteVm
                 {
                     UserId = x.UserId,
                     KnowledgeBaseId = x.KnowledgeBaseId,
@@ -54,7 +54,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(new ApiBadRequestResponse($"Vote failed"));
+            return BadRequest(new ApiBadRequestResponse("Vote failed"));
         }
 
         
@@ -77,7 +77,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return Ok();
             }
-            return BadRequest(new ApiBadRequestResponse($"Delete vote failed"));
+            return BadRequest(new ApiBadRequestResponse("Delete vote failed"));
         }
 
         #endregion Votes

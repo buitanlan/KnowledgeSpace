@@ -1,7 +1,7 @@
-﻿using KnowledgeSpace.BackendServer.Data.Interfaces;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using KnowledgeSpace.BackendServer.Data.Interfaces;
 
 namespace KnowledgeSpace.BackendServer.Data.Entities
 {

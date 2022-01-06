@@ -10,7 +10,7 @@ namespace KnowledgeSpace.ViewModels.UnitTest.Systems
 
         public FunctionCreateRequestValidatorTest()
         {
-            _request = new FunctionCreateRequest()
+            _request = new FunctionCreateRequest
             {
                 Id = "test6",
                 ParentId = null,

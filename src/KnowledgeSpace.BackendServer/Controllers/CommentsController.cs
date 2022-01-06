@@ -27,7 +27,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var totalRecords = await query.CountAsync();
             var items = await query.Skip((pageIndex - 1 * pageSize))
                 .Take(pageSize)
-                .Select(c => new CommentVm()
+                .Select(c => new CommentVm
                 {
                     Id = c.Id,
                     Content = c.Content,
@@ -116,7 +116,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(new ApiBadRequestResponse($"Update comment failed"));
+            return BadRequest(new ApiBadRequestResponse("Update comment failed"));
         }
 
         
@@ -138,8 +138,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _context.KnowledgeBases.Update(knowledgeBase);
 
             var result = await _context.SaveChangesAsync();
-            if (result <= 0) return BadRequest(new ApiBadRequestResponse($"Delete comment failed"));
-            var commentVm = new CommentVm()
+            if (result <= 0) return BadRequest(new ApiBadRequestResponse("Delete comment failed"));
+            var commentVm = new CommentVm
             {
                 Id = comment.Id,
                 Content = comment.Content,

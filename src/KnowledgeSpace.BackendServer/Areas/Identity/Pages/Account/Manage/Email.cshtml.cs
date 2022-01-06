@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
 {
-    public partial class EmailModel : PageModel
+    public class EmailModel : PageModel
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -95,7 +95,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { userId = userId, email = Input.NewEmail, code = code },
+                    values: new { userId, email = Input.NewEmail, code },
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
@@ -131,7 +131,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code },
+                values: new { area = "Identity", userId, code },
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,

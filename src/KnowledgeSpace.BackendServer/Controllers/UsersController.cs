@@ -35,7 +35,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [ApiValidationFilter]
         public async Task<IActionResult> PostUser(UserCreateRequest  request)
         {
-            var user = new User()
+            var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
                 Email = request.Email,
@@ -61,7 +61,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var users = _userManager.Users;
 
-            var userVms = await users.Select(u => new UserVm()
+            var userVms = await users.Select(u => new UserVm
             {
                 Id = u.Id,
                 UserName = u.UserName,
@@ -89,7 +89,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var totalRecords = await query.CountAsync();
             var items = await query.Skip(pageIndex - 1 * pageSize)
                 .Take(pageSize)
-                .Select(u => new UserVm()
+                .Select(u => new UserVm
                 {
                     Id = u.Id,
                     UserName = u.UserName,
@@ -100,7 +100,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                     LastName = u.LastName
                 }).ToListAsync();
 
-            var pagination = new Pagination<UserVm>()
+            var pagination = new Pagination<UserVm>
             {
                 Items = items,
                 TotalRecords = totalRecords
@@ -116,7 +116,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
-            var userVm = new UserVm()
+            var userVm = new UserVm
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -177,7 +177,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var result = await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
-            var userVm = new UserVm()
+            var userVm = new UserVm
             {
                 Id = user.Id,
                 UserName = user.UserName,

@@ -223,9 +223,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(request.CommandId, request.FunctionId);
             if (commandInFunction != null)
-                return BadRequest(new ApiBadRequestResponse($"This command has been added to function"));
+                return BadRequest(new ApiBadRequestResponse("This command has been added to function"));
 
-            var entity = new CommandInFunction()
+            var entity = new CommandInFunction
             {
                 CommandId = request.CommandId,
                 FunctionId = request.FunctionId
@@ -237,7 +237,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return CreatedAtAction(nameof(GetById), new { commandId = request.CommandId, functionId = request.FunctionId }, request);
             }
-            return BadRequest(new ApiBadRequestResponse($"Add comment function failed"));
+            return BadRequest(new ApiBadRequestResponse("Add comment function failed"));
         }
 
 
@@ -248,9 +248,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var commandInFunction = await _context.CommandInFunctions.FindAsync(functionId, commandId);
             if (commandInFunction == null)
-                return BadRequest(new ApiBadRequestResponse($"This command is not existed in function"));
+                return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
 
-            var entity = new CommandInFunction()
+            var entity = new CommandInFunction
             {
                 CommandId = commandId,
                 FunctionId = functionId

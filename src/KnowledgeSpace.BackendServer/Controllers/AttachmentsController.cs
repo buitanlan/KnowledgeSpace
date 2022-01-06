@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using KnowledgeSpace.BackendServer.Helpers;
-using KnowledgeSpace.ViewModels.Contents;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Helpers;
+using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers
@@ -16,12 +16,12 @@ namespace KnowledgeSpace.BackendServer.Controllers
     {
         #region Attachments
 
-        [HttpGet("{knowledgeBaseId}/attachments")]
+        [HttpGet("{knowledgeBaseId:int}/attachments")]
         public async Task<IActionResult> GetAttachment(int knowledgeBaseId)
         {
             var query = await _context.Attachments
                 .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
-                .Select(c => new AttachmentVm()
+                .Select(c => new AttachmentVm
                 {
                     Id = c.Id,
                     LastModifiedDate = c.LastModifiedDate,
@@ -36,8 +36,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
             return Ok(query);
         }
 
-        [HttpDelete("{knowledgeBaseId}/attachments/{attachmentId}")]
-        public async Task<IActionResult> DeleteAttachment(int attachmentId)
+        [HttpDelete("{knowledgeBaseId:int}/attachments/{attachmentId}")]
+        public async Task<IActionResult> DeleteAttachment(int attachmentId, int knowledgeBaseId)
         {
             var attachment = await _context.Attachments.FindAsync(attachmentId);
             if (attachment == null)
@@ -50,7 +50,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return Ok();
             }
-            return BadRequest(new ApiBadRequestResponse($"Delete attachment failed"));
+            return BadRequest(new ApiBadRequestResponse("Delete attachment failed"));
         }
         
         private async Task<Attachment> SaveFile(int knowledgeBaseId, IFormFile file)
@@ -60,7 +60,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var originalFileName = name.Trim('"');
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
-            var attachmentEntity = new Attachment()
+            var attachmentEntity = new Attachment
             {
                 FileName = fileName,
                 FilePath = _storageService.GetFileUrl(fileName),

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -48,14 +48,12 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account
             {
                 return BadRequest("A code must be supplied for password reset.");
             }
-            else
+
+            Input = new InputModel
             {
-                Input = new InputModel
-                {
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-                };
-                return Page();
-            }
+                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+            };
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

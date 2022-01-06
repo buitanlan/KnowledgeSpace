@@ -1,16 +1,16 @@
-﻿using KnowledgeSpace.BackendServer.Controllers;
-using KnowledgeSpace.ViewModels.Systems;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Controllers;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;
+using KnowledgeSpace.ViewModels.Systems;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MockQueryable.Moq;
+using Moq;
 using Xunit;
 
 namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
@@ -52,7 +52,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             _mockUserManager.Setup(x => x.CreateAsync(It.IsAny<User>()))
                 .ReturnsAsync(IdentityResult.Success);
             var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
-            var result = await usersController.PostUser(new UserCreateRequest()
+            var result = await usersController.PostUser(new UserCreateRequest
             {
                 UserName = "test"
             });
@@ -66,9 +66,9 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PostUser_ValidInput_Failed()
         {
             _mockUserManager.Setup(x => x.CreateAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
             var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
-            var result = await usersController.PostUser(new UserCreateRequest()
+            var result = await usersController.PostUser(new UserCreateRequest
             {
                 UserName = "test"
             });
@@ -153,7 +153,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task GetById_HasData_ReturnSuccess()
         {
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(new User()
+                .ReturnsAsync(new User
                 {
                     UserName = "test1"
                 });
@@ -181,7 +181,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PutUser_ValidInput_Success()
         {
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-               .ReturnsAsync(new User()
+               .ReturnsAsync(new User
                {
                    UserName = "test1"
                });
@@ -189,7 +189,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             _mockUserManager.Setup(x => x.UpdateAsync(It.IsAny<User>()))
                 .ReturnsAsync(IdentityResult.Success);
             var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
-            var result = await usersController.PutUser("test", new UserCreateRequest()
+            var result = await usersController.PutUser("test", new UserCreateRequest
             {
                 UserName = "test2"
             });
@@ -203,16 +203,16 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PutUser_ValidInput_Failed()
         {
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-             .ReturnsAsync(new User()
+             .ReturnsAsync(new User
              {
                  UserName = "test1"
              });
 
             _mockUserManager.Setup(x => x.UpdateAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
 
             var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
-            var result = await usersController.PutUser("test", new UserCreateRequest()
+            var result = await usersController.PutUser("test", new UserCreateRequest
             {
                 FirstName = "test2"
             });
@@ -226,7 +226,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task DeleteUser_ValidInput_Success()
         {
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-               .ReturnsAsync(new User()
+               .ReturnsAsync(new User
                {
                    UserName = "test"
                });
@@ -243,13 +243,13 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task DeleteUser_ValidInput_Failed()
         {
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-             .ReturnsAsync(new User()
+             .ReturnsAsync(new User
              {
                  UserName = "test"
              });
 
             _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
 
             var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
             var result = await usersController.DeleteUser("test");

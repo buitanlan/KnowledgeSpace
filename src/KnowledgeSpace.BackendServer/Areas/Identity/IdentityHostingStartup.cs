@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using KnowledgeSpace.BackendServer.Areas.Identity;
+using Microsoft.AspNetCore.Hosting;
 
-[assembly: HostingStartup(typeof(KnowledgeSpace.BackendServer.Areas.Identity.IdentityHostingStartup))]
+[assembly: HostingStartup(typeof(IdentityHostingStartup))]
 namespace KnowledgeSpace.BackendServer.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup

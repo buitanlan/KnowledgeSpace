@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +52,7 @@ namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    values: new { area = "Identity", userId, code, returnUrl },
                     protocol: Request.Scheme);
             }
 

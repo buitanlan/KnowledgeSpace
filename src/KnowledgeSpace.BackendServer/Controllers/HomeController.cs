@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using KnowledgeSpace.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         public IActionResult Privacy()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

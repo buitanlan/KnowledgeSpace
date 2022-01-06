@@ -1,15 +1,15 @@
-﻿using KnowledgeSpace.BackendServer.Controllers;
-using KnowledgeSpace.ViewModels.Systems;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Controllers;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.ViewModels;
+using KnowledgeSpace.ViewModels.Systems;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MockQueryable.Moq;
+using Moq;
 using Xunit;
 
 namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
@@ -48,7 +48,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             _mockRoleManager.Setup(x => x.CreateAsync(It.IsAny<IdentityRole>()))
                 .ReturnsAsync(IdentityResult.Success);
             var rolesController = new RolesController(_mockRoleManager.Object, _context);
-            var result = await rolesController.PostRole(new RoleCreateRequest()
+            var result = await rolesController.PostRole(new RoleCreateRequest
             {
                 Id = "test",
                 Name = "test"
@@ -62,9 +62,9 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PostRole_ValidInput_Failed()
         {
             _mockRoleManager.Setup(x => x.CreateAsync(It.IsAny<IdentityRole>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
             var rolesController = new RolesController(_mockRoleManager.Object, _context);
-            var result = await rolesController.PostRole(new RoleCreateRequest()
+            var result = await rolesController.PostRole(new RoleCreateRequest
             {
                 Id = "test",
                 Name = "test"
@@ -144,7 +144,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task GetById_HasData_ReturnSuccess()
         {
             _mockRoleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(new IdentityRole()
+                .ReturnsAsync(new IdentityRole
                 {
                     Id = "test1",
                     Name = "test1"
@@ -171,7 +171,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PutRole_ValidInput_Success()
         {
             _mockRoleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-               .ReturnsAsync(new IdentityRole()
+               .ReturnsAsync(new IdentityRole
                {
                    Id = "test",
                    Name = "test"
@@ -180,7 +180,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
             _mockRoleManager.Setup(x => x.UpdateAsync(It.IsAny<IdentityRole>()))
                 .ReturnsAsync(IdentityResult.Success);
             var rolesController = new RolesController(_mockRoleManager.Object, _context);
-            var result = await rolesController.PutRole("test", new RoleCreateRequest()
+            var result = await rolesController.PutRole("test", new RoleCreateRequest
             {
                 Id = "test",
                 Name = "test"
@@ -194,17 +194,17 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task PutRole_ValidInput_Failed()
         {
             _mockRoleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-             .ReturnsAsync(new IdentityRole()
+             .ReturnsAsync(new IdentityRole
              {
                  Id = "test",
                  Name = "test"
              });
 
             _mockRoleManager.Setup(x => x.UpdateAsync(It.IsAny<IdentityRole>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
 
             var rolesController = new RolesController(_mockRoleManager.Object, _context);
-            var result = await rolesController.PutRole("test", new RoleCreateRequest()
+            var result = await rolesController.PutRole("test", new RoleCreateRequest
             {
                 Id = "test",
                 Name = "test"
@@ -218,7 +218,7 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task DeleteRole_ValidInput_Success()
         {
             _mockRoleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-               .ReturnsAsync(new IdentityRole()
+               .ReturnsAsync(new IdentityRole
                {
                    Id = "test",
                    Name = "test"
@@ -235,14 +235,14 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers
         public async Task DeleteRole_ValidInput_Failed()
         {
             _mockRoleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-             .ReturnsAsync(new IdentityRole()
+             .ReturnsAsync(new IdentityRole
              {
                  Id = "test",
                  Name = "test"
              });
 
             _mockRoleManager.Setup(x => x.DeleteAsync(It.IsAny<IdentityRole>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError[] { }));
+                .ReturnsAsync(IdentityResult.Failed());
 
             var rolesController = new RolesController(_mockRoleManager.Object, _context);
             var result = await rolesController.DeleteRole("test");

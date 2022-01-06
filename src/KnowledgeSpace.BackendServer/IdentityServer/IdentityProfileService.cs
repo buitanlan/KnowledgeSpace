@@ -11,6 +11,7 @@ using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 namespace KnowledgeSpace.BackendServer.IdentityServer
 {
     public class IdentityProfileService: IProfileService

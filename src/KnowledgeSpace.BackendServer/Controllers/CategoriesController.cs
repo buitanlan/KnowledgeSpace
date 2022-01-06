@@ -26,7 +26,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [ApiValidationFilter]
         public async Task<IActionResult> PostCategory([FromBody] CategoryCreateRequest request)
         {
-            var category = new Category()
+            var category = new Category
             {
                 Name = request.Name,
                 ParentId = request.ParentId,
