@@ -1,10 +1,9 @@
-﻿namespace KnowledgeSpace.BackendServer.Constants
+﻿namespace KnowledgeSpace.BackendServer.Constants;
+
+public class SystemConstants
 {
-    public class SystemConstants
+    public class Claims
     {
-        public class Claims
-        {
-            public const string Permissions = "Permissions";
-        }
+        public const string Permissions = "Permissions";
     }
 }

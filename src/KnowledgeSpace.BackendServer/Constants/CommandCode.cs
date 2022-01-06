@@ -1,11 +1,10 @@
-﻿namespace KnowledgeSpace.BackendServer.Constants
+﻿namespace KnowledgeSpace.BackendServer.Constants;
+
+public enum CommandCode
 {
-    public enum CommandCode
-    {
-        Create,
-        Update,
-        Delete,
-        View,
-        Approve
-    }
+    Create,
+    Update,
+    Delete,
+    View,
+    Approve
 }

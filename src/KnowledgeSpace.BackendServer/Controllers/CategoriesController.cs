@@ -10,151 +10,150 @@ using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace KnowledgeSpace.BackendServer.Controllers
+namespace KnowledgeSpace.BackendServer.Controllers;
+
+public class CategoriesController: BaseController
 {
-    public class CategoriesController: BaseController
+    private readonly ApplicationDbContext _context;
+    public CategoriesController(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
-        public CategoriesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        _context = context;
+    }
 
         
-        [HttpPost]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Create)]
-        [ApiValidationFilter]
-        public async Task<IActionResult> PostCategory([FromBody] CategoryCreateRequest request)
+    [HttpPost]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Create)]
+    [ApiValidationFilter]
+    public async Task<IActionResult> PostCategory([FromBody] CategoryCreateRequest request)
+    {
+        var category = new Category
         {
-            var category = new Category
-            {
-                Name = request.Name,
-                ParentId = request.ParentId,
-                SortOrder = request.SortOrder,
-                SeoAlias = request.SeoAlias,
-                SeoDescription = request.SeoDescription
-            };
-            _context.Categories.Add(category);
-            var result = await _context.SaveChangesAsync();
+            Name = request.Name,
+            ParentId = request.ParentId,
+            SortOrder = request.SortOrder,
+            SeoAlias = request.SeoAlias,
+            SeoDescription = request.SeoDescription
+        };
+        _context.Categories.Add(category);
+        var result = await _context.SaveChangesAsync();
 
-            if (result > 0)
-            {
-                return CreatedAtAction(nameof(GetById), new { id = category.Id }, request);
-            }
-            return BadRequest(new ApiBadRequestResponse("Create category failed"));
+        if (result > 0)
+        {
+            return CreatedAtAction(nameof(GetById), new { id = category.Id }, request);
         }
+        return BadRequest(new ApiBadRequestResponse("Create category failed"));
+    }
 
         
-        [HttpGet]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
-        public async Task<IActionResult> GetCategories()
-        {
-            var categories = await _context.Categories.ToListAsync();
-            var categoryVms = categories.Select(CreateCategoryVm).ToList();
-            return Ok(categoryVms);
-        }
+    [HttpGet]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
+    public async Task<IActionResult> GetCategories()
+    {
+        var categories = await _context.Categories.ToListAsync();
+        var categoryVms = categories.Select(CreateCategoryVm).ToList();
+        return Ok(categoryVms);
+    }
 
         
-        [HttpGet("filter")]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
-        public async Task<IActionResult> GetCategoriesPaging(string filter, int pageIndex, int pageSize)
+    [HttpGet("filter")]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
+    public async Task<IActionResult> GetCategoriesPaging(string filter, int pageIndex, int pageSize)
+    {
+        var query = _context.Categories.AsQueryable();
+        if (!string.IsNullOrEmpty(filter))
         {
-            var query = _context.Categories.AsQueryable();
-            if (!string.IsNullOrEmpty(filter))
-            {
-                query = query.Where(x => x.Name.Contains(filter)
-                || x.Name.Contains(filter));
-            }
-            var totalRecords = await query.CountAsync();
-            var items = await query.Skip((pageIndex - 1 * pageSize))
-                .Take(pageSize).ToListAsync();
-
-            var data = items.Select(CreateCategoryVm).ToList();
-
-            var pagination = new Pagination<CategoryVm>
-            {
-                Items = data,
-                TotalRecords = totalRecords,
-            };
-            return Ok(pagination);
+            query = query.Where(x => x.Name.Contains(filter)
+                                     || x.Name.Contains(filter));
         }
+        var totalRecords = await query.CountAsync();
+        var items = await query.Skip((pageIndex - 1 * pageSize))
+            .Take(pageSize).ToListAsync();
+
+        var data = items.Select(CreateCategoryVm).ToList();
+
+        var pagination = new Pagination<CategoryVm>
+        {
+            Items = data,
+            TotalRecords = totalRecords,
+        };
+        return Ok(pagination);
+    }
         
 
-        [HttpGet("{id}")]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
-        [ApiValidationFilter]
-        public async Task<IActionResult> GetById(string id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return NotFound(new ApiNotFoundResponse($"Category with id: {id} is not found"));
+    [HttpGet("{id}")]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
+    [ApiValidationFilter]
+    public async Task<IActionResult> GetById(string id)
+    {
+        var category = await _context.Categories.FindAsync(id);
+        if (category == null)
+            return NotFound(new ApiNotFoundResponse($"Category with id: {id} is not found"));
 
+        CategoryVm categoryVm = CreateCategoryVm(category);
+        return Ok(categoryVm);
+    }
+
+        
+    [HttpPut("{id}")]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Update)]
+    [ApiValidationFilter]
+    public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
+    {
+        var category = await _context.Categories.FindAsync(id);
+        if (category == null)
+            return NotFound();
+
+        if (id == request.ParentId)
+        {
+            return BadRequest(new ApiBadRequestResponse("Category cannot be a child itself."));
+        }
+
+        category.Name = request.Name;
+        category.ParentId = request.ParentId;
+        category.SortOrder = request.SortOrder;
+        category.SeoDescription = request.SeoDescription;
+        category.SeoAlias = request.SeoAlias;
+
+        _context.Categories.Update(category);
+        var result = await _context.SaveChangesAsync();
+
+        if (result > 0)
+        {
+            return NoContent();
+        }
+        return BadRequest(new ApiBadRequestResponse("Update category failed"));
+    }
+
+        
+    [HttpDelete("{id}")]
+    [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
+    public async Task<IActionResult> DeleteCategory(string id)
+    {
+        var category = await _context.Categories.FindAsync(id);
+        if (category == null)
+            return NotFound();
+
+        _context.Categories.Remove(category);
+        var result = await _context.SaveChangesAsync();
+        if (result > 0)
+        {
             CategoryVm categoryVm = CreateCategoryVm(category);
             return Ok(categoryVm);
         }
+        return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
+    }
 
-        
-        [HttpPut("{id}")]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Update)]
-        [ApiValidationFilter]
-        public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
+    private static CategoryVm CreateCategoryVm(Category category)
+    {
+        return new()
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return NotFound();
-
-            if (id == request.ParentId)
-            {
-                return BadRequest(new ApiBadRequestResponse("Category cannot be a child itself."));
-            }
-
-            category.Name = request.Name;
-            category.ParentId = request.ParentId;
-            category.SortOrder = request.SortOrder;
-            category.SeoDescription = request.SeoDescription;
-            category.SeoAlias = request.SeoAlias;
-
-            _context.Categories.Update(category);
-            var result = await _context.SaveChangesAsync();
-
-            if (result > 0)
-            {
-                return NoContent();
-            }
-            return BadRequest(new ApiBadRequestResponse("Update category failed"));
-        }
-
-        
-        [HttpDelete("{id}")]
-        [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
-        public async Task<IActionResult> DeleteCategory(string id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return NotFound();
-
-            _context.Categories.Remove(category);
-            var result = await _context.SaveChangesAsync();
-            if (result > 0)
-            {
-                CategoryVm categoryVm = CreateCategoryVm(category);
-                return Ok(categoryVm);
-            }
-            return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
-        }
-
-        private static CategoryVm CreateCategoryVm(Category category)
-        {
-            return new()
-            {
-                Id = category.Id,
-                Name = category.Name,
-                SortOrder = category.SortOrder,
-                ParentId = category.ParentId,
-                NumberOfTickets = category.NumberOfTickets,
-                SeoDescription = category.SeoDescription,
-                SeoAlias = category.SeoDescription
-            };
-        }
+            Id = category.Id,
+            Name = category.Name,
+            SortOrder = category.SortOrder,
+            ParentId = category.ParentId,
+            NumberOfTickets = category.NumberOfTickets,
+            SeoDescription = category.SeoDescription,
+            SeoAlias = category.SeoDescription
+        };
     }
 }

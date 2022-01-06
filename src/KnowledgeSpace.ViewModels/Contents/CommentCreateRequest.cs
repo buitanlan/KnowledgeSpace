@@ -1,9 +1,8 @@
-﻿namespace KnowledgeSpace.ViewModels.Contents
-{
-    public class CommentCreateRequest
-    {
-        public string Content { get; set; }
+﻿namespace KnowledgeSpace.ViewModels.Contents;
 
-        public int KnowledgeBaseId { get; set; }
-    }
+public class CommentCreateRequest
+{
+    public string Content { get; set; }
+
+    public int KnowledgeBaseId { get; set; }
 }

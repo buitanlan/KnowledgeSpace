@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace KnowledgeSpace.ViewModels.Contents
-{
-    public class VoteVm
-    {
-        public int KnowledgeBaseId { get; set; }
-        public string UserId { get; set; }
+namespace KnowledgeSpace.ViewModels.Contents;
 
-        public DateTime CreateDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
-    }
+public class VoteVm
+{
+    public int KnowledgeBaseId { get; set; }
+    public string UserId { get; set; }
+
+    public DateTime CreateDate { get; set; }
+    public DateTime? LastModifiedDate { get; set; }
 }

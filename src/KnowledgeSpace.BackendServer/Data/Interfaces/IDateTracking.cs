@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace KnowledgeSpace.BackendServer.Data.Interfaces
+namespace KnowledgeSpace.BackendServer.Data.Interfaces;
+
+public interface IDateTracking
 {
-    public interface IDateTracking
-    {
-        DateTime CreateDate { get; set; }
-        DateTime? LastModifiedDate { get; set; }
-    }
+    DateTime CreateDate { get; set; }
+    DateTime? LastModifiedDate { get; set; }
 }

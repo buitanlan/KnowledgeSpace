@@ -9,29 +9,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace KnowledgeSpace.BackendServer.Controllers
-{
-	public class PermissionsController : BaseController
-	{
-		private readonly IConfiguration _configuration;
+namespace KnowledgeSpace.BackendServer.Controllers;
 
-		public PermissionsController(IConfiguration configuration)
+public class PermissionsController : BaseController
+{
+	private readonly IConfiguration _configuration;
+
+	public PermissionsController(IConfiguration configuration)
+	{
+		_configuration = configuration;
+	}
+
+	[HttpGet]
+	[ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
+
+	public async Task<IActionResult> GetCommandViews()
+	{
+		await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+		if (conn.State == ConnectionState.Closed)
 		{
-			_configuration = configuration;
+			await conn.OpenAsync();
 		}
 
-		[HttpGet]
-		[ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
-
-		public async Task<IActionResult> GetCommandViews()
-		{
-			await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-			if (conn.State == ConnectionState.Closed)
-			{
-				await conn.OpenAsync();
-			}
-
-			var sql = @"SELECT f.Id,
+		var sql = @"SELECT f.Id,
 	                       f.Name,
 	                       f.ParentId,
 	                       sum(case when sa.Id = 'Create' then 1 else 0 end) as HasCreate,
@@ -44,8 +44,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                         group by f.Id,f.Name, f.ParentId
                         order by f.ParentId";
 
-			var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
-			return Ok(result.ToList());
-		}
+		var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
+		return Ok(result.ToList());
 	}
 }
