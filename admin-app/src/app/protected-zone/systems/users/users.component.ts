@@ -6,7 +6,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
   public users$: Observable<User[]> = of([]);
