@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
     }
 
     isToggled(): boolean {
-        // tslint:disable-next-line:no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const dom: Element = document.querySelector('body')!;
         return dom.classList.contains(this.pushRightClass);
     }
