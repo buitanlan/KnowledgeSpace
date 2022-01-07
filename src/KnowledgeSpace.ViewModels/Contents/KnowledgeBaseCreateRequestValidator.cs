@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 
-namespace KnowledgeSpace.ViewModels.Contents
+namespace KnowledgeSpace.ViewModels.Contents;
+
+public class KnowledgeBaseCreateRequestValidator : AbstractValidator<KnowledgeBaseCreateRequest>
 {
-    public class KnowledgeBaseCreateRequestValidator : AbstractValidator<KnowledgeBaseCreateRequest>
-    {
-    }
 }

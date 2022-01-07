@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace KnowledgeSpace.ViewModels.Systems
+namespace KnowledgeSpace.ViewModels.Systems;
+
+public class UpdatePermissionRequest
 {
-    public class UpdatePermissionRequest
-    {
-        public List<PermissionVm> Permissions { get; set; } = new();
-    }
+    public List<PermissionVm> Permissions { get; set; } = new();
 }

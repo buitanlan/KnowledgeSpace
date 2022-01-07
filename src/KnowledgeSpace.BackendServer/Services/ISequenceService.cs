@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace KnowledgeSpace.BackendServer.Services;
 
-namespace KnowledgeSpace.BackendServer.Services
+public interface ISequenceService
 {
-    public interface ISequenceService
-    {
-        Task<int> GetKnowledgeBaseNewId();
-    }
+    Task<int> GetKnowledgeBaseNewId();
 }

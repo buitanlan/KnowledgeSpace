@@ -1,22 +1,21 @@
 ﻿using System;
 
-namespace KnowledgeSpace.ViewModels.Contents
+namespace KnowledgeSpace.ViewModels.Contents;
+
+public class ReportVm
 {
-    public class ReportVm
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public int? KnowledgeBaseId { get; set; }
+    public int? KnowledgeBaseId { get; set; }
 
-        public string Content { get; set; }
+    public string Content { get; set; }
 
-        public string ReportUserId { get; set; }
+    public string ReportUserId { get; set; }
 
-        public DateTime CreateDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
+    public DateTime CreateDate { get; set; }
+    public DateTime? LastModifiedDate { get; set; }
 
-        public bool IsProcessed { get; set; }
+    public bool IsProcessed { get; set; }
 
-        public string Type { get; set; }
-    }
+    public string Type { get; set; }
 }

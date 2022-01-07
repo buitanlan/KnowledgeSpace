@@ -1,45 +1,40 @@
-﻿using System;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
 
-namespace KnowledgeSpace.BackendServer.Helpers
+namespace KnowledgeSpace.BackendServer.Helpers;
+
+public class ErrorWrappingMiddleware
 {
-    public class ErrorWrappingMiddleware
-    {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ErrorWrappingMiddleware> _logger;
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ErrorWrappingMiddleware> _logger;
 
-        public ErrorWrappingMiddleware(RequestDelegate next, ILogger<ErrorWrappingMiddleware> logger)
+    public ErrorWrappingMiddleware(RequestDelegate next, ILogger<ErrorWrappingMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            await _next.Invoke(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+
+            context.Response.StatusCode = 500;
         }
 
-        public async Task Invoke(HttpContext context)
+        if (!context.Response.HasStarted)
         {
-            try
-            {
-                await _next.Invoke(context);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
+            context.Response.ContentType = "application/json";
 
-                context.Response.StatusCode = 500;
-            }
+            var response = new ApiResponse(context.Response.StatusCode);
 
-            if (!context.Response.HasStarted)
-            {
-                context.Response.ContentType = "application/json";
+            var json = JsonSerializer.Serialize(response);
 
-                var response = new ApiResponse(context.Response.StatusCode);
-
-                var json = JsonSerializer.Serialize(response);
-
-                await context.Response.WriteAsync(json);
-            }
+            await context.Response.WriteAsync(json);
         }
     }
 }

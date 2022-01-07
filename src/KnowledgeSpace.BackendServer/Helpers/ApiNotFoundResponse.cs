@@ -1,10 +1,9 @@
-﻿namespace KnowledgeSpace.BackendServer.Helpers
+﻿namespace KnowledgeSpace.BackendServer.Helpers;
+
+public class ApiNotFoundResponse: ApiResponse
 {
-    public class ApiNotFoundResponse: ApiResponse
+    public ApiNotFoundResponse(string message)
+        : base(404, message)
     {
-        public ApiNotFoundResponse(string message)
-            : base(404, message)
-        {
-        }
     }
 }

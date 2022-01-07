@@ -1,30 +1,27 @@
 ﻿using System.Data;
-using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
-namespace KnowledgeSpace.BackendServer.Services
+namespace KnowledgeSpace.BackendServer.Services;
+
+public class SequenceService: ISequenceService
 {
-    public class SequenceService: ISequenceService
+    private readonly IConfiguration _configuration;
+
+    public SequenceService(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
-
-        public SequenceService(IConfiguration configuration)
+        _configuration = configuration;
+    }
+    public async Task<int> GetKnowledgeBaseNewId()
+    {
+        await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+        if (conn.State == ConnectionState.Closed)
         {
-            _configuration = configuration;
+            await conn.OpenAsync();
         }
-        public async Task<int> GetKnowledgeBaseNewId()
-        {
-            await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            if (conn.State == ConnectionState.Closed)
-            {
-                await conn.OpenAsync();
-            }
 
-            var result = await conn.ExecuteScalarAsync<int>(@"SELECT (NEXT VALUE FOR KnowledgeBaseSequence)", null,
-                null, 120, CommandType.Text);
-            return result;
-        }
+        var result = await conn.ExecuteScalarAsync<int>(@"SELECT (NEXT VALUE FOR KnowledgeBaseSequence)", null,
+            null, 120, CommandType.Text);
+        return result;
     }
 }

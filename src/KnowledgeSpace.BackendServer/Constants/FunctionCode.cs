@@ -1,24 +1,23 @@
-﻿namespace KnowledgeSpace.BackendServer.Constants
+﻿namespace KnowledgeSpace.BackendServer.Constants;
+
+public enum FunctionCode
 {
-    public enum FunctionCode
-    {
-        Dashboard,
+    Dashboard,
 
-        Content,
-        ContentCategory,
-        ContentKnowledgeBase,
-        ContentComment,
-        ContentReport,
+    Content,
+    ContentCategory,
+    ContentKnowledgeBase,
+    ContentComment,
+    ContentReport,
 
-        Statistic,
-        StatisticMonthlyNewMember,
-        StatisticMonthlyNewKnowledgeBase,
-        StatisticMonthlyComment,
+    Statistic,
+    StatisticMonthlyNewMember,
+    StatisticMonthlyNewKnowledgeBase,
+    StatisticMonthlyComment,
 
-        System,
-        SystemUser,
-        SystemRole,
-        SystemFunction,
-        SystemPermission,
-    }
+    System,
+    SystemUser,
+    SystemRole,
+    SystemFunction,
+    SystemPermission,
 }

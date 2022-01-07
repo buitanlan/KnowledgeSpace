@@ -1,21 +1,20 @@
-﻿namespace KnowledgeSpace.ViewModels.Systems
+﻿namespace KnowledgeSpace.ViewModels.Systems;
+
+public class PermissionScreenVm
 {
-    public class PermissionScreenVm
-    {
-        public string Id { get; set; }
+    public string Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string ParentId { get; set; }
+    public string ParentId { get; set; }
 
-        public bool HasCreate { get; set; }
+    public bool HasCreate { get; set; }
 
-        public bool HasUpdate { get; set; }
+    public bool HasUpdate { get; set; }
 
-        public bool HasDelete { get; set; }
+    public bool HasDelete { get; set; }
 
-        public bool HasView { get; set; }
+    public bool HasView { get; set; }
 
-        public bool HasApprove { get; set; }
-    }
+    public bool HasApprove { get; set; }
 }
