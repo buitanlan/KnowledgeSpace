@@ -33,7 +33,7 @@ public class IdentityProfileService: IProfileService
     {
         var sub = context.Subject.GetSubjectId();
         var user = await _userManager.FindByIdAsync(sub);
-        if (user == null)
+        if (user is null)
         {
             throw new ArgumentException("");
         }

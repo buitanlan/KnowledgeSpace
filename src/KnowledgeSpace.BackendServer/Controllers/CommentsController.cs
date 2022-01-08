@@ -13,7 +13,7 @@ public partial class KnowledgeBasesController
 {
     #region Comments
 
-    [HttpGet("{knowledgeBaseId}/comments/filter")]
+    [HttpGet("{knowledgeBaseId:int}/comments/filter")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
     public async Task<IActionResult> GetCommentsPaging(int knowledgeBaseId, string filter, int pageIndex, int pageSize)
     {
@@ -22,8 +22,10 @@ public partial class KnowledgeBasesController
         {
             query = query.Where(x => x.Content.Contains(filter));
         }
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip((pageIndex - 1 * pageSize))
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)
             .Select(c => new CommentVm
             {
@@ -45,12 +47,12 @@ public partial class KnowledgeBasesController
     }
         
 
-    [HttpGet("{knowledgeBaseId}/comments/{commentId}")]
+    [HttpGet("{knowledgeBaseId:int}/comments/{commentId}")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
     public async Task<IActionResult> GetCommentDetail(int commentId, int knowledgeBaseId)
     {
-        var comment = await _context.Comments.FindAsync(commentId);
-        if (comment == null)
+        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        if (comment is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found comment with id: {commentId}"));
 
         var commentVm = new CommentVm
@@ -67,7 +69,7 @@ public partial class KnowledgeBasesController
     }
 
         
-    [HttpPost("{knowledgeBaseId}/comments")]
+    [HttpPost("{knowledgeBaseId:int}/comments")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.Create)]
     public async Task<IActionResult> PostComment(int knowledgeBaseId, [FromBody] CommentCreateRequest request)
     {
@@ -79,7 +81,7 @@ public partial class KnowledgeBasesController
         };
         _context.Comments.Add(comment);
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id: {knowledgeBaseId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) + 1;
@@ -95,12 +97,12 @@ public partial class KnowledgeBasesController
     }
 
         
-    [HttpPut("{knowledgeBaseId}/comments/{commentId}")]
+    [HttpPut("{knowledgeBaseId:int}/comments/{commentId:int}")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.Update)]
     public async Task<IActionResult> PutComment(int commentId, [FromBody] CommentCreateRequest request, int knowledgeBaseId)
     {
-        var comment = await _context.Comments.FindAsync(commentId);
-        if (comment == null)
+        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        if (comment is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found comment with id: {commentId}"));
         if (User.Identity != null && comment.OwnwerUserId != User.Identity.Name)
             return Forbid();
@@ -123,13 +125,13 @@ public partial class KnowledgeBasesController
     public async Task<IActionResult> DeleteComment(int knowledgeBaseId, int commentId)
     {
 
-        var comment = await _context.Comments.FindAsync(commentId);
-        if (comment == null)
+        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        if (comment is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found the comment with id: {commentId}"));
 
         _context.Comments.Remove(comment);
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id: {knowledgeBaseId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) - 1;

@@ -111,7 +111,7 @@ public class UsersControllerTest
             .Returns(_userSources.AsQueryable().BuildMock().Object);
 
         var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
-        var result = await usersController.GetUsersPaging(null, 1, 2);
+        var result = await usersController.GetUsersPaging(null!, 1, 2);
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
         if (okResult is {Value: Pagination<UserVm> userVms})
         {

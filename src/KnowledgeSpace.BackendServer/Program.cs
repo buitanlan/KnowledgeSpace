@@ -20,7 +20,7 @@ builder.Services.AddRazorPages(options =>
         foreach (var selector in model.Selectors)
         {
             var attributeRouteModel = selector.AttributeRouteModel;
-            if (attributeRouteModel == null) continue;
+            if (attributeRouteModel is null) continue;
             attributeRouteModel.Order = -1;
             if (attributeRouteModel.Template != null)
                 attributeRouteModel.Template = attributeRouteModel.Template.Remove(0, "Identity".Length);
