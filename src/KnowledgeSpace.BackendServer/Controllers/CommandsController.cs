@@ -18,12 +18,14 @@ public class CommandsController: BaseController
     [HttpGet]
     public async Task<IActionResult> GetCommands()
     {
-        var commands = _context.Commands;
-        var commandVms = await commands.Select(c => new CommandVm
-        {
-            Id = c.Id,
-            Name = c.Name
-        }).ToListAsync();
+        var commandVms = await _context.Commands
+            .AsNoTracking()
+            .Select(c => new CommandVm
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .ToListAsync();
         return Ok(commandVms);
     }
 

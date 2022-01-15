@@ -23,13 +23,13 @@ public class ConfirmEmailModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(string userId, string code)
     {
-        if (userId == null || code == null)
+        if (userId is null || code is null)
         {
             return RedirectToPage("/Index");
         }
 
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
+        if (user is null)
         {
             return NotFound($"Unable to load user with ID '{userId}'.");
         }
