@@ -11,7 +11,6 @@ const string KspSpecificOrigins = "KspSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-
 builder.Services.AddControllersWithViews()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleCreateRequestValidator>());
 builder.Services.AddRazorPages(options =>
@@ -21,7 +20,7 @@ builder.Services.AddRazorPages(options =>
         foreach (var selector in model.Selectors)
         {
             var attributeRouteModel = selector.AttributeRouteModel;
-            if (attributeRouteModel == null) continue;
+            if (attributeRouteModel is null) continue;
             attributeRouteModel.Order = -1;
             if (attributeRouteModel.Template != null)
                 attributeRouteModel.Template = attributeRouteModel.Template.Remove(0, "Identity".Length);
@@ -68,26 +67,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseErrorWrapping();
-            
 app.UseStaticFiles();
-
 app.UseIdentityServer();
-
 app.UseAuthentication();
-            
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseAuthorization();
-            
 app.UseCors(KspSpecificOrigins);
-
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();
     endpoints.MapRazorPages();
 });
-            
 app.UseSwaggerDocument();
 await app.RunAsync();

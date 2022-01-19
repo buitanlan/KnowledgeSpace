@@ -14,6 +14,7 @@ public partial class KnowledgeBasesController
     public async Task<IActionResult> GetVotes(int knowledgeBaseId)
     {
         var votes = await _context.Votes
+            .AsNoTracking()
             .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
             .Select(x => new VoteVm
             {
@@ -21,7 +22,8 @@ public partial class KnowledgeBasesController
                 KnowledgeBaseId = x.KnowledgeBaseId,
                 CreateDate = x.CreateDate,
                 LastModifiedDate = x.LastModifiedDate
-            }).ToListAsync();
+            })
+            .ToListAsync();
 
         return Ok(votes);
     }
@@ -30,7 +32,9 @@ public partial class KnowledgeBasesController
     [HttpPost("{knowledgeBaseId}/votes")]
     public async Task<IActionResult> PostVote(int knowledgeBaseId, [FromBody] VoteCreateRequest request)
     {
-        var vote = await _context.Votes.FindAsync(knowledgeBaseId, request.UserId);
+        var vote = await _context.Votes
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x=> x.KnowledgeBaseId == knowledgeBaseId && x.UserId == request.UserId);
         if (vote != null)
             return BadRequest(new ApiBadRequestResponse("This user has been voted for this KB"));
 
@@ -41,7 +45,7 @@ public partial class KnowledgeBasesController
         };
         _context.Votes.Add(vote);
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id {knowledgeBaseId}"));
         knowledgeBase.NumberOfVotes = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) + 1;
@@ -59,11 +63,13 @@ public partial class KnowledgeBasesController
     [HttpDelete("{knowledgeBaseId}/votes/{userId}")]
     public async Task<IActionResult> DeleteVote(int knowledgeBaseId, string userId)
     {
-        var vote = await _context.Votes.FindAsync(knowledgeBaseId, userId);
-        if (vote == null)
+        var vote = await _context.Votes
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.KnowledgeBaseId == knowledgeBaseId && x.UserId == userId);
+        if (vote is null)
             return NotFound();
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id {knowledgeBaseId}"));
         knowledgeBase.NumberOfVotes = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) - 1;

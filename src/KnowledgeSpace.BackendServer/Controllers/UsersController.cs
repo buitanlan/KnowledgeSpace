@@ -58,16 +58,19 @@ public class UsersController : BaseController
     {
         var users = _userManager.Users;
 
-        var userVms = await users.Select(u => new UserVm
-        {
-            Id = u.Id,
-            UserName = u.UserName,
-            Dob = u.Dob,
-            Email = u.Email,
-            PhoneNumber = u.PhoneNumber,
-            FirstName = u.FirstName,
-            LastName = u.LastName
-        }).ToListAsync();
+        var userVms = await users
+            .AsNoTracking()
+            .Select(u => new UserVm
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Dob = u.Dob,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                FirstName = u.FirstName,
+                LastName = u.LastName
+            })
+            .ToListAsync();
         return Ok(userVms);
     }
 
@@ -83,8 +86,10 @@ public class UsersController : BaseController
                 x.Email.Contains(filter) || x.UserName.Contains(filter) || x.PhoneNumber.Contains(filter));
         }
 
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip(pageIndex - 1 * pageSize)
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)
             .Select(u => new UserVm
             {
@@ -95,7 +100,8 @@ public class UsersController : BaseController
                 PhoneNumber = u.PhoneNumber,
                 FirstName = u.FirstName,
                 LastName = u.LastName
-            }).ToListAsync();
+            })
+            .ToListAsync();
 
         var pagination = new Pagination<UserVm>
         {
@@ -112,7 +118,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> GetById(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
-        if (user == null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
+        if (user is null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
         var userVm = new UserVm
         {
             Id = user.Id,
@@ -132,7 +138,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> PutUser(string id, [FromBody] UserCreateRequest request)
     {
         var user = await _userManager.FindByIdAsync(id);
-        if(user == null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
+        if(user is null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
@@ -151,7 +157,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> PutUserPassword(string id, [FromBody]UserPasswordChangeRequest request)
     {
         var user = await _userManager.FindByIdAsync(id);
-        if (user == null)
+        if (user is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
@@ -169,7 +175,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> DeleteUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
-        if (user == null) return NotFound();
+        if (user is null) return NotFound();
 
         var result = await _userManager.DeleteAsync(user);
 
@@ -208,7 +214,9 @@ public class UsersController : BaseController
                 ParentId = f.ParentId,
                 SortOrder = f.SortOrder,
             };
-        var data = await query.Distinct()
+        var data = await query
+            .AsNoTracking()
+            .Distinct()
             .OrderBy(x => x.ParentId)
             .ThenBy(x => x.SortOrder)
             .ToListAsync();

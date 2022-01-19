@@ -99,8 +99,8 @@ public partial class KnowledgeBasesController : BaseController
         foreach (var labelText in labels)
         {
             var labelId = TextHelper.ToUnsignedString(labelText);
-            var existingLabel = await _context.Labels.FindAsync(labelId);
-            if (existingLabel == null)
+            var existingLabel = await _context.Labels.AsNoTracking().SingleOrDefaultAsync(x =>x.Id == labelId);
+            if (existingLabel is null)
             {
                 var labelEntity = new Label
                 {
@@ -123,15 +123,17 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetKnowledgeBases()
     {
-        var knowledgeBases = _context.KnowledgeBases;
-        var knowledgeBaseVms = await knowledgeBases.Select(u => new KnowledgeBaseQuickVm
-        {
-            Id = u.Id,
-            CategoryId = u.CategoryId,
-            Description = u.Description,
-            SeoAlias = u.SeoAlias,
-            Title = u.Title
-        }).ToListAsync();
+        var knowledgeBaseVms = await _context.KnowledgeBases
+            .AsNoTracking()
+            .Select(u => new KnowledgeBaseQuickVm
+            {
+                Id = u.Id,
+                CategoryId = u.CategoryId,
+                Description = u.Description,
+                SeoAlias = u.SeoAlias,
+                Title = u.Title
+            })
+            .ToListAsync();
 
         return Ok(knowledgeBaseVms);
     }
@@ -146,8 +148,10 @@ public partial class KnowledgeBasesController : BaseController
         {
             query = query.Where(x => x.Title.Contains(filter));
         }
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip((pageIndex - 1 * pageSize))
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip((pageIndex - 1 * pageSize))
             .Take(pageSize)
             .Select(u => new KnowledgeBaseQuickVm
             {
@@ -173,7 +177,6 @@ public partial class KnowledgeBasesController : BaseController
         return new()
         {
             Id = knowledgeBase.CategoryId,
-
             CategoryId = knowledgeBase.CategoryId,
             Title = knowledgeBase.Title,
             SeoAlias = knowledgeBase.SeoAlias,
@@ -199,7 +202,7 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetById(int id)
     {
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(id);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found knowledge base with id: {id}"));
 
@@ -213,8 +216,8 @@ public partial class KnowledgeBasesController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PutKnowledgeBase(int id, [FromBody] KnowledgeBaseCreateRequest request)
     {
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(id);
-        if (knowledgeBase == null)
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found knowledge base with id {id}"));
         UpdateKnowledgeBase(request, knowledgeBase);
         _context.KnowledgeBases.Update(knowledgeBase);
@@ -234,20 +237,17 @@ public partial class KnowledgeBasesController : BaseController
 
     [HttpDelete("{id}")]
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.Delete)]
-    public async Task<IActionResult> DeleteKnowledgeBase(string id)
+    public async Task<IActionResult> DeleteKnowledgeBase(int id)
     {
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(id);
-        if (knowledgeBase == null)
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot find knowledge base with {id}"));
 
         _context.KnowledgeBases.Remove(knowledgeBase);
         var result = await _context.SaveChangesAsync();
-        if (result > 0)
-        {
-            var knowledgeBaseVm = CreateKnowledgeBaseVm(knowledgeBase);
-            return Ok(knowledgeBaseVm);
-        }
-        return BadRequest(new ApiBadRequestResponse("Cannot delete this knowledge Base"));
+        if (result <= 0) return BadRequest(new ApiBadRequestResponse("Cannot delete this knowledge Base"));
+        var knowledgeBaseVm = CreateKnowledgeBaseVm(knowledgeBase);
+        return Ok(knowledgeBaseVm);
     }
         
     private static void UpdateKnowledgeBase(KnowledgeBaseCreateRequest request, KnowledgeBase knowledgeBase)

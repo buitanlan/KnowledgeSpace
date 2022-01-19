@@ -44,13 +44,15 @@ public class RolesController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetRoles()
     {
-        var roles = _roleManager.Roles;
 
-        var roleVms = await roles.Select(r => new RoleVm
-        {
-            Id = r.Id,
-            Name = r.Name
-        }).ToListAsync();
+        var roleVms = await _roleManager.Roles
+            .AsNoTracking()
+            .Select(r => new RoleVm
+            {
+                Id = r.Id,
+                Name = r.Name
+            }).
+            ToListAsync();
         return Ok(roleVms);
     }
 
@@ -65,8 +67,10 @@ public class RolesController : BaseController
             query = query.Where(x => x.Id.Contains(keyword) || x.Name.Contains(keyword));
         }
 
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip(pageIndex - 1 * pageSize)
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)
             .Select(x => new RoleVm
             {
@@ -89,7 +93,7 @@ public class RolesController : BaseController
     public async Task<IActionResult> GetById(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
-        if (role == null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
+        if (role is null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
         var roleVm = new RoleVm
         {
             Id = role.Id,
@@ -107,7 +111,7 @@ public class RolesController : BaseController
         if(id  != roleVm.Id) return BadRequest(new ApiBadRequestResponse("Role id not match"));
 
         var role = await _roleManager.FindByIdAsync(id);
-        if(role == null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
+        if(role is null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
 
         role.Name = roleVm.Name;
         role.NormalizedName = roleVm.Name.ToUpper();
@@ -124,7 +128,7 @@ public class RolesController : BaseController
     public async Task<IActionResult> DeleteRole(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
-        if (role == null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
+        if (role is null) return NotFound(new ApiNotFoundResponse($"Cannot find role with id: {id}"));
 
         var result = await _roleManager.DeleteAsync(role);
 

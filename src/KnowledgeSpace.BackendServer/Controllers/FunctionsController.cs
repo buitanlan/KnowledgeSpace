@@ -25,7 +25,7 @@ public class FunctionsController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PostFunction([FromBody]FunctionCreateRequest  request)
     {
-        var dbFunction = await _context.Functions.FindAsync(request.Id);
+        var dbFunction = await _context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == request.Id);
         if (dbFunction is not null)
             return BadRequest(new ApiBadRequestResponse($"Function with id {request.Id} is existed!"));
             
@@ -53,16 +53,17 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
     public async Task<IActionResult> GetFunctions()
     {
-        var functions = _context.Functions;
-
-        var functionVms = await functions.Select(u => new FunctionVm
-        {
-            Id = u.Id,
-            Name = u.Name,
-            Url = u.Url,
-            SortOrder = u.SortOrder,
-            ParentId = u.ParentId
-        }).ToListAsync();
+        var functionVms = await _context.Functions
+            .AsNoTracking()
+            .Select(u => new FunctionVm
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Url = u.Url,
+                SortOrder = u.SortOrder,
+                ParentId = u.ParentId
+            })
+            .ToListAsync();
         return Ok(functionVms);
     }
  
@@ -79,8 +80,10 @@ public class FunctionsController : BaseController
                 x.Name.Contains(filter) || x.Id.Contains(filter) || x.Url.Contains(filter));
         }
 
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip(pageIndex - 1 * pageSize)
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)
             .Select(u => new FunctionVm
             {
@@ -89,7 +92,8 @@ public class FunctionsController : BaseController
                 Url = u.Url,
                 SortOrder = u.SortOrder,
                 ParentId = u.ParentId
-            }).ToListAsync();
+            })
+            .ToListAsync();
 
         var pagination = new Pagination<FunctionVm>
         {
@@ -105,8 +109,8 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
     public async Task<IActionResult> GetById(string id)
     {
-        var function = await _context.Functions.FindAsync(id);
-        if (function == null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
+        var function = await _context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
         var functionVm = new FunctionVm
         {
             Id = function.Id,
@@ -123,8 +127,8 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
     public async Task<IActionResult> PutFunction(string id, [FromBody] FunctionCreateRequest request)
     {
-        var function = await _context.Functions.FindAsync(id);
-        if(function == null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
+        var function = await _context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if(function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
         function.Name = request.Name;
         function.ParentId = request.ParentId;
@@ -143,8 +147,8 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Delete)]
     public async Task<IActionResult> DeleteFunction(string id)
     {
-        var function = await _context.Functions.FindAsync(id);
-        if (function == null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
+        var function = await _context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
         _context.Functions.Remove(function);
         var result = await _context.SaveChangesAsync();
@@ -179,11 +183,14 @@ public class FunctionsController : BaseController
                 commandInFunction.FunctionId
             };
         query = query.Where(x => x.FunctionId == functionId);
-        var data = await query.Select(x => new CommandVm
-        {
-            Id = x.Id,
-            Name = x.Name
-        }).ToListAsync();
+        var data = await query
+            .AsNoTracking()
+            .Select(x => new CommandVm
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .ToListAsync();
         return Ok(data);
     }
         
@@ -205,11 +212,14 @@ public class FunctionsController : BaseController
                 commandInFunction.FunctionId
             };
         query = query.Where(x => x.FunctionId != functionId);
-        var data = await query.Select(x => new CommandVm
-        {
-            Id = x.Id,
-            Name = x.Name
-        }).ToListAsync();
+        var data = await query
+            .AsNoTracking()
+            .Select(x => new CommandVm
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .ToListAsync();
         return Ok(data);
     }
         
@@ -219,7 +229,8 @@ public class FunctionsController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
     {
-        var commandInFunction = await _context.CommandInFunctions.FindAsync(request.CommandId, request.FunctionId);
+        var commandInFunction = await _context.CommandInFunctions.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.CommandId == request.CommandId && x.FunctionId ==  request.FunctionId);
         if (commandInFunction != null)
             return BadRequest(new ApiBadRequestResponse("This command has been added to function"));
 
@@ -244,8 +255,10 @@ public class FunctionsController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> DeleteCommandToFunction(string functionId, string commandId)
     {
-        var commandInFunction = await _context.CommandInFunctions.FindAsync(functionId, commandId);
-        if (commandInFunction == null)
+        var commandInFunction = await _context.CommandInFunctions
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.CommandId == commandId && x.FunctionId ==  functionId);
+        if (commandInFunction is null)
             return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
 
         var entity = new CommandInFunction

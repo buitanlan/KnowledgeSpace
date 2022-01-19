@@ -19,8 +19,10 @@ public partial class KnowledgeBasesController
         {
             query = query.Where(x => x.Content.Contains(filter));
         }
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip((pageIndex - 1 * pageSize))
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip((pageIndex - 1 * pageSize))
             .Take(pageSize)
             .Select(c => new ReportVm
             {
@@ -45,8 +47,8 @@ public partial class KnowledgeBasesController
     [HttpGet("{knowledgeBaseId}/reports/{reportId}")]
     public async Task<IActionResult> GetReportDetail(int knowledgeBaseId, int reportId)
     {
-        var report = await _context.Reports.FindAsync(reportId);
-        if (report == null)
+        var report = await _context.Reports.AsNoTracking().SingleOrDefaultAsync(x => x.Id == reportId);
+        if (report is null)
             return NotFound();
 
         var reportVm = new ReportVm
@@ -76,7 +78,7 @@ public partial class KnowledgeBasesController
         };
         _context.Reports.Add(report);
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id {knowledgeBaseId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfReports.GetValueOrDefault(0) + 1;
@@ -94,8 +96,8 @@ public partial class KnowledgeBasesController
     [ApiValidationFilter]
     public async Task<IActionResult> PutReport(int reportId, [FromBody] CommentCreateRequest request)
     {
-        var report = await _context.Reports.FindAsync(reportId);
-        if (report == null)
+        var report = await _context.Reports.AsNoTracking().SingleOrDefaultAsync(x => x.Id == reportId);
+        if (report is null)
             return BadRequest(new ApiNotFoundResponse($"Cannot found report with id {reportId}"));
         if (User.Identity != null && report.ReportUserId != User.Identity.Name)
             return Forbid();
@@ -115,13 +117,13 @@ public partial class KnowledgeBasesController
     [HttpDelete("{knowledgeBaseId}/reports/{reportId}")]
     public async Task<IActionResult> DeleteReport(int knowledgeBaseId, int reportId)
     {
-        var report = await _context.Reports.FindAsync(reportId);
+        var report = await _context.Reports.AsNoTracking().SingleOrDefaultAsync(x => x.Id == reportId);
         if (report is null)
             return NotFound();
 
         _context.Reports.Remove(report);
 
-        var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
+        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found report with id {reportId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfReports.GetValueOrDefault(0) - 1;

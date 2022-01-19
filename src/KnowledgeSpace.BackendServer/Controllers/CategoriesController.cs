@@ -47,7 +47,7 @@ public class CategoriesController: BaseController
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
     public async Task<IActionResult> GetCategories()
     {
-        var categories = await _context.Categories.ToListAsync();
+        var categories = await _context.Categories.AsNoTracking().ToListAsync();
         var categoryVms = categories.Select(CreateCategoryVm).ToList();
         return Ok(categoryVms);
     }
@@ -63,9 +63,12 @@ public class CategoriesController: BaseController
             query = query.Where(x => x.Name.Contains(filter)
                                      || x.Name.Contains(filter));
         }
-        var totalRecords = await query.CountAsync();
-        var items = await query.Skip((pageIndex - 1 * pageSize))
-            .Take(pageSize).ToListAsync();
+        var totalRecords = await query.AsNoTracking().CountAsync();
+        var items = await query
+            .AsNoTracking()
+            .Skip((pageIndex - 1 * pageSize))
+            .Take(pageSize)
+            .ToListAsync();
 
         var data = items.Select(CreateCategoryVm).ToList();
 
@@ -78,16 +81,16 @@ public class CategoriesController: BaseController
     }
         
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
     [ApiValidationFilter]
-    public async Task<IActionResult> GetById(string id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null)
+        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (category is null)
             return NotFound(new ApiNotFoundResponse($"Category with id: {id} is not found"));
 
-        CategoryVm categoryVm = CreateCategoryVm(category);
+        var categoryVm = CreateCategoryVm(category);
         return Ok(categoryVm);
     }
 
@@ -97,8 +100,8 @@ public class CategoriesController: BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null)
+        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        if (category is null)
             return NotFound();
 
         if (id == request.ParentId)
@@ -125,25 +128,22 @@ public class CategoriesController: BaseController
         
     [HttpDelete("{id}")]
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
-    public async Task<IActionResult> DeleteCategory(string id)
+    public async Task<IActionResult> DeleteCategory(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null)
+        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id); 
+        if (category is null)
             return NotFound();
 
         _context.Categories.Remove(category);
         var result = await _context.SaveChangesAsync();
-        if (result > 0)
-        {
-            CategoryVm categoryVm = CreateCategoryVm(category);
-            return Ok(categoryVm);
-        }
-        return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
+        if (result <= 0) return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
+        var categoryVm = CreateCategoryVm(category);
+        return Ok(categoryVm);
     }
 
     private static CategoryVm CreateCategoryVm(Category category)
     {
-        return new()
+        return new CategoryVm
         {
             Id = category.Id,
             Name = category.Name,
