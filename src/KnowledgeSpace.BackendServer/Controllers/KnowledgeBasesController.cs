@@ -66,7 +66,7 @@ public partial class KnowledgeBasesController : BaseController
         
     private static KnowledgeBase CreateKnowledgeBaseEntity(KnowledgeBaseCreateRequest request)
     {
-        return new()
+        return new KnowledgeBase
         {
             CategoryId = request.CategoryId,
 
@@ -174,7 +174,7 @@ public partial class KnowledgeBasesController : BaseController
 
     private static KnowledgeBaseVm CreateKnowledgeBaseVm(KnowledgeBase knowledgeBase)
     {
-        return new()
+        return new KnowledgeBaseVm
         {
             Id = knowledgeBase.CategoryId,
             CategoryId = knowledgeBase.CategoryId,
@@ -198,7 +198,7 @@ public partial class KnowledgeBasesController : BaseController
     }
 
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetById(int id)
     {
@@ -211,7 +211,7 @@ public partial class KnowledgeBasesController : BaseController
     }
 
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.Update)]
     [ApiValidationFilter]
     public async Task<IActionResult> PutKnowledgeBase(int id, [FromBody] KnowledgeBaseCreateRequest request)
