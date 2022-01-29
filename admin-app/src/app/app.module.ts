@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
 import { LanguageTranslationModule } from './shared/modules/language-translation/language-translation.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 
 @NgModule({
     imports: [
@@ -25,7 +25,7 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
         AuthGuard,
         {
             provide:HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
+            useClass: JwtInterceptor,
             multi: true
         }
     ],

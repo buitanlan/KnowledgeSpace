@@ -6,7 +6,7 @@ namespace KnowledgeSpace.BackendServer.Extensions;
 
 public static class ApplicationServiceExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<DbInitializer>();
         services.AddTransient<IEmailSender, EmailSenderService>();
@@ -16,6 +16,5 @@ public static class ApplicationServiceExtensions
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-        return services;
     }
 }

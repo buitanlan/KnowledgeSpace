@@ -1,23 +1,25 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { User } from '../models/user';
-import { BaseService } from './base.service';
-import { catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { User } from "../models/user";
+import { environment } from "src/environments/environment";
+import { UtilitiesService } from "@app/shared/services/utilities.service";
+import { map } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
-export class UserService extends BaseService {
-    constructor(private readonly http: HttpClient) {
-        super();
-    }
+export class UserService {
+    constructor(private readonly http: HttpClient,
+                private readonly utilitiesService: UtilitiesService) {}
+
     getAll() {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-        return this.http.get<User[]>(`${environment.apiUrl}/api/users`, httpOptions).pipe(catchError(this.handleError));
+        return this.http.get<User[]>(`${environment.apiUrl}/api/users`);
     }
+
+    getMenuByUser(userId: string) {
+        return this.http.get<Function[]>(`${environment.apiUrl}/api/users/${userId}/menu`).pipe(
+            map(response => this.utilitiesService.unflatteringForLeftMenu(response)));
+    }
+
+
 }

@@ -4,7 +4,7 @@ namespace KnowledgeSpace.BackendServer.Extensions;
 
 public static class SwaggerServiceExtensions
 {
-    public static IServiceCollection AddSwaggerDocument(this IServiceCollection services)
+    public static void AddSwaggerDocument(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -51,7 +51,6 @@ public static class SwaggerServiceExtensions
                 }
             });
         });
-        return services;
     }
     public static IApplicationBuilder UseSwaggerDocument(this IApplicationBuilder app)
     {
