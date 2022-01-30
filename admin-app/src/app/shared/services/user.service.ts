@@ -4,6 +4,8 @@ import { User } from "../models/user";
 import { environment } from "src/environments/environment";
 import { UtilitiesService } from "@app/shared/services/utilities.service";
 import { map } from "rxjs";
+import { Function } from "../models/function";
+
 
 @Injectable({
     providedIn: 'root'

@@ -43,7 +43,7 @@ export class ErrorsInterceptor implements HttpInterceptor {
         modelStateErrors = modelStateErrors === '' ? 'Server error' : modelStateErrors;
         return throwError(() => modelStateErrors);
         }
-    console.log(errorMessage);
+    console.log('error', errorMessage);
     return throwError(() => errorMessage);
     }
 }

@@ -6,8 +6,6 @@ using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-const string KspSpecificOrigins = "KspSpecificOrigins";
-
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -32,12 +30,10 @@ builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerDocument();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(KspSpecificOrigins,
+    options.AddPolicy("CorsPolicy",
         policy =>
         {
-            policy.WithOrigins(builder.Configuration["AllowOrigins"])
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
         });
 });
 var logger = new LoggerConfiguration()
@@ -54,16 +50,18 @@ try
     var context = services.GetRequiredService<ApplicationDbContext>();
     await context.Database.MigrateAsync();
     Log.Information("Seeding data...");
-    var dbInitializer = services.GetService<DbInitializer>();
-    dbInitializer?.Seed().Wait();
+    var dbInitializer = services.GetRequiredService<DbInitializer>();
+    await dbInitializer.Seed();
 }
 catch(Exception ex)
 {
     Log.Error(ex, "An error occurred while seeding the database");
 }
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseErrorWrapping();
@@ -73,7 +71,7 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
-app.UseCors(KspSpecificOrigins);
+app.UseCors("CorsPolicy");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();

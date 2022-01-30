@@ -7,20 +7,18 @@ import { Function } from "../models/function";
 })
 export class UtilitiesService {
 
-    unflatteringForLeftMenu = (functions: any[]): any[] => {
-        const map = {} as any;
-        const roots: any[] = [];
-        for (let i = 0; i < functions.length; i++) {
-            const node = functions[i];
-            node.children = [];
-            map[node.id] = i; // use map to look-up the parents
-            if (node.parentId) {
-                delete node['children'];
-                functions[map[node.parentId]].children.push(node);
-            } else {
-                roots.push(node);
+    unflatteringForLeftMenu = ( funcs: Function[]): Function[] => {
+        for (const func of funcs) {
+            if(func.parentId) {
+                const parent = funcs.filter(x => x.id === func.parentId)[0];
+                if (parent.children) {
+                    parent.children = [...parent.children, func]
+                } else {
+                    parent.children = [func];
+                }
+                funcs = funcs.filter(x => x.id !== func.id)
             }
         }
-        return roots;
+        return funcs;
     }
 }

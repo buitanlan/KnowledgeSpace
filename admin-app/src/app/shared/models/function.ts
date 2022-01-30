@@ -5,4 +5,5 @@ export interface Function {
     sortOrder: number;
     parentId: string;
     icon:string;
+    children: Function[] | null | undefined;
 }
