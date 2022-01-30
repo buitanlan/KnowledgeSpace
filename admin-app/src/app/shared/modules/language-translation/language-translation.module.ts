@@ -28,7 +28,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     exports: [TranslateModule]
 })
 export class LanguageTranslationModule {
-    constructor(private translate: TranslateService) {
+    constructor(private readonly translate: TranslateService) {
         // Gets Default language from browser if available, otherwise set English ad default
         this.translate.addLangs(['en', 'fr', 'ur', 'es', 'it', 'fa', 'de', 'zh-CHS']);
         this.translate.setDefaultLang('en');

@@ -6,7 +6,7 @@ import { MonthlyNewMembersComponent } from './monthly-new-members/monthly-new-me
 
 const routes: Routes = [
     {
-        path: 'monthly-new-knowledge-base',
+        path: 'monthly-new-knowledge-bases',
         component: MonthlyNewKnowledgeBasesComponent
     },
     {

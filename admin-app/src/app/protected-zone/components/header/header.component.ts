@@ -15,10 +15,12 @@ export class HeaderComponent implements OnInit {
     isAuthenticated = false;
     subscription: Subscription;
 
-    constructor(private translate: TranslateService, 
-        private readonly router: Router, 
-        private readonly authService: AuthService) {
-        this.subscription = this.authService.authNavStatus$.subscribe(status => this.isAuthenticated = status);
+    constructor(
+        private readonly translate: TranslateService,
+        private readonly router: Router,
+        private readonly authService: AuthService
+    ) {
+        this.subscription = this.authService.authNavStatus$.subscribe((status) => (this.isAuthenticated = status));
         this.userName = this.authService.name;
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd && window.innerWidth <= 992 && this.isToggled()) {

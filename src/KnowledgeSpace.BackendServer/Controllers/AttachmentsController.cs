@@ -32,7 +32,7 @@ public partial class KnowledgeBasesController
         return Ok(query);
     }
 
-    [HttpDelete("{knowledgeBaseId:int}/attachments/{attachmentId}")]
+    [HttpDelete("{knowledgeBaseId:int}/attachments/{attachmentId:int}")]
     public async Task<IActionResult> DeleteAttachment(int attachmentId, int knowledgeBaseId)
     {
         var attachment = await _context.Attachments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == attachmentId);

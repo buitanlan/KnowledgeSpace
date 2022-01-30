@@ -36,7 +36,7 @@ public class FunctionsController : BaseController
             ParentId = request.ParentId,
             SortOrder = request.SortOrder,
             Url = request.Url,
-
+            Icon = request.Icon
         };
         await _context.Functions.AddAsync(function);
         var result = await _context.SaveChangesAsync();
@@ -61,7 +61,8 @@ public class FunctionsController : BaseController
                 Name = u.Name,
                 Url = u.Url,
                 SortOrder = u.SortOrder,
-                ParentId = u.ParentId
+                ParentId = u.ParentId,
+                Icon = u.Icon
             })
             .ToListAsync();
         return Ok(functionVms);
@@ -91,7 +92,8 @@ public class FunctionsController : BaseController
                 Name = u.Name,
                 Url = u.Url,
                 SortOrder = u.SortOrder,
-                ParentId = u.ParentId
+                ParentId = u.ParentId,
+                Icon = u.Icon
             })
             .ToListAsync();
 
@@ -134,7 +136,8 @@ public class FunctionsController : BaseController
         function.ParentId = request.ParentId;
         function.SortOrder = request.SortOrder;
         function.Url = request.Url;
-
+        function.Icon = request.Icon;
+        
         _context.Functions.Update(function);
         var result = await _context.SaveChangesAsync();
 
@@ -160,7 +163,8 @@ public class FunctionsController : BaseController
             Name = function.Name,
             Url = function.Url,
             SortOrder = function.SortOrder,
-            ParentId = function.ParentId
+            ParentId = function.ParentId,
+            Icon = function.Icon
         };
         return Ok(functionVm);
     }

@@ -8,7 +8,7 @@ namespace KnowledgeSpace.BackendServer.Extensions;
 
 public static class IdentityServiceExtensions
 {
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
+    public static void AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
         //1. Set up Ef core
         services.AddDbContext<ApplicationDbContext>(opt =>
@@ -57,7 +57,5 @@ public static class IdentityServiceExtensions
                 policy.RequireAuthenticatedUser();
             });
         });
-            
-        return services;
     }
 }

@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
-import { UserManager, UserManagerSettings, User } from 'oidc-client';
-import { BehaviorSubject } from 'rxjs';
-import { BaseService } from './base.service';
+import { UserManager, UserManagerSettings, User, Profile } from "oidc-client";
+import { BehaviorSubject, defer } from "rxjs";
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends BaseService {
+export class AuthService{
   private authNavStatusSource = new BehaviorSubject<boolean>(false);
   authNavStatus$ = this.authNavStatusSource.asObservable();
   private manager = new UserManager(getClientSettings());
   private user: User | null = null;
 
   constructor() {
-    super();
-
-    this.manager.getUser().then(user => {
+    defer(() => this.manager.getUser()).subscribe(user => {
       this.user = user;
       this.authNavStatusSource.next(this.isAuthenticated());
     });
@@ -44,6 +41,10 @@ export class AuthService extends BaseService {
 
   get name(): string {
     return this.user?.profile.name ?? '';
+  }
+
+  getProfile(): Profile | null{
+      return this.user?.profile ?? null;
   }
 
   async signout() {

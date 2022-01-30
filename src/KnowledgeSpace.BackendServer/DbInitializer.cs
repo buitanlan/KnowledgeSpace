@@ -65,32 +65,30 @@ public class DbInitializer
         #endregion Người dùng
 
         #region Chức năng
+        var listFunction = new List<Function>
+            {
+                new() {Id = "Dashboard", Name = "Thống kê", ParentId = null, SortOrder = 1,Url = "/dashboard",Icon="fa-tachometer-alt"  },
+                new() {Id = "Content",Name = "Nội dung",ParentId = null,Url ="/contents",Icon="fa-table" },
+                new() {Id = "ContentCategory",Name = "Danh mục",ParentId ="Content",Url = "/contents/categories",Icon="fa-list" },
+                new() {Id = "ContentKnowledgeBase",Name = "Bài viết",ParentId = "Content",SortOrder = 2,Url = "/contents/knowledge-bases",Icon="fa-edit" },
+                new() {Id = "ContentComment",Name = "Trang",ParentId = "Content",SortOrder = 3,Url = "/contents/comments",Icon="fa-edit" },
+                new() {Id = "ContentReport",Name = "Báo xấu",ParentId = "Content",SortOrder = 3,Url = "/contents/reports",Icon="fa-edit" },
+
+                new() {Id = "Statistic",Name = "Thống kê", ParentId = null, Url = "/statistics",Icon="fa-chart-bar" },
+                new() {Id = "StatisticMonthlyNewMember",Name = "Đăng ký từng tháng",ParentId = "Statistic",SortOrder = 1,Url = "/statistics/monthly-new-members",Icon = "fa-wrench"},
+                new() {Id = "StatisticMonthlyNewKnowledgeBase",Name = "Bài đăng hàng tháng",ParentId = "Statistic",SortOrder = 2,Url = "/statistics/monthly-new-knowledge-bases",Icon = "fa-wrench"},
+                new() {Id = "StatisticMonthlyComment",Name = "Comment theo tháng",ParentId = "Statistic",SortOrder = 3,Url = "/statistics/monthly-new-comments",Icon = "fa-wrench" },
+
+                new() {Id = "System", Name = "Hệ thống", ParentId = null, Url = "/systems",Icon="fa-th-list" },
+                new() {Id = "SystemUser", Name = "Người dùng",ParentId = "System",Url = "/systems/users",Icon="fa-desktop"},
+                new() {Id = "SystemRole", Name = "Nhóm quyền",ParentId = "System",Url = "/systems/roles",Icon="fa-desktop"},
+                new() {Id = "SystemFunction", Name = "Chức năng",ParentId = "System",Url = "/systems/functions",Icon="fa-desktop"},
+                new() {Id = "SystemPermission", Name = "Quyền hạn",ParentId = "System",Url = "/systems/permissions",Icon="fa-desktop"},
+            };
 
         if (!_context.Functions.Any())
-        {
-            _context.Functions.AddRange(new List<Function>
-            {
-                new() {Id = "Dashboard", Name = "Thống kê", ParentId = null, SortOrder = 1,Url = "/dashboard"  },
-
-                new() {Id = "Content",Name = "Nội dung",ParentId = null,Url = "/content" },
-
-                new() {Id = "ContentCategory",Name = "Danh mục",ParentId ="Content",Url = "/content/category"  },
-                new() {Id = "ContentKnowledgeBase",Name = "Bài viết",ParentId = "Content",SortOrder = 2,Url = "/content/kb" },
-                new() {Id = "ContentComment",Name = "Trang",ParentId = "Content",SortOrder = 3,Url = "/content/comment" },
-                new() {Id = "ContentReport",Name = "Báo xấu",ParentId = "Content",SortOrder = 3,Url = "/content/report" },
-
-                new() {Id = "Statistic",Name = "Thống kê", ParentId = null, Url = "/statistic" },
-                new() {Id = "StatisticMonthlyNewMember",Name = "Đăng ký từng tháng",ParentId = "Statistic",SortOrder = 1,Url = "/statistic/monthly-register"},
-                new() {Id = "StatisticMonthlyNewKnowledgeBase",Name = "Bài đăng hàng tháng",ParentId = "Statistic",SortOrder = 2,Url = "/statistic/monthly-newkb"},
-                new() {Id = "StatisticMonthlyComment",Name = "Comment theo tháng",ParentId = "Statistic",SortOrder = 3,Url = "/statistic/monthly-comment" },
-
-                new() {Id = "System", Name = "Hệ thống", ParentId = null, Url = "/system" },
-                new() {Id = "SystemUser", Name = "Người dùng",ParentId = "System",Url = "/system/user"},
-                new() {Id = "SystemRole", Name = "Nhóm quyền",ParentId = "System",Url = "/system/role"},
-                new() {Id = "SystemFunction", Name = "Chức năng",ParentId = "System",Url = "/system/function"},
-                new() {Id = "SystemPermission", Name = "Quyền hạn",ParentId = "System",Url = "/system/permission"},
-            });
-            await _context.SaveChangesAsync();
+        {   
+            _context.Functions.AddRange(listFunction);
         }
 
         if (!_context.Commands.Any())
@@ -111,7 +109,7 @@ public class DbInitializer
 
         if (!_context.CommandInFunctions.Any())
         {
-            foreach (var function in functions)
+            foreach (var function in listFunction)
             {
                 var createAction = new CommandInFunction
                 {
@@ -145,7 +143,7 @@ public class DbInitializer
         if (!_context.Permissions.Any())
         {
             var adminRole = await _roleManager.FindByNameAsync(AdminRoleName);
-            foreach (var function in functions)
+            foreach (var function in listFunction)
             {
                 _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Create"));
                 _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Update"));
