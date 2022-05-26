@@ -17,7 +17,7 @@ export class AuthCallbackComponent implements OnInit {
 
     async ngOnInit() {
         // check for error
-        if (this.route.snapshot.queryParams.error) {
+        if (this.route.snapshot.queryParams['error']) {
             this.error = true;
             return;
         }
