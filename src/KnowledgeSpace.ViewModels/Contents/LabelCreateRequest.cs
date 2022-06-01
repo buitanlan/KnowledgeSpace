@@ -1,7 +1,6 @@
-﻿namespace KnowledgeSpace.ViewModels.Contents
+﻿namespace KnowledgeSpace.ViewModels.Contents;
+
+public class LabelCreateRequest
 {
-    public class LabelCreateRequest
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

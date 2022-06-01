@@ -7,7 +7,7 @@ import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
     {
-        path: 'knowledge-base',
+        path: 'knowledge-bases',
         component: KnowledgeBaseComponent
     },
     {
@@ -19,7 +19,7 @@ const routes: Routes = [
         component: ReportsComponent
     },
     {
-        path: 'caterories',
+        path: 'categories',
         component: CategoriesComponent
     },
     {

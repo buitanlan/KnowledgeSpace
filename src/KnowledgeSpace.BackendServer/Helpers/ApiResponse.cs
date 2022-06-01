@@ -1,28 +1,27 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace KnowledgeSpace.BackendServer.Helpers
+namespace KnowledgeSpace.BackendServer.Helpers;
+
+public class ApiResponse
 {
-    public class ApiResponse
+    public int StatusCode { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string Message { get; }
+
+    public ApiResponse(int statusCode, string message = null)
     {
-        public int StatusCode { get; }
+        StatusCode = statusCode;
+        Message = message ?? GetDefaultMessageForStatusCode(statusCode);
+    }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Message { get; }
-
-        public ApiResponse(int statusCode, string message = null)
+    private static string GetDefaultMessageForStatusCode(int statusCode)
+    {
+        return statusCode switch
         {
-            StatusCode = statusCode;
-            Message = message ?? GetDefaultMessageForStatusCode(statusCode);
-        }
-
-        private static string GetDefaultMessageForStatusCode(int statusCode)
-        {
-            return statusCode switch
-            {
-                404 => "Resource not found",
-                500 => "An unhandled error occurred",
-                _ => null
-            };
-        }
+            404 => "Resource not found",
+            500 => "An unhandled error occurred",
+            _ => null
+        };
     }
 }

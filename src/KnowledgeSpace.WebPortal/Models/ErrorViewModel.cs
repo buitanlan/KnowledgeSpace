@@ -1,9 +1,8 @@
-namespace KnowledgeSpace.WebPortal.Models
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+namespace KnowledgeSpace.WebPortal.Models;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+public class ErrorViewModel
+{
+    public string RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

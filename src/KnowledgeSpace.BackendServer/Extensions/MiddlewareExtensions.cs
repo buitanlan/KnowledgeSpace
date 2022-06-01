@@ -1,13 +1,14 @@
 ﻿using KnowledgeSpace.BackendServer.Helpers;
-using Microsoft.AspNetCore.Builder;
 
-namespace KnowledgeSpace.BackendServer.Extensions
+namespace KnowledgeSpace.BackendServer.Extensions;
+
+public static class MiddlewareExtensions
 {
-    public static class MiddlewareExtensions
+    public static void UseErrorWrapping(this IApplicationBuilder builder)
     {
-        public static IApplicationBuilder UseErrorWrapping(this IApplicationBuilder builder)
+        builder.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
         {
-            return builder.UseMiddleware<ErrorWrappingMiddleware>();
-        }
+            appBuilder.UseMiddleware<ErrorWrappingMiddleware>();
+        });
     }
 }

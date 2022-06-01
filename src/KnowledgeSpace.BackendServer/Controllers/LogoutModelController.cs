@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace KnowledgeSpace.BackendServer.Controllers
+namespace KnowledgeSpace.BackendServer.Controllers;
+
+public class LogoutModelController : Controller
 {
-    public class LogoutModelController : Controller
+    public IActionResult Logout(string logoutid)
     {
-        public IActionResult Logout(string logoutid)
-        {
-            throw new System.NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

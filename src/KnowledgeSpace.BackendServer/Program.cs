@@ -1,50 +1,81 @@
-using System;
-using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
+using KnowledgeSpace.BackendServer;
 using KnowledgeSpace.BackendServer.Data;
-using Microsoft.AspNetCore.Hosting;
+using KnowledgeSpace.BackendServer.Extensions;
+using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace KnowledgeSpace.BackendServer
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleCreateRequestValidator>());
+builder.Services.AddRazorPages(options =>
 {
-    public class Program
+    options.Conventions.AddAreaFolderRouteModelConvention("Identity", "/Account/", model =>
     {
-        public static async Task Main(string[] args)
+        foreach (var selector in model.Selectors)
         {
-            Log.Logger = new LoggerConfiguration()
-                            .Enrich.FromLogContext()
-                            .WriteTo.Console()
-                            .CreateLogger();
-            var host = CreateHostBuilder(args).Build();
-            using var scope = host.Services.CreateScope();
-            var services = scope.ServiceProvider;
-            try
-            {
-                var context = services.GetRequiredService<ApplicationDbContext>();
-                await context.Database.MigrateAsync();
-                Log.Information("Seeding data...");
-                var dbInitializer = services.GetService<DbInitializer>();
-                dbInitializer?.Seed().Wait();
-            }
-            catch(Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred while seeding the database");
-            }
-
-            await host.RunAsync();
+            var attributeRouteModel = selector.AttributeRouteModel;
+            if (attributeRouteModel is null) continue;
+            attributeRouteModel.Order = -1;
+            if (attributeRouteModel.Template != null)
+                attributeRouteModel.Template = attributeRouteModel.Template.Remove(0, "Identity".Length);
         }
-
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
-                .ReadFrom.Configuration(hostingContext.Configuration))                
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    });
+});
+builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+builder.Services.AddSwaggerDocument();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        policy =>
+        {
+            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+        });
+});
+var logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
+builder.WebHost.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+    .ReadFrom.Configuration(hostingContext.Configuration));
+var app = builder.Build();
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
+    Log.Information("Seeding data...");
+    var dbInitializer = services.GetRequiredService<DbInitializer>();
+    await dbInitializer.Seed();
 }
+catch(Exception ex)
+{
+    Log.Error(ex, "An error occurred while seeding the database");
+}
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseErrorWrapping();
+app.UseStaticFiles();
+app.UseIdentityServer();
+app.UseAuthentication();
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.UseCors("CorsPolicy");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
+});
+app.UseSwaggerDocument();
+await app.RunAsync();

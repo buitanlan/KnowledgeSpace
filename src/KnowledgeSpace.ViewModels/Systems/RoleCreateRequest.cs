@@ -1,9 +1,8 @@
-﻿namespace KnowledgeSpace.ViewModels.Systems
-{
-    public class RoleCreateRequest
-    {
-        public string Id { get; set; }
+﻿namespace KnowledgeSpace.ViewModels.Systems;
 
-        public string Name { get; set; }
-    }
+public class RoleCreateRequest
+{
+    public string Id { get; set; }
+
+    public string Name { get; set; }
 }
