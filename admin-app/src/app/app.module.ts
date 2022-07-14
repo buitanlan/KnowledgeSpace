@@ -25,7 +25,7 @@ import { ErrorsInterceptor } from '@app/shared/interceptors/errors.interceptor';
     providers: [
         AuthGuard,
         {
-            provide:HTTP_INTERCEPTORS,
+            provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptor,
             multi: true
         },

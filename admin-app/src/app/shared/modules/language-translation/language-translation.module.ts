@@ -33,6 +33,6 @@ export class LanguageTranslationModule {
         this.translate.addLangs(['en', 'fr', 'ur', 'es', 'it', 'fa', 'de', 'zh-CHS']);
         this.translate.setDefaultLang('en');
         const browserLang = this.translate.getBrowserLang();
-        this.translate.use( 'en');
+        this.translate.use('en');
     }
 }

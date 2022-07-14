@@ -2,10 +2,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
-import { Function } from "@app/shared/models/function";
+import { Function } from '@app/shared/models/function';
 import { AuthService } from '@app/shared/services/auth.service';
 import { UserService } from '@app/shared/services/user.service';
-
 
 @Component({
     selector: 'app-sidebar',
@@ -17,14 +16,16 @@ export class SidebarComponent implements OnInit {
     collapsed!: boolean;
     showMenu!: string;
     pushRightClass!: string;
-    functions$: Observable<Function[]> = of([])
+    functions$: Observable<Function[]> = of([]);
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(private readonly translate: TranslateService,
-                private readonly router: Router,
-                private readonly authService: AuthService,
-                private readonly userService: UserService) {}
+    constructor(
+        private readonly translate: TranslateService,
+        private readonly router: Router,
+        private readonly authService: AuthService,
+        private readonly userService: UserService
+    ) {}
 
     ngOnInit() {
         this.isActive = false;
@@ -36,10 +37,9 @@ export class SidebarComponent implements OnInit {
 
     loadMenu() {
         const profile = this.authService.getProfile();
-        if(profile){
+        if (profile) {
             this.functions$ = this.userService.getMenuByUser(profile.sub);
         }
-
     }
 
     eventCalled() {

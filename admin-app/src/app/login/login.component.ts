@@ -10,8 +10,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
     animations: [routerTransition()]
 })
 export class LoginComponent implements OnInit {
-    constructor(private readonly authService: AuthService,
-                private readonly spinner: NgxSpinnerService) {}
+    constructor(private readonly authService: AuthService, private readonly spinner: NgxSpinnerService) {}
 
     ngOnInit() {
         this.login();
