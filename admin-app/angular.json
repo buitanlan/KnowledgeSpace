@@ -2,7 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "1f4e8eec-0c5d-4efe-89ff-82dad880caa3",
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -31,12 +33,13 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/app.scss"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js"
+                "node_modules/@fortawesome/fontawesome-free/js/fontawesome.min.js",
+                "node_modules/chart.js/dist/Chart.js"
             ],
             "allowedCommonJsDependencies": [
               "chart.js"
@@ -119,6 +122,12 @@
               "src/**/*.html"
             ]
           }
+        },
+        "analyze": {
+          "builder": "@ngx-builders/analyze:analyze",
+          "options": {
+            "outputPath": "dist"
+          }
         }
       }
     },
@@ -142,7 +151,6 @@
       }
     }
   },
-  "defaultProject": "client",
   "schematics": {
     "@schematics/angular:component": {
       "skipTests": true
