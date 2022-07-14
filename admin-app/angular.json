@@ -33,12 +33,13 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/app.scss"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js"
+                "node_modules/@fortawesome/fontawesome-free/js/fontawesome.min.js",
+                "node_modules/chart.js/dist/Chart.js"
             ],
             "allowedCommonJsDependencies": [
               "chart.js"
@@ -120,6 +121,12 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
+          }
+        },
+        "analyze": {
+          "builder": "@ngx-builders/analyze:analyze",
+          "options": {
+            "outputPath": "dist"
           }
         }
       }

@@ -1,4 +1,4 @@
-# SB Admin rewritten in Angular4 and Bootstrap 4
+# SB Admin rewritten in Angular14 and Bootstrap 5
 
 Simple Dashboard Admin App built using Angular 9 and Bootstrap 4
 
