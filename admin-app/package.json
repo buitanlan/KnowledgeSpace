@@ -74,25 +74,8 @@
         "typescript": "4.7.4",
         "yarn": "1.22.19"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
     "lint-staged": {
-        "linters": {
-            "*.{ts,js,html,scss,css}": [
-                "prettier --write",
-                "git add"
-            ]
-        },
-        "ignore": [
-            "node_modules",
-            "**/dist/*.min.js",
-            "**/*.scss",
-            "**/*.less",
-            "**/*.html",
-            "**/*.json"
-        ]
+        "*.": "npm run format",
+        "*.ts": "npm run lint"
     }
 }
