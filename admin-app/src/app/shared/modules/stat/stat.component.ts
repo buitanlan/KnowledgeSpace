@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     templateUrl: './stat.component.html',
     styleUrls: ['./stat.component.scss']
 })
-export class StatComponent  {
+export class StatComponent {
     @Input() bgClass!: string;
     @Input() icon!: string;
     @Input() count!: number;

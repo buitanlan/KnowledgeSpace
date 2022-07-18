@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './notification.component.html',
     styleUrls: ['./notification.component.scss']
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent {
     constructor() {}
-
-    ngOnInit() {}
 }
