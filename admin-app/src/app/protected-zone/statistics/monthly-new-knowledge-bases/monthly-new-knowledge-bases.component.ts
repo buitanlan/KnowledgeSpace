@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './monthly-new-knowledge-bases.component.html',
     styleUrls: ['./monthly-new-knowledge-bases.component.scss']
 })
-export class MonthlyNewKnowledgeBasesComponent implements OnInit {
+export class MonthlyNewKnowledgeBasesComponent {
     constructor() {}
-
-    ngOnInit(): void {}
 }

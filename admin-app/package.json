@@ -1,7 +1,6 @@
 {
-    "name": "admin_app",
+    "name": "admin-app",
     "version": "14.0.0",
-    "license": "Apache",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -10,7 +9,7 @@
         "test": "ng test",
         "test-ci": "TEST_CI=true ng test",
         "lint": "npx eslint \"src/**/*.ts\" --quiet --fix",
-        "format": "npx prettier \"src/**/*.{js,jsx,ts,tsx,html,css,scss}\" --write",
+        "format": "npx prettier \"src/**/*.{ts,html,scss}\" --write",
         "e2e": "ng e2e",
         "prepare": "cd .. && husky install ./admin-app/.husky"
     },
@@ -71,11 +70,10 @@
         "prettier": "2.7.1",
         "protractor": "7.0.0",
         "ts-node": "10.8.2",
-        "typescript": "4.7.4",
-        "yarn": "1.22.19"
+        "typescript": "4.7.4"
     },
     "lint-staged": {
-        "*.": "npm run format",
+        "*": "npm run format",
         "*.ts": "npm run lint"
     }
 }

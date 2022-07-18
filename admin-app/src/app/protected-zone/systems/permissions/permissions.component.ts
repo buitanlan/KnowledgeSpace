@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './permissions.component.html',
     styleUrls: ['./permissions.component.scss']
 })
-export class PermissionsComponent implements OnInit {
+export class PermissionsComponent {
     constructor() {}
-
-    ngOnInit(): void {}
 }

@@ -5,7 +5,7 @@ import { AuthGuard } from '@app/shared/guards/auth.guard';
 const routes: Routes = [
     {
         path: '',
-        loadChildren: () => import('./protected-zone/proted-zone.module').then((m) => m.ProtectedZoneModule),
+        loadChildren: () => import('./protected-zone/protected-zone.module').then((m) => m.ProtectedZoneModule),
         canActivate: [AuthGuard]
     },
     {
