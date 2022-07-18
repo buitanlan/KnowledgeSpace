@@ -25,14 +25,11 @@ const routes: Routes = [
     {
         path: '',
         component: UsersComponent
-    },
+    }
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-
-export class SystemsRoutingModule { }
-
-
+export class SystemsRoutingModule {}

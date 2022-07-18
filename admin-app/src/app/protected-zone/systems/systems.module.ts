@@ -6,18 +6,8 @@ import { RolesComponent } from './roles/roles.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { SystemsRoutingModule } from '@app/protected-zone/systems/systems-routing.module';
 
-
-
 @NgModule({
-  declarations: [
-    FunctionsComponent,
-    UsersComponent,
-    RolesComponent,
-    PermissionsComponent
-  ],
-  imports: [
-    CommonModule,
-    SystemsRoutingModule
-  ]
+    declarations: [FunctionsComponent, UsersComponent, RolesComponent, PermissionsComponent],
+    imports: [CommonModule, SystemsRoutingModule]
 })
-export class SystemsModule { }
+export class SystemsModule {}

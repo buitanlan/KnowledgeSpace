@@ -20,13 +20,11 @@ const routes: Routes = [
     {
         path: '',
         component: MonthlyNewKnowledgeBasesComponent
-    },
+    }
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-
-export class StatisticsRoutingModule { }
-
+export class StatisticsRoutingModule {}

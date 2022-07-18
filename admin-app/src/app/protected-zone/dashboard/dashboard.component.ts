@@ -7,7 +7,7 @@ import { routerTransition } from '@app/router.animations';
     styleUrls: ['./dashboard.component.scss'],
     animations: [routerTransition()]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
     public alerts: Array<any> = [];
     public sliders: Array<any> = [];
 
@@ -49,8 +49,6 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
-
-    ngOnInit() {}
 
     public closeAlert(alert: any) {
         const index: number = this.alerts.indexOf(alert);
