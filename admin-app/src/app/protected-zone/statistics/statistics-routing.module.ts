@@ -5,26 +5,26 @@ import { MonthlyNewKnowledgeBasesComponent } from './monthly-new-knowledge-bases
 import { MonthlyNewMembersComponent } from './monthly-new-members/monthly-new-members.component';
 
 const routes: Routes = [
-    {
-        path: 'monthly-new-knowledge-bases',
-        component: MonthlyNewKnowledgeBasesComponent
-    },
-    {
-        path: 'monthly-new-comments',
-        component: MonthlyNewCommentsComponent
-    },
-    {
-        path: 'monthly-new-members',
-        component: MonthlyNewMembersComponent
-    },
-    {
-        path: '',
-        component: MonthlyNewKnowledgeBasesComponent
-    }
+  {
+    path: 'monthly-new-knowledge-bases',
+    component: MonthlyNewKnowledgeBasesComponent
+  },
+  {
+    path: 'monthly-new-comments',
+    component: MonthlyNewCommentsComponent
+  },
+  {
+    path: 'monthly-new-members',
+    component: MonthlyNewMembersComponent
+  },
+  {
+    path: '',
+    component: MonthlyNewKnowledgeBasesComponent
+  }
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class StatisticsRoutingModule {}

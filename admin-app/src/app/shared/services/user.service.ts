@@ -7,18 +7,18 @@ import { map } from 'rxjs';
 import { Function } from '../models/function';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class UserService {
-    constructor(private readonly http: HttpClient, private readonly utilitiesService: UtilitiesService) {}
+  constructor(private readonly http: HttpClient, private readonly utilitiesService: UtilitiesService) {}
 
-    getAll() {
-        return this.http.get<User[]>(`${environment.apiUrl}/api/users`);
-    }
+  getAll() {
+    return this.http.get<User[]>(`${environment.apiUrl}/api/users`);
+  }
 
-    getMenuByUser(userId: string) {
-        return this.http
-            .get<Function[]>(`${environment.apiUrl}/api/users/${userId}/menu`)
-            .pipe(map((response) => this.utilitiesService.unflatteringForLeftMenu(response)));
-    }
+  getMenuByUser(userId: string) {
+    return this.http
+      .get<Function[]>(`${environment.apiUrl}/api/users/${userId}/menu`)
+      .pipe(map((response) => this.utilitiesService.unflatteringForLeftMenu(response)));
+  }
 }

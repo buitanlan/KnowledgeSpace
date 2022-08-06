@@ -7,79 +7,79 @@ import { AuthService } from '@app/shared/services/auth.service';
 import { UserService } from '@app/shared/services/user.service';
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-    isActive!: boolean;
-    collapsed!: boolean;
-    showMenu!: string;
-    pushRightClass!: string;
-    functions$: Observable<Function[]> = of([]);
+  isActive!: boolean;
+  collapsed!: boolean;
+  showMenu!: string;
+  pushRightClass!: string;
+  functions$: Observable<Function[]> = of([]);
 
-    @Output() collapsedEvent = new EventEmitter<boolean>();
+  @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(
-        private readonly translate: TranslateService,
-        private readonly router: Router,
-        private readonly authService: AuthService,
-        private readonly userService: UserService
-    ) {}
+  constructor(
+    private readonly translate: TranslateService,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly userService: UserService
+  ) {}
 
-    ngOnInit() {
-        this.isActive = false;
-        this.collapsed = false;
-        this.showMenu = '';
-        this.pushRightClass = 'push-right';
-        this.loadMenu();
+  ngOnInit() {
+    this.isActive = false;
+    this.collapsed = false;
+    this.showMenu = '';
+    this.pushRightClass = 'push-right';
+    this.loadMenu();
+  }
+
+  loadMenu() {
+    const profile = this.authService.getProfile();
+    if (profile) {
+      this.functions$ = this.userService.getMenuByUser(profile.sub);
     }
+  }
 
-    loadMenu() {
-        const profile = this.authService.getProfile();
-        if (profile) {
-            this.functions$ = this.userService.getMenuByUser(profile.sub);
-        }
-    }
+  eventCalled() {
+    this.isActive = !this.isActive;
+  }
 
-    eventCalled() {
-        this.isActive = !this.isActive;
+  addExpandClass(element: any) {
+    if (element === this.showMenu) {
+      this.showMenu = '0';
+    } else {
+      this.showMenu = element;
     }
+  }
 
-    addExpandClass(element: any) {
-        if (element === this.showMenu) {
-            this.showMenu = '0';
-        } else {
-            this.showMenu = element;
-        }
-    }
+  toggleCollapsed() {
+    this.collapsed = !this.collapsed;
+    this.collapsedEvent.emit(this.collapsed);
+  }
 
-    toggleCollapsed() {
-        this.collapsed = !this.collapsed;
-        this.collapsedEvent.emit(this.collapsed);
-    }
+  isToggled(): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const dom: Element = document.querySelector('body')!;
+    return dom.classList.contains(this.pushRightClass);
+  }
 
-    isToggled(): boolean {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const dom: Element = document.querySelector('body')!;
-        return dom.classList.contains(this.pushRightClass);
-    }
+  toggleSidebar() {
+    const dom: any = document.querySelector('body');
+    dom.classList.toggle(this.pushRightClass);
+  }
 
-    toggleSidebar() {
-        const dom: any = document.querySelector('body');
-        dom.classList.toggle(this.pushRightClass);
-    }
+  rltAndLtr() {
+    const dom: any = document.querySelector('body');
+    dom.classList.toggle('rtl');
+  }
 
-    rltAndLtr() {
-        const dom: any = document.querySelector('body');
-        dom.classList.toggle('rtl');
-    }
+  changeLang(language: string) {
+    this.translate.use(language);
+  }
 
-    changeLang(language: string) {
-        this.translate.use(language);
-    }
-
-    onLoggedout() {
-        localStorage.removeItem('isLoggedin');
-    }
+  onLoggedout() {
+    localStorage.removeItem('isLoggedin');
+  }
 }

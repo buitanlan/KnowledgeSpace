@@ -5,15 +5,15 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        request = request.clone({
-            setHeaders: {
-                'Content-Type': 'application/json',
-                Authorization: `${this.authService.authorizationHeaderValue}`
-            }
-        });
-        return next.handle(request);
-    }
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    request = request.clone({
+      setHeaders: {
+        'Content-Type': 'application/json',
+        Authorization: `${this.authService.authorizationHeaderValue}`
+      }
+    });
+    return next.handle(request);
+  }
 }

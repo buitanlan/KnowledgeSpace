@@ -7,7 +7,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { ContentsRoutingModule } from './content-routing.module';
 
 @NgModule({
-    declarations: [CategoriesComponent, KnowledgeBaseComponent, CommentsComponent, ReportsComponent],
-    imports: [CommonModule, ContentsRoutingModule]
+  declarations: [CategoriesComponent, KnowledgeBaseComponent, CommentsComponent, ReportsComponent],
+  imports: [CommonModule, ContentsRoutingModule]
 })
 export class ContentsModule {}

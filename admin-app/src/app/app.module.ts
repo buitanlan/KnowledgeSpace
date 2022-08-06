@@ -11,28 +11,28 @@ import { AuthGuard } from '@app/shared/guards/auth.guard';
 import { ErrorsInterceptor } from '@app/shared/interceptors/errors.interceptor';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        LanguageTranslationModule,
-        AppRoutingModule
-    ],
-    declarations: [AppComponent],
-    providers: [
-        AuthGuard,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: JwtInterceptor,
-            multi: true
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: ErrorsInterceptor,
-            multi: true
-        }
-    ],
-    bootstrap: [AppComponent]
+  imports: [
+    CommonModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    LanguageTranslationModule,
+    AppRoutingModule
+  ],
+  declarations: [AppComponent],
+  providers: [
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorsInterceptor,
+      multi: true
+    }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

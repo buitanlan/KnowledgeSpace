@@ -1,127 +1,113 @@
 <nav class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-brand ms-4" href="#">Knowledge Space </a>
-    <button (click)="toggleSidebar()" class="navbar-toggler" type="button">
-        <!-- <span class="navbar-toggler-icon"></span> -->
-        <i aria-hidden="true" class="fas fa-bars text-muted"></i>
-    </button>
-    <div class="collapse navbar-collapse">
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control me-sm-2" placeholder="{{ 'Search' | translate }}" type="text" />
-        </form>
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown" ngbDropdown>
-                <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fas fa-envelope"></i> <b class="caret"></b><span class="sr-only">(current)</span>
-                </a>
-                <ul class="dropdown-menu-right messages" ngbDropdownMenu>
-                    <li class="media">
-                        <img
-                            alt="Generic placeholder image"
-                            class="d-flex align-self-center me-3"
-                            src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
-                        />
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
-                            <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
-                        </div>
-                    </li>
-                    <li class="media">
-                        <img
-                            alt="Generic placeholder image"
-                            class="d-flex align-self-center me-3"
-                            src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
-                        />
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
-                            <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
-                        </div>
-                    </li>
-                    <li class="media">
-                        <img
-                            alt="Generic placeholder image"
-                            class="d-flex align-self-center me-3"
-                            src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
-                        />
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">John Smith</h5>
-                            <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
-                            <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown" ngbDropdown>
-                <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fas fa-bell"></i> <b class="caret"></b><span class="sr-only">(current)</span>
-                </a>
-                <div class="dropdown-menu-right" ngbDropdownMenu>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Pending Task' | translate }} <span class="badge badge-info">6</span>
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        {{ 'In queue' | translate }} <span class="badge badge-info"> 13</span>
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Mail' | translate }} <span class="badge badge-info"> 45</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        {{ 'View All' | translate }}
-                    </a>
-                </div>
-            </li>
-            <li class="nav-item dropdown" ngbDropdown>
-                <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fas fa-globe"></i> {{ 'Language' | translate }} <b class="caret"></b>
-                </a>
-                <div class="dropdown-menu-right" ngbDropdownMenu>
-                    <a (click)="changeLang('en')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'English' | translate }}
-                    </a>
-                    <a (click)="changeLang('fr')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'French' | translate }}
-                    </a>
-                    <a (click)="changeLang('ur')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Urdu' | translate }}
-                    </a>
-                    <a (click)="changeLang('es')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Spanish' | translate }}
-                    </a>
-                    <a (click)="changeLang('it')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Italian' | translate }}
-                    </a>
-                    <a (click)="changeLang('fa')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Farsi' | translate }}
-                    </a>
-                    <a (click)="changeLang('de')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'German' | translate }}
-                    </a>
-                    <a (click)="changeLang('zh-CHS')" class="dropdown-item" href="javascript:void(0)">
-                        {{ 'Simplified Chinese' | translate }}
-                    </a>
-                </div>
-            </li>
-            <li class="nav-item dropdown me-3" ngbDropdown>
-                <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
-                    <i class="fas fa-user"></i> {{ userName }} <b class="caret"></b>
-                </a>
-                <div class="dropdown-menu-right" ngbDropdownMenu>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fas fa-fw fa-user"></i> {{ 'Profile' | translate }}
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fas fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="fas fa-fw fa-cog"></i> {{ 'Settings' | translate }}
-                    </a>
-                    <a (click)="signout()" [routerLink]="['/login']" class="dropdown-item">
-                        <i class="fas fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
-                    </a>
-                </div>
-            </li>
+  <a class="navbar-brand ms-4">Knowledge Space </a>
+  <button (click)="toggleSidebar()" class="navbar-toggler" type="button">
+    <!-- <span class="navbar-toggler-icon"></span> -->
+    <i aria-hidden="true" class="fas fa-bars text-muted"></i>
+  </button>
+  <div class="collapse navbar-collapse">
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control me-sm-2" placeholder="{{ 'Search' | translate }}" type="text" />
+    </form>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link" ngbDropdownToggle>
+          <i class="fas fa-envelope"></i> <b class="caret"></b><span class="sr-only">(current)</span>
+        </a>
+        <ul class="dropdown-menu-right messages" ngbDropdownMenu>
+          <li class="media">
+            <img
+              alt="Generic placeholder image"
+              class="d-flex align-self-center me-3"
+              src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
+            />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">John Smith</h5>
+              <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
+              <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
+            </div>
+          </li>
+          <li class="media">
+            <img
+              alt="Generic placeholder image"
+              class="d-flex align-self-center me-3"
+              src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
+            />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">John Smith</h5>
+              <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
+              <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
+            </div>
+          </li>
+          <li class="media">
+            <img
+              alt="Generic placeholder image"
+              class="d-flex align-self-center me-3"
+              src="http://i.huffpost.com/gadgets/slideshows/461162/slide_461162_6224974_sq50.jpg"
+            />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">John Smith</h5>
+              <p class="small text-muted"><i class="far fa-clock"></i> Yesterday at 4:32 PM</p>
+              <p class="last">Lorem ipsum dolor sit amet, consectetur...</p>
+            </div>
+          </li>
         </ul>
-    </div>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link" ngbDropdownToggle>
+          <i class="fas fa-bell"></i> <b class="caret"></b><span class="sr-only">(current)</span>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item"> {{ 'Pending Task' | translate }} <span class="badge badge-info">6</span> </a>
+          <a class="dropdown-item"> {{ 'In queue' | translate }} <span class="badge badge-info"> 13</span> </a>
+          <a class="dropdown-item"> {{ 'Mail' | translate }} <span class="badge badge-info"> 45</span> </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item">
+            {{ 'View All' | translate }}
+          </a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link" ngbDropdownToggle>
+          <i class="fas fa-globe"></i> {{ 'Language' | translate }} <b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a (click)="changeLang('en')" class="dropdown-item">
+            {{ 'English' | translate }}
+          </a>
+          <a (click)="changeLang('fr')" class="dropdown-item">
+            {{ 'French' | translate }}
+          </a>
+          <a (click)="changeLang('ur')" class="dropdown-item">
+            {{ 'Urdu' | translate }}
+          </a>
+          <a (click)="changeLang('es')" class="dropdown-item">
+            {{ 'Spanish' | translate }}
+          </a>
+          <a (click)="changeLang('it')" class="dropdown-item">
+            {{ 'Italian' | translate }}
+          </a>
+          <a (click)="changeLang('fa')" class="dropdown-item">
+            {{ 'Farsi' | translate }}
+          </a>
+          <a (click)="changeLang('de')" class="dropdown-item" href="javascript:void(0)">
+            {{ 'German' | translate }}
+          </a>
+          <a (click)="changeLang('zh-CHS')" class="dropdown-item" href="javascript:void(0)">
+            {{ 'Simplified Chinese' | translate }}
+          </a>
+        </div>
+      </li>
+      <li class="nav-item dropdown me-3" ngbDropdown>
+        <a class="nav-link" ngbDropdownToggle> <i class="fas fa-user"></i> {{ userName }} <b class="caret"></b> </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item"> <i class="fas fa-fw fa-user"></i> {{ 'Profile' | translate }} </a>
+          <a class="dropdown-item"> <i class="fas fa-fw fa-envelope"></i> {{ 'Inbox' | translate }} </a>
+          <a class="dropdown-item"> <i class="fas fa-fw fa-cog"></i> {{ 'Settings' | translate }} </a>
+          <a (click)="signout()" [routerLink]="['/login']" class="dropdown-item">
+            <i class="fas fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </nav>
