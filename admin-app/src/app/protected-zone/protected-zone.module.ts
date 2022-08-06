@@ -8,7 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-    imports: [CommonModule, ProtectedZoneRoutingModule, TranslateModule, NgbDropdownModule],
-    declarations: [LayoutComponent, SidebarComponent, HeaderComponent]
+  imports: [CommonModule, ProtectedZoneRoutingModule, TranslateModule, NgbDropdownModule],
+  declarations: [LayoutComponent, SidebarComponent, HeaderComponent]
 })
 export class ProtectedZoneModule {}

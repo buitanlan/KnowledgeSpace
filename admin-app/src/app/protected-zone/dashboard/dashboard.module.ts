@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard.component';
 import { StatModule } from '@app/shared/modules';
 
 @NgModule({
-    imports: [CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule, StatModule],
-    declarations: [DashboardComponent, TimelineComponent, NotificationComponent, ChatComponent]
+  imports: [CommonModule, NgbCarouselModule, NgbAlertModule, DashboardRoutingModule, StatModule],
+  declarations: [DashboardComponent, TimelineComponent, NotificationComponent, ChatComponent]
 })
 export class DashboardModule {}

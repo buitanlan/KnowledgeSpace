@@ -6,30 +6,30 @@ import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.componen
 import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
-    {
-        path: 'knowledge-bases',
-        component: KnowledgeBaseComponent
-    },
-    {
-        path: 'comments',
-        component: CommentsComponent
-    },
-    {
-        path: 'reports',
-        component: ReportsComponent
-    },
-    {
-        path: 'categories',
-        component: CategoriesComponent
-    },
-    {
-        path: '',
-        component: KnowledgeBaseComponent
-    }
+  {
+    path: 'knowledge-bases',
+    component: KnowledgeBaseComponent
+  },
+  {
+    path: 'comments',
+    component: CommentsComponent
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent
+  },
+  {
+    path: 'categories',
+    component: CategoriesComponent
+  },
+  {
+    path: '',
+    component: KnowledgeBaseComponent
+  }
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class ContentsRoutingModule {}

@@ -4,20 +4,20 @@ import { AuthService } from '../shared/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    animations: [routerTransition()]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  animations: [routerTransition()]
 })
 export class LoginComponent implements OnInit {
-    constructor(private readonly authService: AuthService, private readonly spinner: NgxSpinnerService) {}
+  constructor(private readonly authService: AuthService, private readonly spinner: NgxSpinnerService) {}
 
-    ngOnInit() {
-        this.login();
-    }
+  ngOnInit() {
+    this.login();
+  }
 
-    login() {
-        void this.spinner.show();
-        void this.authService.login();
-    }
+  login() {
+    void this.spinner.show();
+    void this.authService.login();
+  }
 }

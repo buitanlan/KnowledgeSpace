@@ -1,24 +1,24 @@
 <nav [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar">
-    <div class="list-group">
-        <div class="nested-menu" *ngFor="let item of functions$ | async">
-            <a class="list-group-item" (click)="addExpandClass(item.id)">
-                <i class="fa {{ item.icon }}"></i>&nbsp;
-                <span>{{ item.name }}</span>
+  <div class="list-group">
+    <div class="nested-menu" *ngFor="let item of functions$ | async">
+      <a class="list-group-item" (click)="addExpandClass(item.id)">
+        <i class="fa {{ item.icon }}"></i>&nbsp;
+        <span>{{ item.name }}</span>
+      </a>
+      <li class="nested" [class.expand]="showMenu === item.id" *ngFor="let subItem of item.children">
+        <ul class="submenu">
+          <li>
+            <a routerLink="{{ subItem.url }}" [routerLinkActive]="['router-link-active']">
+              <i class="fa {{ subItem.icon }}"></i>&nbsp;
+              <span>{{ subItem.name }}</span>
             </a>
-            <li class="nested" [class.expand]="showMenu === item.id" *ngFor="let subItem of item.children">
-                <ul class="submenu">
-                    <li>
-                        <a routerLink="{{ subItem.url }}" [routerLinkActive]="['router-link-active']">
-                            <i class="fa {{ subItem.icon }}"></i>&nbsp;
-                            <span>{{ subItem.name }}</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </div>
+          </li>
+        </ul>
+      </li>
     </div>
-    <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
-        <i class="fas fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;
-        <span>{{ 'Collapse Sidebar' | translate }}</span>
-    </div>
+  </div>
+  <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
+    <i class="fas fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;
+    <span>{{ 'Collapse Sidebar' | translate }}</span>
+  </div>
 </nav>

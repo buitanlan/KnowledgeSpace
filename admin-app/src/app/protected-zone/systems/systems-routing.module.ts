@@ -6,30 +6,30 @@ import { RolesComponent } from './roles/roles.component';
 import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
-    {
-        path: 'users',
-        component: UsersComponent
-    },
-    {
-        path: 'functions',
-        component: FunctionsComponent
-    },
-    {
-        path: 'roles',
-        component: RolesComponent
-    },
-    {
-        path: 'permissions',
-        component: PermissionsComponent
-    },
-    {
-        path: '',
-        component: UsersComponent
-    }
+  {
+    path: 'users',
+    component: UsersComponent
+  },
+  {
+    path: 'functions',
+    component: FunctionsComponent
+  },
+  {
+    path: 'roles',
+    component: RolesComponent
+  },
+  {
+    path: 'permissions',
+    component: PermissionsComponent
+  },
+  {
+    path: '',
+    component: UsersComponent
+  }
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class SystemsRoutingModule {}
