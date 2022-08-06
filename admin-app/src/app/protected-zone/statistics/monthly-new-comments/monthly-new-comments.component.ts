@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './monthly-new-comments.component.html',
     styleUrls: ['./monthly-new-comments.component.scss']
 })
-export class MonthlyNewCommentsComponent implements OnInit {
+export class MonthlyNewCommentsComponent {
     constructor() {}
-
-    ngOnInit(): void {}
 }
