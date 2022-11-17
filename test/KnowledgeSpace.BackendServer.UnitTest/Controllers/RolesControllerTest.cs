@@ -78,7 +78,7 @@ public class RolesControllerTest
     public async Task GetRoles_HasData_ReturnSuccess()
     {
         _mockRoleManager.Setup(x => x.Roles)
-            .Returns(_roleSources.AsQueryable().BuildMock().Object);
+            .Returns(_roleSources.AsQueryable().BuildMock());
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRoles();
         if (result is OkObjectResult okResult)
@@ -102,7 +102,7 @@ public class RolesControllerTest
     public async Task GetRolesPaging_NoFilter_ReturnSuccess()
     {
         _mockRoleManager.Setup(x => x.Roles)
-            .Returns(_roleSources.AsQueryable().BuildMock().Object);
+            .Returns(_roleSources.AsQueryable().BuildMock());
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging(null, 1, 2);
@@ -118,7 +118,7 @@ public class RolesControllerTest
     public async Task GetRolesPaging_HasFilter_ReturnSuccess()
     {
         _mockRoleManager.Setup(x => x.Roles)
-            .Returns(_roleSources.AsQueryable().BuildMock().Object);
+            .Returns(_roleSources.AsQueryable().BuildMock());
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging("test3", 1, 2);

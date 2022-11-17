@@ -82,7 +82,7 @@ public class UsersControllerTest
     public async Task GetUsers_HasData_ReturnSuccess()
     {
         _mockUserManager.Setup(x => x.Users)
-            .Returns(_userSources.AsQueryable().BuildMock().Object);
+            .Returns(_userSources.AsQueryable().BuildMock());
         var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
         var result = await usersController.GetUsers();
         if (result is OkObjectResult okResult)
@@ -108,7 +108,7 @@ public class UsersControllerTest
     public async Task GetUsersPaging_NoFilter_ReturnSuccess()
     {
         _mockUserManager.Setup(x => x.Users)
-            .Returns(_userSources.AsQueryable().BuildMock().Object);
+            .Returns(_userSources.AsQueryable().BuildMock());
 
         var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
         var result = await usersController.GetUsersPaging(null!, 1, 2);
@@ -125,7 +125,7 @@ public class UsersControllerTest
     public async Task GetUsersPaging_HasFilter_ReturnSuccess()
     {
         _mockUserManager.Setup(x => x.Users)
-            .Returns(_userSources.AsQueryable().BuildMock().Object);
+            .Returns(_userSources.AsQueryable().BuildMock());
 
         var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
         var result = await usersController.GetUsersPaging("test3", 1, 2);
