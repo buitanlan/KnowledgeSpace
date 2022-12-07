@@ -36,11 +36,8 @@ builder.Services.AddCors(options =>
             policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
         });
 });
-var logger = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .CreateLogger();
-builder.WebHost.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(hostingContext.Configuration));
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
@@ -72,10 +69,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 app.UseCors("CorsPolicy");
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapDefaultControllerRoute();
-    endpoints.MapRazorPages();
-});
+app.MapDefaultControllerRoute();
+app.MapRazorPages();
 app.UseSwaggerDocument();
 await app.RunAsync();
