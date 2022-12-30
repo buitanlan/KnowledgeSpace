@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 import { routerTransition } from '@app/router.animations';
+import { ChatComponent, NotificationComponent, TimelineComponent } from '@app/protected-zone/dashboard/components';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { StatComponent } from '@app/shared/modules/stat/stat.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  animations: [routerTransition()]
+  animations: [routerTransition()],
+  imports: [ChatComponent, NotificationComponent, NgbAlert, TimelineComponent, StatComponent],
+  standalone: true
 })
 export class DashboardComponent {
   public alerts: Array<any> = [];

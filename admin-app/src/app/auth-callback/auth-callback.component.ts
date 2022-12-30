@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-auth-callback',
   templateUrl: './auth-callback.component.html',
-  styleUrls: ['./auth-callback.component.scss']
+  styleUrls: ['./auth-callback.component.scss'],
+  imports: [RouterLink, NgIf],
+  standalone: true
 })
 export class AuthCallbackComponent implements OnInit {
   error = false;
@@ -23,6 +26,6 @@ export class AuthCallbackComponent implements OnInit {
     }
 
     await this.authService.completeAuthentication();
-    this.router.navigate(['/']);
+    void this.router.navigate(['/']);
   }
 }

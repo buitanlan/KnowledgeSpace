@@ -1,15 +1,18 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { Function } from '@app/shared/models/function';
 import { AuthService } from '@app/shared/services/auth.service';
 import { UserService } from '@app/shared/services/user.service';
+import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+  imports: [NgClass, AsyncPipe, RouterLinkActive, TranslateModule, NgForOf, RouterLink],
+  standalone: true
 })
 export class SidebarComponent implements OnInit {
   isActive!: boolean;

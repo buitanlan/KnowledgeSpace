@@ -5,7 +5,7 @@ import { CommentsComponent } from './comments/comments.component';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { ReportsComponent } from './reports/reports.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'knowledge-bases',
     component: KnowledgeBaseComponent
