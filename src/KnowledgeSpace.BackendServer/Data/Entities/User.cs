@@ -22,11 +22,11 @@ public class User : IdentityUser
     }
     [MaxLength(50)]
     [Required]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; }  = default!;
 
     [MaxLength(50)]
     [Required]
-    public string LastName { get; set; }
+    public string LastName { get; set; } = default!;
 
     [Required]
     public DateTime Dob { get; set; }

@@ -11,7 +11,7 @@ public partial class KnowledgeBasesController
 {
     #region Reports
 
-    [HttpGet("{knowledgeBaseId}/reports/filter")]
+    [HttpGet("{knowledgeBaseId:int}/reports/filter")]
     public async Task<IActionResult> GetReportsPaging(int knowledgeBaseId, string filter, int pageIndex, int pageSize)
     {
         var query = _context.Reports.Where(x => x.KnowledgeBaseId == knowledgeBaseId).AsQueryable();
@@ -44,7 +44,7 @@ public partial class KnowledgeBasesController
         return Ok(pagination);
     }
 
-    [HttpGet("{knowledgeBaseId}/reports/{reportId}")]
+    [HttpGet("{knowledgeBaseId:int}/reports/{reportId:int}")]
     public async Task<IActionResult> GetReportDetail(int knowledgeBaseId, int reportId)
     {
         var report = await _context.Reports.AsNoTracking().SingleOrDefaultAsync(x => x.Id == reportId);

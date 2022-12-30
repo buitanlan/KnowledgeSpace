@@ -34,7 +34,7 @@ public partial class KnowledgeBasesController
                 CreateDate = c.CreateDate,
                 KnowledgeBaseId = c.KnowledgeBaseId,
                 LastModifiedDate = c.LastModifiedDate,
-                OwnwerUserId = c.OwnwerUserId
+                OwnwerUserId = c.OwnerUserId
             })
             .ToListAsync();
 
@@ -62,7 +62,7 @@ public partial class KnowledgeBasesController
             CreateDate = comment.CreateDate,
             KnowledgeBaseId = comment.KnowledgeBaseId,
             LastModifiedDate = comment.LastModifiedDate,
-            OwnwerUserId = comment.OwnwerUserId
+            OwnwerUserId = comment.OwnerUserId
         };
 
         return Ok(commentVm);
@@ -77,7 +77,7 @@ public partial class KnowledgeBasesController
         {
             Content = request.Content,
             KnowledgeBaseId = request.KnowledgeBaseId,
-            OwnwerUserId = string.Empty,
+            OwnerUserId = string.Empty,
         };
         _context.Comments.Add(comment);
 
@@ -104,7 +104,7 @@ public partial class KnowledgeBasesController
         var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
         if (comment is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found comment with id: {commentId}"));
-        if (User.Identity != null && comment.OwnwerUserId != User.Identity.Name)
+        if (User.Identity != null && comment.OwnerUserId != User.Identity.Name)
             return Forbid();
 
         comment.Content = request.Content;
@@ -146,7 +146,7 @@ public partial class KnowledgeBasesController
             CreateDate = comment.CreateDate,
             KnowledgeBaseId = comment.KnowledgeBaseId,
             LastModifiedDate = comment.LastModifiedDate,
-            OwnwerUserId = comment.OwnwerUserId
+            OwnwerUserId = comment.OwnerUserId
         };
         return Ok(commentVm);
     }

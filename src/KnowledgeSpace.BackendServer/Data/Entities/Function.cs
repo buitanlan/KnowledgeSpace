@@ -13,11 +13,11 @@ public class Function
 
     [MaxLength(200)]
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     [MaxLength(200)]
     [Required]
-    public string Url { get; set; }
+    public string Url { get; set; } = default!;
 
     [Required]
     public int SortOrder { get; set; }
@@ -29,5 +29,5 @@ public class Function
     
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string Icon { get; set; }
+    public string Icon { get; set; } = default!;
 }

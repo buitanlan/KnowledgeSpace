@@ -1,10 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace KnowledgeSpace.BackendServer.Data.Migrations
 {
+    /// <inheritdoc />
     public partial class Initial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
@@ -21,8 +25,8 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                     EntityId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,9 +88,7 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                     FilePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     FileType = table.Column<string>(type: "varchar(4)", maxLength: 4, nullable: false),
                     FileSize = table.Column<long>(type: "bigint", nullable: false),
-                    KnowledgeBaseId = table.Column<int>(type: "int", nullable: true),
-                    CommentId = table.Column<int>(type: "int", nullable: true),
-                    Type = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
+                    KnowledgeBaseId = table.Column<int>(type: "int", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -145,7 +147,7 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     KnowledgeBaseId = table.Column<int>(type: "int", nullable: false),
-                    OwnwerUserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    OwnerUserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -162,7 +164,8 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Url = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: false),
-                    ParentId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    ParentId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Icon = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,15 +180,15 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     SeoAlias = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Environment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Problem = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    StepToReproduce = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ErrorMessage = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Workaround = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Environment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Problem = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    StepToReproduce = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Workaround = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OwnerUserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Labels = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Labels = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NumberOfComments = table.Column<int>(type: "int", nullable: true),
@@ -214,7 +217,7 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -240,9 +243,9 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    KnowledgeBaseId = table.Column<int>(type: "int", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    ReportUserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    KnowledgeBaseId = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ReportUserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsProcessed = table.Column<bool>(type: "bit", nullable: false)
@@ -412,6 +415,7 @@ namespace KnowledgeSpace.BackendServer.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

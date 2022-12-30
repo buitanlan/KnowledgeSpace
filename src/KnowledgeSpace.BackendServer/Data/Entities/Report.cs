@@ -14,11 +14,11 @@ public class Report : IDateTracking
     public int KnowledgeBaseId { get; set; }
 
     [MaxLength(500)]
-    public string Content { get; set; }
+    public string Content { get; set; } = default!;
 
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string ReportUserId { get; set; }
+    public string ReportUserId { get; set; } = default!;
 
     public DateTime CreateDate { get; set; }
     public DateTime? LastModifiedDate { get; set; }

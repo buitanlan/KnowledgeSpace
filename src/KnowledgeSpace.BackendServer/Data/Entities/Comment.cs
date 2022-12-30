@@ -13,7 +13,7 @@ public class Comment : IDateTracking
 
     [MaxLength(500)]
     [Required]
-    public string Content { get; set; }
+    public string Content { get; set; } = default!;
 
     [Required]
     [Range(1, Double.PositiveInfinity)]
@@ -21,7 +21,7 @@ public class Comment : IDateTracking
 
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string OwnwerUserId { get; set; }
+    public string OwnerUserId { get; set; } = default!;
 
     public DateTime CreateDate { get; set; }
     public DateTime? LastModifiedDate { get; set; }
