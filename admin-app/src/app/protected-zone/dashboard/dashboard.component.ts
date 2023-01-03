@@ -1,11 +1,64 @@
 import { Component } from '@angular/core';
 import { routerTransition } from '@app/router.animations';
+import { ChatComponent, NotificationComponent, TimelineComponent } from '@app/protected-zone/dashboard/components';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { StatComponent } from '@app/shared/modules/stat/stat.component';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  animations: [routerTransition()]
+  template: `
+    <div [@routerTransition]>
+      <h2 class="text-muted">Dashboard <small>Statistics Overview</small></h2>
+      <hr />
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'primary'" [count]="26" [icon]="'fa-comments'" [label]="'New Comments!'"></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'warning'" [count]="12" [icon]="'fa-tasks'" [label]="'New task!'"></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'success'" [count]="124" [icon]="'fa-shopping-cart'" [label]="'New Orders!'"></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'danger'" [count]="13" [icon]="'fa-ticket-alt'" [label]="'New Tickets!'"></app-stat>
+        </div>
+      </div>
+      <hr />
+      <ngb-alert (close)="closeAlert(alert)" *ngFor="let alert of alerts" [type]="alert.type">{{
+        alert.message
+      }}</ngb-alert>
+      <hr />
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card card-default">
+            <div class="card-header"><i class="far fa-clock fa-fw"></i> Responsive Timeline</div>
+            <!-- /.card-header -->
+            <app-timeline></app-timeline>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4">
+          <div class="card card-default mb-3">
+            <div class="card-header"><i class="fas fa-bell fa-fw"></i> Notifications card</div>
+            <!-- /.card-header -->
+            <app-notification></app-notification>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <app-chat></app-chat>
+          <!-- /.card .chat-card -->
+        </div>
+        <!-- /.col-lg-4 -->
+      </div>
+    </div>
+  `,
+  animations: [routerTransition()],
+  imports: [ChatComponent, NotificationComponent, NgbAlert, TimelineComponent, StatComponent],
+  standalone: true
 })
 export class DashboardComponent {
   public alerts: Array<any> = [];

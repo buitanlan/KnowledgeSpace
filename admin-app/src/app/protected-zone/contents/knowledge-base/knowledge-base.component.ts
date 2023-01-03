@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-knowledge-base',
-  templateUrl: './knowledge-base.component.html',
-  styleUrls: ['./knowledge-base.component.scss']
+  template: `<p>knowledge-base works!</p>`,
+  standalone: true
 })
 export class KnowledgeBaseComponent {
   constructor() {}
