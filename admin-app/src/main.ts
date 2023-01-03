@@ -5,9 +5,9 @@ import { AppComponent } from '@app/app.component';
 import { RouterModule } from '@angular/router';
 import { AppRoutes } from '@app/app.route';
 import { AuthGuard } from '@app/shared/guards/auth.guard';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
-import { JwtInterceptor } from '@app/shared/interceptors/jwt.interceptor';
-import { ErrorsInterceptor } from '@app/shared/interceptors/errors.interceptor';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from '@app/shared/interceptors/jwt.interceptor';
+import { errorInterceptor } from '@app/shared/interceptors/errors.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -15,17 +15,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(RouterModule.forRoot(AppRoutes)),
-    provideHttpClient(),
-    AuthGuard,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorsInterceptor,
-      multi: true
-    }
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    AuthGuard
   ]
 }).catch((err) => console.error(err));

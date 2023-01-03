@@ -1,19 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '@app/shared/services/auth.service';
 
-@Injectable()
-export class JwtInterceptor implements HttpInterceptor {
-  constructor(private readonly authService: AuthService) {}
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    request = request.clone({
-      setHeaders: {
-        'Content-Type': 'application/json',
-        Authorization: `${this.authService.authorizationHeaderValue}`
-      }
-    });
-    return next.handle(request);
-  }
-}
+export const authInterceptor: HttpInterceptorFn = (request, next) => {
+  const authService = inject(AuthService);
+  request = request.clone({
+    setHeaders: {
+      'Content-Type': 'application/json',
+      Authorization: `${authService.authorizationHeaderValue}`
+    }
+  });
+  return next(request);
+};
