@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-functions',
-  templateUrl: './functions.component.html',
-  styleUrls: ['./functions.component.scss'],
+  template: `<p>functions works!</p>`,
   standalone: true
 })
 export class FunctionsComponent {

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { Function } from '@app/shared/models/function';
 import { AuthService } from '@app/shared/services/auth.service';
@@ -9,9 +8,34 @@ import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
+  template: `
+    <nav [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar">
+      <div class="list-group">
+        <div class="nested-menu" *ngFor="let item of functions$ | async">
+          <a class="list-group-item" (click)="addExpandClass(item.id)">
+            <i class="fa {{ item.icon }}"></i>&nbsp;
+            <span>{{ item.name }}</span>
+          </a>
+          <li class="nested" [class.expand]="showMenu === item.id" *ngFor="let subItem of item.children">
+            <ul class="submenu">
+              <li>
+                <a routerLink="{{ subItem.url }}" [routerLinkActive]="['router-link-active']">
+                  <i class="fa {{ subItem.icon }}"></i>&nbsp;
+                  <span>{{ subItem.name }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </div>
+      </div>
+      <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
+        <i class="fas fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;
+        <span>{{ 'Collapse Sidebar' }}</span>
+      </div>
+    </nav>
+  `,
   styleUrls: ['./sidebar.component.scss'],
-  imports: [NgClass, AsyncPipe, RouterLinkActive, TranslateModule, NgForOf, RouterLink],
+  imports: [NgClass, AsyncPipe, RouterLinkActive, NgForOf, RouterLink],
   standalone: true
 })
 export class SidebarComponent implements OnInit {
@@ -24,7 +48,6 @@ export class SidebarComponent implements OnInit {
   @Output() collapsedEvent = new EventEmitter<boolean>();
 
   constructor(
-    private readonly translate: TranslateService,
     private readonly router: Router,
     private readonly authService: AuthService,
     private readonly userService: UserService
@@ -76,10 +99,6 @@ export class SidebarComponent implements OnInit {
   rltAndLtr() {
     const dom: any = document.querySelector('body');
     dom.classList.toggle('rtl');
-  }
-
-  changeLang(language: string) {
-    this.translate.use(language);
   }
 
   onLoggedout() {

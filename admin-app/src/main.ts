@@ -5,7 +5,7 @@ import { AppComponent } from '@app/app.component';
 import { RouterModule } from '@angular/router';
 import { AppRoutes } from '@app/app.route';
 import { AuthGuard } from '@app/shared/guards/auth.guard';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { JwtInterceptor } from '@app/shared/interceptors/jwt.interceptor';
 import { ErrorsInterceptor } from '@app/shared/interceptors/errors.interceptor';
 
@@ -15,6 +15,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(RouterModule.forRoot(AppRoutes)),
+    provideHttpClient(),
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

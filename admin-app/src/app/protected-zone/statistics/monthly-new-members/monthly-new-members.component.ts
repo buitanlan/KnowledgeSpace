@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-monthly-new-members',
-  templateUrl: './monthly-new-members.component.html',
-  styleUrls: ['./monthly-new-members.component.scss'],
+  template: `<p>monthly-new-members works!</p>`,
   standalone: true
 })
 export class MonthlyNewMembersComponent {

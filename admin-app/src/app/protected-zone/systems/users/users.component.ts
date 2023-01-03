@@ -6,8 +6,12 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
+  template: `
+    <p>users list!</p>
+    <ul>
+      <li *ngFor="let user of users$ | async">{{ user.userName }}</li>
+    </ul>
+  `,
   imports: [NgForOf, AsyncPipe],
   standalone: true
 })

@@ -27,9 +27,3 @@ export const routes: Routes = [
     component: KnowledgeBaseComponent
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ContentsRoutingModule {}
