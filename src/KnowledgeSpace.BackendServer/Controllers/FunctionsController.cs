@@ -54,7 +54,6 @@ public class FunctionsController : BaseController
     public async Task<IActionResult> GetFunctions()
     {
         var functionVms = await _context.Functions
-            .AsNoTracking()
             .Select(u => new FunctionVm
             {
                 Id = u.Id,
@@ -83,7 +82,6 @@ public class FunctionsController : BaseController
 
         var totalRecords = await query.AsNoTracking().CountAsync();
         var items = await query
-            .AsNoTracking()
             .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)
             .Select(u => new FunctionVm
@@ -188,7 +186,6 @@ public class FunctionsController : BaseController
             };
         query = query.Where(x => x.FunctionId == functionId);
         var data = await query
-            .AsNoTracking()
             .Select(x => new CommandVm
             {
                 Id = x.Id,

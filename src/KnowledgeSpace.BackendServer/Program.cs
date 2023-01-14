@@ -36,7 +36,10 @@ builder.Services.AddCors(options =>
             policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
         });
 });
-
+var logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(hostingContext.Configuration));
 var app = builder.Build();

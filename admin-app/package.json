@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "npx eslint \"src/**/*.ts\" --quiet --fix",
     "format": "npx prettier \"src/**/*.{ts,html,scss}\" --write",
-    "prepare": "cd .. &&npx husky@8.0.2 install ./admin-app/.husky"
+    "prepare": "cd .. &&pnpx husky@8.0.2 install ./admin-app/.husky"
   },
   "private": true,
   "dependencies": {
@@ -65,7 +65,7 @@
     "typescript": "4.8.4"
   },
   "lint-staged": {
-    "*": "npm run format",
-    "*.ts": "npm run lint"
+    "*": "pnpm run format",
+    "*.ts": "pnpm run lint"
   }
 }

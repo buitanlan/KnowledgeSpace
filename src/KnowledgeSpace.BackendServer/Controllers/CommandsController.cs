@@ -19,7 +19,6 @@ public class CommandsController: BaseController
     public async Task<IActionResult> GetCommands()
     {
         var commandVms = await _context.Commands
-            .AsNoTracking()
             .Select(c => new CommandVm
             {
                 Id = c.Id,
