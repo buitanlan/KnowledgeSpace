@@ -15,7 +15,6 @@ public partial class KnowledgeBasesController
     public async Task<IActionResult> GetAttachment(int knowledgeBaseId)
     {
         var query = await _context.Attachments
-            .AsNoTracking()
             .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
             .Select(c => new AttachmentVm
             {

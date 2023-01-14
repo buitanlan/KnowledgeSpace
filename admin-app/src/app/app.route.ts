@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from '@app/shared/guards/auth.guard';
+import { authGuard } from '@app/shared/guards/auth.guard';
 
 export const AppRoutes: Routes = [
   {
     path: '',
     loadChildren: () => import('./protected-zone/protected-zone.route').then((m) => m.routes),
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'login',
