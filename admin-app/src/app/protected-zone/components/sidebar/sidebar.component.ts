@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Function } from '@app/shared/models/function';
@@ -46,12 +46,9 @@ export class SidebarComponent implements OnInit {
   functions$: Observable<Function[]> = of([]);
 
   @Output() collapsedEvent = new EventEmitter<boolean>();
-
-  constructor(
-    private readonly router: Router,
-    private readonly authService: AuthService,
-    private readonly userService: UserService
-  ) {}
+  readonly authService = inject(AuthService);
+  readonly router = inject(Router);
+  userService = inject(UserService);
 
   ngOnInit() {
     this.isActive = false;

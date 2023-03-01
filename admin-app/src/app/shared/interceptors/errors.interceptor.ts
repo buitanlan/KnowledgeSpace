@@ -29,6 +29,6 @@ const handleErrors = (error: HttpErrorResponse) => {
     modelStateErrors = modelStateErrors === '' ? 'Server error' : modelStateErrors;
     return throwError(() => modelStateErrors);
   }
-  console.log('error', errorMessage);
+  console.error('error', errorMessage);
   return throwError(() => errorMessage);
 };
