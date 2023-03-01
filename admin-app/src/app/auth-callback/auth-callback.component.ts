@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { NgIf } from '@angular/common';
@@ -19,11 +19,9 @@ import { NgIf } from '@angular/common';
 })
 export class AuthCallbackComponent implements OnInit {
   error = false;
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute
-  ) {}
+  readonly authService = inject(AuthService);
+  readonly router = inject(Router);
+  readonly route = inject(ActivatedRoute);
 
   async ngOnInit() {
     // check for error

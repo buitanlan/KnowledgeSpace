@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { User } from '@app/shared/models/user';
 import { Observable, of } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
@@ -17,7 +17,7 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 })
 export class UsersComponent implements OnInit {
   public users$: Observable<User[]> = of([]);
-  constructor(private readonly userService: UserService) {}
+  userService = inject(UserService);
 
   ngOnInit() {
     this.users$ = this.userService.getAll();

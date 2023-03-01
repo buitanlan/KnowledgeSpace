@@ -16,4 +16,4 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(RouterModule.forRoot(AppRoutes)),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
   ]
-}).catch((err) => console.error(err));
+}).catch(console.error);

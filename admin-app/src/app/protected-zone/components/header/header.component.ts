@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -105,8 +105,10 @@ export class HeaderComponent implements OnInit {
   userName: string;
   isAuthenticated = false;
   subscription: Subscription;
+  readonly authService = inject(AuthService);
+  readonly router = inject(Router);
 
-  constructor(private readonly router: Router, private readonly authService: AuthService) {
+  constructor() {
     this.subscription = this.authService.authNavStatus$.subscribe((status) => (this.isAuthenticated = status));
     this.userName = this.authService.name;
     this.router.events.subscribe((val) => {
