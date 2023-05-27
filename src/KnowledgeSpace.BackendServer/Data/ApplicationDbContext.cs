@@ -5,11 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Data;
 
-public class ApplicationDbContext : IdentityDbContext<User>
+public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<User>(options)
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options)
-    {
-    }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

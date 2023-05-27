@@ -67,7 +67,7 @@ public class RolesController : BaseController
             query = query.Where(x => x.Id.Contains(keyword) || x.Name.Contains(keyword));
         }
 
-        var totalRecords = await query.AsNoTracking().CountAsync();
+        var totalRecords = await query.CountAsync();
         var items = await query
             .Skip(pageIndex - 1 * pageSize)
             .Take(pageSize)

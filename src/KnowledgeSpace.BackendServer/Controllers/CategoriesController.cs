@@ -63,7 +63,7 @@ public class CategoriesController: BaseController
             query = query.Where(x => x.Name.Contains(filter)
                                      || x.Name.Contains(filter));
         }
-        var totalRecords = await query.AsNoTracking().CountAsync();
+        var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
             .Skip(pageIndex - 1 * pageSize)
@@ -100,7 +100,7 @@ public class CategoriesController: BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
     {
-        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var category = await _context.Categories.SingleOrDefaultAsync(x => x.Id == id);
         if (category is null)
             return NotFound();
 
@@ -130,7 +130,7 @@ public class CategoriesController: BaseController
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id); 
+        var category = await _context.Categories.SingleOrDefaultAsync(x => x.Id == id);
         if (category is null)
             return NotFound();
 

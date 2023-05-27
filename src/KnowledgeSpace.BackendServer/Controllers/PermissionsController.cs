@@ -4,7 +4,7 @@ using KnowledgeSpace.BackendServer.Authorization;
 using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
@@ -22,7 +22,7 @@ public class PermissionsController : BaseController
 
 	public async Task<IActionResult> GetCommandViews()
 	{
-		await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+		await using var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 		if (conn.State == ConnectionState.Closed)
 		{
 			await conn.OpenAsync();

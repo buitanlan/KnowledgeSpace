@@ -5,17 +5,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace KnowledgeSpace.BackendServer.Authorization;
 
-public class ClaimRequirementFilter: IAuthorizationFilter
+public class ClaimRequirementFilter(FunctionCode functionCode, CommandCode commandCode): IAuthorizationFilter
 {
-    private readonly FunctionCode _functionCode;
-    private readonly CommandCode _commandCode;
-
-    public ClaimRequirementFilter(FunctionCode functionCode, CommandCode commandCode)
-    {
-        _functionCode = functionCode;
-        _commandCode = commandCode;
-    }
-
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var permissionsClaim = context.HttpContext.User.Claims
@@ -23,7 +14,7 @@ public class ClaimRequirementFilter: IAuthorizationFilter
         if (permissionsClaim is not null)
         {
             var permissions = JsonSerializer.Deserialize<List<string>>(permissionsClaim.Value);
-            if (permissions is not null && !permissions.Contains(_functionCode + "_" + _commandCode))
+            if (permissions is not null && !permissions.Contains(functionCode + "_" + commandCode))
             {
                 context.Result = new ForbidResult();
             }

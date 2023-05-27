@@ -1,14 +1,9 @@
 ﻿namespace KnowledgeSpace.BackendServer.Services;
 
-public class StorageService: IStorageService
+public class StorageService(IWebHostEnvironment webHostEnvironment): IStorageService
 {
-    private readonly string _userContentFolder;
+    private readonly string _userContentFolder = Path.Combine(webHostEnvironment.WebRootPath, UserContentFolderName);
     private const string UserContentFolderName = "user-attachments";
-
-    public StorageService(IWebHostEnvironment webHostEnvironment)
-    {
-        _userContentFolder = Path.Combine(webHostEnvironment.WebRootPath, UserContentFolderName);
-    }
 
     public string GetFileUrl(string fileName)
     {

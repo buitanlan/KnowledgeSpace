@@ -13,7 +13,7 @@ public static class IdentityServiceExtensions
         //1. Set up Ef core
         services.AddDbContext<ApplicationDbContext>(opt =>
         {
-            opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();

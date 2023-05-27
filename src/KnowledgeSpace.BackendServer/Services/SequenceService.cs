@@ -1,20 +1,14 @@
 ﻿using System.Data;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace KnowledgeSpace.BackendServer.Services;
 
-public class SequenceService: ISequenceService
+public class SequenceService(IConfiguration configuration): ISequenceService
 {
-    private readonly IConfiguration _configuration;
-
-    public SequenceService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
     public async Task<int> GetKnowledgeBaseNewId()
     {
-        await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+        await using var conn = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
         if (conn.State == ConnectionState.Closed)
         {
             await conn.OpenAsync();
