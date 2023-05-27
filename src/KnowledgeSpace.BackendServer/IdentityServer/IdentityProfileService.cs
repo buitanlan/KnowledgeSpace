@@ -11,43 +11,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.IdentityServer;
 
-public class IdentityProfileService: IProfileService
+public class IdentityProfileService(
+    IUserClaimsPrincipalFactory<User> claimsFactory,
+    UserManager<User> userManager,
+    ApplicationDbContext dbContext,
+    RoleManager<IdentityRole> roleManager): IProfileService
 {
-    private readonly IUserClaimsPrincipalFactory<User> _claimsFactory;
-    private readonly UserManager<User> _userManager;
-    private readonly ApplicationDbContext _context;
-    private readonly RoleManager<IdentityRole> _roleManager;
-
-    public IdentityProfileService(
-        IUserClaimsPrincipalFactory<User> claimsFactory,
-        UserManager<User> userManager,
-        ApplicationDbContext context,
-        RoleManager<IdentityRole> roleManager)
-    {
-        _claimsFactory = claimsFactory;
-        _userManager = userManager;
-        _context = context;
-        _roleManager = roleManager;
-    }
+  
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         var sub = context.Subject.GetSubjectId();
-        var user = await _userManager.FindByIdAsync(sub);
+        var user = await userManager.FindByIdAsync(sub);
         if (user is null)
         {
             throw new ArgumentException("");
         }
 
-        var principal = await _claimsFactory.CreateAsync(user);
+        var principal = await claimsFactory.CreateAsync(user);
         var claims = principal.Claims.ToList();
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = await userManager.GetRolesAsync(user);
 
-        var query = from p in _context.Permissions
-            join c in _context.Commands
+        var query = from p in dbContext.Permissions
+            join c in dbContext.Commands
                 on p.CommandId equals c.Id
-            join f in _context.Functions
+            join f in dbContext.Functions
                 on p.FunctionId equals f.Id
-            join r in _roleManager.Roles on p.RoleId equals r.Id
+            join r in roleManager.Roles on p.RoleId equals r.Id
             where roles.Contains(r.Name)
             select f.Id + "_" + c.Id;
         var permissions = await query.Distinct().ToListAsync();
@@ -64,7 +53,7 @@ public class IdentityProfileService: IProfileService
     public async Task IsActiveAsync(IsActiveContext context)
     {
         var sub = context.Subject.GetSubjectId();
-        var user = await _userManager.FindByIdAsync(sub);
+        var user = await userManager.FindByIdAsync(sub);
         context.IsActive = user is not null;
     }
 }

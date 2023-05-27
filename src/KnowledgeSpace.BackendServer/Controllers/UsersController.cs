@@ -86,7 +86,7 @@ public class UsersController : BaseController
                 x.Email.Contains(filter) || x.UserName.Contains(filter) || x.PhoneNumber.Contains(filter));
         }
 
-        var totalRecords = await query.AsNoTracking().CountAsync();
+        var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
             .Skip(pageIndex - 1 * pageSize)

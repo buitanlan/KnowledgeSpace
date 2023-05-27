@@ -15,7 +15,7 @@ public class ApiResponse
         Message = message ?? GetDefaultMessageForStatusCode(statusCode);
     }
 
-    private static string GetDefaultMessageForStatusCode(int statusCode)
+    private static string? GetDefaultMessageForStatusCode(int statusCode)
     {
         return statusCode switch
         {

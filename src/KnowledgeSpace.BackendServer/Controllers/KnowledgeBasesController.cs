@@ -12,21 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public partial class KnowledgeBasesController : BaseController
+public partial class KnowledgeBasesController
+    (ApplicationDbContext context, 
+    ISequenceService sequenceService,
+    IStorageService storageService) : BaseController
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ISequenceService _sequenceService;
-    private readonly IStorageService _storageService;
-
-    public KnowledgeBasesController(ApplicationDbContext context, 
-        ISequenceService sequenceService,
-        IStorageService storageService)
-    {
-        _context = context;
-        _sequenceService = sequenceService;
-        _storageService = storageService;
-    }
-
 
     [HttpPost]
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.Create)]
@@ -34,7 +24,7 @@ public partial class KnowledgeBasesController : BaseController
     public async Task<IActionResult> PostKnowledgeBase([FromForm] KnowledgeBaseCreateRequest request)
     {
         var knowledgeBase = CreateKnowledgeBaseEntity(request);
-        knowledgeBase.Id = await _sequenceService.GetKnowledgeBaseNewId();
+        knowledgeBase.Id = await sequenceService.GetKnowledgeBaseNewId();
         if (request.Attachments is not null && request.Attachments.Count > 0)
         {
             foreach (var attachment in request.Attachments)
@@ -42,19 +32,19 @@ public partial class KnowledgeBasesController : BaseController
                 var attachmentEntity = await SaveFile(knowledgeBase.Id, attachment);
                 if (attachmentEntity is not null)
                 {
-                    _context.Attachments.Add(attachmentEntity);
+                    context.Attachments.Add(attachmentEntity);
 
                 }
             }
         }
 
-        _context.KnowledgeBases.Add(knowledgeBase);
+        context.KnowledgeBases.Add(knowledgeBase);
         //Process label
         if (!string.IsNullOrEmpty(request.Labels))
         {
             await ProcessLabel(request, knowledgeBase);
         }
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -99,7 +89,7 @@ public partial class KnowledgeBasesController : BaseController
         foreach (var labelText in labels)
         {
             var labelId = TextHelper.ToUnsignedString(labelText);
-            var existingLabel = await _context.Labels.AsNoTracking().SingleOrDefaultAsync(x =>x.Id == labelId);
+            var existingLabel = await context.Labels.SingleOrDefaultAsync(x =>x.Id == labelId);
             if (existingLabel is null)
             {
                 var labelEntity = new Label
@@ -107,14 +97,14 @@ public partial class KnowledgeBasesController : BaseController
                     Id = labelId,
                     Name = labelText
                 };
-                _context.Labels.Add(labelEntity);
+                context.Labels.Add(labelEntity);
             }
             var labelInKnowledgeBase = new LabelInKnowledgeBase
             {
                 KnowledgeBaseId = knowledgeBase.Id,
                 LabelId = labelId
             };
-            _context.LabelInKnowledgeBases.Add(labelInKnowledgeBase);
+            context.LabelInKnowledgeBases.Add(labelInKnowledgeBase);
         }
     }
 
@@ -123,7 +113,7 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetKnowledgeBases()
     {
-        var knowledgeBaseVms = await _context.KnowledgeBases
+        var knowledgeBaseVms = await context.KnowledgeBases
             .AsNoTracking()
             .Select(u => new KnowledgeBaseQuickVm
             {
@@ -143,12 +133,12 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetKnowledgeBasesPaging(string filter, int pageIndex, int pageSize)
     {
-        var query = _context.KnowledgeBases.AsQueryable();
+        var query = context.KnowledgeBases.AsQueryable();
         if (!string.IsNullOrEmpty(filter))
         {
             query = query.Where(x => x.Title.Contains(filter));
         }
-        var totalRecords = await query.AsNoTracking().CountAsync();
+        var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
             .Skip(pageIndex - 1 * pageSize)
@@ -202,7 +192,7 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.View)]
     public async Task<IActionResult> GetById(int id)
     {
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var knowledgeBase = await context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found knowledge base with id: {id}"));
 
@@ -216,16 +206,16 @@ public partial class KnowledgeBasesController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PutKnowledgeBase(int id, [FromBody] KnowledgeBaseCreateRequest request)
     {
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == id);
         if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found knowledge base with id {id}"));
         UpdateKnowledgeBase(request, knowledgeBase);
-        _context.KnowledgeBases.Update(knowledgeBase);
+        context.KnowledgeBases.Update(knowledgeBase);
         if (!string.IsNullOrEmpty(request.Labels))
         {
             await ProcessLabel(request, knowledgeBase);
         }
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -239,12 +229,12 @@ public partial class KnowledgeBasesController : BaseController
     [ClaimRequirement(FunctionCode.ContentKnowledgeBase,CommandCode.Delete)]
     public async Task<IActionResult> DeleteKnowledgeBase(int id)
     {
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == id);
         if (knowledgeBase is null)
             return NotFound(new ApiNotFoundResponse($"Cannot find knowledge base with {id}"));
 
-        _context.KnowledgeBases.Remove(knowledgeBase);
-        var result = await _context.SaveChangesAsync();
+        context.KnowledgeBases.Remove(knowledgeBase);
+        var result = await context.SaveChangesAsync();
         if (result <= 0) return BadRequest(new ApiBadRequestResponse("Cannot delete this knowledge Base"));
         var knowledgeBaseVm = CreateKnowledgeBaseVm(knowledgeBase);
         return Ok(knowledgeBaseVm);

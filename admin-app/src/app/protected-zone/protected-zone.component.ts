@@ -9,7 +9,7 @@ import { SidebarComponent } from '@app/protected-zone/components/sidebar/sidebar
   template: `
     <app-header></app-header>
     <app-sidebar (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
-    <section [ngClass]="{ collapsed: collapedSideBar }" class="main-container">
+    <section [ngClass]="{ collapsed: collapsedSideBar }" class="main-container">
       <router-outlet></router-outlet>
     </section>
   `,
@@ -18,11 +18,11 @@ import { SidebarComponent } from '@app/protected-zone/components/sidebar/sidebar
   standalone: true
 })
 export class ProtectedZoneComponent {
-  collapedSideBar = false;
+  collapsedSideBar = false;
 
   constructor() {}
 
   receiveCollapsed($event: boolean) {
-    this.collapedSideBar = $event;
+    this.collapsedSideBar = $event;
   }
 }

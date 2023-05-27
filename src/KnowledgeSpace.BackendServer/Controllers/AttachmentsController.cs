@@ -14,7 +14,7 @@ public partial class KnowledgeBasesController
     [HttpGet("{knowledgeBaseId:int}/attachments")]
     public async Task<IActionResult> GetAttachment(int knowledgeBaseId)
     {
-        var query = await _context.Attachments
+        var query = await context.Attachments
             .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
             .Select(c => new AttachmentVm
             {
@@ -34,13 +34,13 @@ public partial class KnowledgeBasesController
     [HttpDelete("{knowledgeBaseId:int}/attachments/{attachmentId:int}")]
     public async Task<IActionResult> DeleteAttachment(int attachmentId, int knowledgeBaseId)
     {
-        var attachment = await _context.Attachments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == attachmentId);
+        var attachment = await context.Attachments.SingleOrDefaultAsync(x => x.Id == attachmentId);
         if (attachment is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found attachment with id {attachmentId}"));
 
-        _context.Attachments.Remove(attachment);
+        context.Attachments.Remove(attachment);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
         if (result > 0)
         {
             return Ok();
@@ -54,11 +54,11 @@ public partial class KnowledgeBasesController
         if (name is null) return null;
         var originalFileName = name.Trim('"');
         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
-        await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+        await storageService.SaveFileAsync(file.OpenReadStream(), fileName);
         var attachmentEntity = new Attachment
         {
             FileName = fileName,
-            FilePath = _storageService.GetFileUrl(fileName),
+            FilePath = storageService.GetFileUrl(fileName),
             FileSize = file.Length,
             FileType = Path.GetExtension(fileName),
             KnowledgeBaseId = knowledgeBaseId,

@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using KnowledgeSpace.BackendServer;
 using KnowledgeSpace.BackendServer.Data;
@@ -6,11 +7,13 @@ using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 builder.Logging.ClearProviders();
-builder.Services.AddControllersWithViews()
-    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RoleCreateRequestValidator>());
+builder.Services.AddControllersWithViews();
+builder.Services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters()
+                .AddValidatorsFromAssembly(typeof(RoleCreateRequestValidator).Assembly);
+
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AddAreaFolderRouteModelConvention("Identity", "/Account/", model =>

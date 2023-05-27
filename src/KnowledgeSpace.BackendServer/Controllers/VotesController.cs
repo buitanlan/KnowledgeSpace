@@ -13,7 +13,7 @@ public partial class KnowledgeBasesController
     [HttpGet("{knowledgeBaseId}/votes")]
     public async Task<IActionResult> GetVotes(int knowledgeBaseId)
     {
-        var votes = await _context.Votes
+        var votes = await context.Votes
             .AsNoTracking()
             .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
             .Select(x => new VoteVm
@@ -32,8 +32,7 @@ public partial class KnowledgeBasesController
     [HttpPost("{knowledgeBaseId}/votes")]
     public async Task<IActionResult> PostVote(int knowledgeBaseId, [FromBody] VoteCreateRequest request)
     {
-        var vote = await _context.Votes
-            .AsNoTracking()
+        var vote = await context.Votes
             .SingleOrDefaultAsync(x=> x.KnowledgeBaseId == knowledgeBaseId && x.UserId == request.UserId);
         if (vote != null)
             return BadRequest(new ApiBadRequestResponse("This user has been voted for this KB"));
@@ -43,15 +42,15 @@ public partial class KnowledgeBasesController
             KnowledgeBaseId = knowledgeBaseId,
             UserId = request.UserId
         };
-        _context.Votes.Add(vote);
+        context.Votes.Add(vote);
 
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id {knowledgeBaseId}"));
         knowledgeBase.NumberOfVotes = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) + 1;
-        _context.KnowledgeBases.Update(knowledgeBase);
+        context.KnowledgeBases.Update(knowledgeBase);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
         if (result > 0)
         {
             return NoContent();
@@ -63,20 +62,19 @@ public partial class KnowledgeBasesController
     [HttpDelete("{knowledgeBaseId}/votes/{userId}")]
     public async Task<IActionResult> DeleteVote(int knowledgeBaseId, string userId)
     {
-        var vote = await _context.Votes
-            .AsNoTracking()
+        var vote = await context.Votes
             .SingleOrDefaultAsync(x => x.KnowledgeBaseId == knowledgeBaseId && x.UserId == userId);
         if (vote is null)
             return NotFound();
 
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id {knowledgeBaseId}"));
         knowledgeBase.NumberOfVotes = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) - 1;
-        _context.KnowledgeBases.Update(knowledgeBase);
+        context.KnowledgeBases.Update(knowledgeBase);
 
-        _context.Votes.Remove(vote);
-        var result = await _context.SaveChangesAsync();
+        context.Votes.Remove(vote);
+        var result = await context.SaveChangesAsync();
         if (result > 0)
         {
             return Ok();

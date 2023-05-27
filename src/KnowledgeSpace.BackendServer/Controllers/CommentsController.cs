@@ -17,12 +17,12 @@ public partial class KnowledgeBasesController
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
     public async Task<IActionResult> GetCommentsPaging(int knowledgeBaseId, string filter, int pageIndex, int pageSize)
     {
-        var query = _context.Comments.Where(x => x.KnowledgeBaseId == knowledgeBaseId).AsQueryable();
+        var query = context.Comments.Where(x => x.KnowledgeBaseId == knowledgeBaseId).AsQueryable();
         if (!string.IsNullOrEmpty(filter))
         {
             query = query.Where(x => x.Content.Contains(filter));
         }
-        var totalRecords = await query.AsNoTracking().CountAsync();
+        var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
             .Skip(pageIndex - 1 * pageSize)
@@ -51,7 +51,7 @@ public partial class KnowledgeBasesController
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
     public async Task<IActionResult> GetCommentDetail(int commentId, int knowledgeBaseId)
     {
-        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        var comment = await context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
         if (comment is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found comment with id: {commentId}"));
 
@@ -79,15 +79,15 @@ public partial class KnowledgeBasesController
             KnowledgeBaseId = request.KnowledgeBaseId,
             OwnerUserId = string.Empty,
         };
-        _context.Comments.Add(comment);
+        context.Comments.Add(comment);
 
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id: {knowledgeBaseId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) + 1;
-        _context.KnowledgeBases.Update(knowledgeBase);
+        context.KnowledgeBases.Update(knowledgeBase);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
         if (result > 0)
         {
             return CreatedAtAction(nameof(GetCommentDetail), new { id = knowledgeBaseId, commentId = comment.Id }, request);
@@ -101,16 +101,16 @@ public partial class KnowledgeBasesController
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.Update)]
     public async Task<IActionResult> PutComment(int commentId, [FromBody] CommentCreateRequest request, int knowledgeBaseId)
     {
-        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        var comment = await context.Comments.SingleOrDefaultAsync(x => x.Id == commentId);
         if (comment is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found comment with id: {commentId}"));
         if (User.Identity != null && comment.OwnerUserId != User.Identity.Name)
             return Forbid();
 
         comment.Content = request.Content;
-        _context.Comments.Update(comment);
+        context.Comments.Update(comment);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -125,19 +125,19 @@ public partial class KnowledgeBasesController
     public async Task<IActionResult> DeleteComment(int knowledgeBaseId, int commentId)
     {
 
-        var comment = await _context.Comments.AsNoTracking().SingleOrDefaultAsync(x => x.Id == commentId);
+        var comment = await context.Comments.SingleOrDefaultAsync(x => x.Id == commentId);
         if (comment is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found the comment with id: {commentId}"));
 
-        _context.Comments.Remove(comment);
+        context.Comments.Remove(comment);
 
-        var knowledgeBase = await _context.KnowledgeBases.AsNoTracking().SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
+        var knowledgeBase = await context.KnowledgeBases.SingleOrDefaultAsync(x => x.Id == knowledgeBaseId);
         if (knowledgeBase is null)
             return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id: {knowledgeBaseId}"));
         knowledgeBase.NumberOfComments = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) - 1;
-        _context.KnowledgeBases.Update(knowledgeBase);
+        context.KnowledgeBases.Update(knowledgeBase);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await context.SaveChangesAsync();
         if (result <= 0) return BadRequest(new ApiBadRequestResponse("Delete comment failed"));
         var commentVm = new CommentVm
         {

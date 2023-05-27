@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
