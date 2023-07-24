@@ -9,17 +9,9 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ConfirmEmailChangeModel : PageModel
+public class ConfirmEmailChangeModel(UserManager<User> userManager, SignInManager<User> signInManager)
+    : PageModel
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-
-    public ConfirmEmailChangeModel(UserManager<User> userManager, SignInManager<User> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
-
     [TempData]
     public string StatusMessage { get; set; }
 
@@ -30,14 +22,14 @@ public class ConfirmEmailChangeModel : PageModel
             return RedirectToPage("/Index");
         }
 
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId);
         if (user is null)
         {
             return NotFound($"Unable to load user with ID '{userId}'.");
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-        var result = await _userManager.ChangeEmailAsync(user, email, code);
+        var result = await userManager.ChangeEmailAsync(user, email, code);
         if (!result.Succeeded)
         {
             StatusMessage = "Error changing email.";
@@ -46,14 +38,14 @@ public class ConfirmEmailChangeModel : PageModel
 
         // In our UI email and user name are one and the same, so when we update the email
         // we need to update the user name.
-        var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
+        var setUserNameResult = await userManager.SetUserNameAsync(user, email);
         if (!setUserNameResult.Succeeded)
         {
             StatusMessage = "Error changing user name.";
             return Page();
         }
 
-        await _signInManager.RefreshSignInAsync(user);
+        await signInManager.RefreshSignInAsync(user);
         StatusMessage = "Thank you for confirming your email change.";
         return Page();
     }

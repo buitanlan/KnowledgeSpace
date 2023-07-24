@@ -5,20 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class CommandsController: BaseController
+public class CommandsController(ApplicationDbContext context) : BaseController
 {
-    private readonly ApplicationDbContext _context;
-
-    public CommandsController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-
     [HttpGet]
     public async Task<IActionResult> GetCommands()
     {
-        var commandVms = await _context.Commands
+        var commandVms = await context.Commands
             .Select(c => new CommandVm
             {
                 Id = c.Id,

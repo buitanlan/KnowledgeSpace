@@ -10,22 +10,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class FunctionsController : BaseController
+public class FunctionsController(ApplicationDbContext context) : BaseController
 {
-    private readonly ApplicationDbContext _context;
-
-    public FunctionsController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-        
-        
     [HttpPost]
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Create)]
     [ApiValidationFilter]
     public async Task<IActionResult> PostFunction([FromBody]FunctionCreateRequest  request)
     {
-        var dbFunction = await _context.Functions.SingleOrDefaultAsync(x => x.Id == request.Id);
+        var dbFunction = await context.Functions.SingleOrDefaultAsync(x => x.Id == request.Id);
         if (dbFunction is not null)
             return BadRequest(new ApiBadRequestResponse($"Function with id {request.Id} is existed!"));
             
@@ -38,8 +30,8 @@ public class FunctionsController : BaseController
             Url = request.Url,
             Icon = request.Icon
         };
-        await _context.Functions.AddAsync(function);
-        var result = await _context.SaveChangesAsync();
+        await context.Functions.AddAsync(function);
+        var result = await context.SaveChangesAsync();
             
         if(result > 0)
         {
@@ -53,7 +45,7 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
     public async Task<IActionResult> GetFunctions()
     {
-        var functionVms = await _context.Functions
+        var functionVms = await context.Functions
             .Select(u => new FunctionVm
             {
                 Id = u.Id,
@@ -73,7 +65,7 @@ public class FunctionsController : BaseController
 
     public async Task<ActionResult<Pagination<RoleVm>>> GetFunctionsPaging(string filter, int pageSize, int pageIndex)
     {
-        var query = _context.Functions.AsQueryable();
+        var query = context.Functions.AsQueryable();
         if( !string.IsNullOrEmpty(filter))
         {
             query = query.Where(x => 
@@ -109,7 +101,7 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
     public async Task<IActionResult> GetById(string id)
     {
-        var function = await _context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var function = await context.Functions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         if (function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
         var functionVm = new FunctionVm
         {
@@ -127,7 +119,7 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
     public async Task<IActionResult> PutFunction(string id, [FromBody] FunctionCreateRequest request)
     {
-        var function = await _context.Functions.SingleOrDefaultAsync(x => x.Id == id);
+        var function = await context.Functions.SingleOrDefaultAsync(x => x.Id == id);
         if(function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
         function.Name = request.Name;
@@ -136,8 +128,8 @@ public class FunctionsController : BaseController
         function.Url = request.Url;
         function.Icon = request.Icon;
         
-        _context.Functions.Update(function);
-        var result = await _context.SaveChangesAsync();
+        context.Functions.Update(function);
+        var result = await context.SaveChangesAsync();
 
         if (result > 0) return NoContent();
         return BadRequest();
@@ -148,11 +140,11 @@ public class FunctionsController : BaseController
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Delete)]
     public async Task<IActionResult> DeleteFunction(string id)
     {
-        var function = await _context.Functions.SingleOrDefaultAsync(x => x.Id == id);
+        var function = await context.Functions.SingleOrDefaultAsync(x => x.Id == id);
         if (function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
-        _context.Functions.Remove(function);
-        var result = await _context.SaveChangesAsync();
+        context.Functions.Remove(function);
+        var result = await context.SaveChangesAsync();
 
         if (result <= 0) return BadRequest(new ApiBadRequestResponse("Delete function failed"));
         var functionVm = new FunctionVm
@@ -173,10 +165,10 @@ public class FunctionsController : BaseController
     public async Task<IActionResult> GetCommandsInFunction(string functionId)
     {
         var query =
-            from c in _context.Commands
-            join cif in _context.CommandInFunctions on c.Id equals cif.CommandId into result1
+            from c in context.Commands
+            join cif in context.CommandInFunctions on c.Id equals cif.CommandId into result1
             from commandInFunction in result1.DefaultIfEmpty()
-            join f in _context.Functions on commandInFunction.FunctionId equals f.Id into result2
+            join f in context.Functions on commandInFunction.FunctionId equals f.Id into result2
             from function in result2.DefaultIfEmpty()
             select new
             {
@@ -201,10 +193,10 @@ public class FunctionsController : BaseController
     public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
     {
         var query =
-            from c in _context.Commands
-            join cif in _context.CommandInFunctions on c.Id equals cif.CommandId into result1
+            from c in context.Commands
+            join cif in context.CommandInFunctions on c.Id equals cif.CommandId into result1
             from commandInFunction in result1.DefaultIfEmpty()
-            join f in _context.Functions on commandInFunction.FunctionId equals f.Id into result2
+            join f in context.Functions on commandInFunction.FunctionId equals f.Id into result2
             from function in result2.DefaultIfEmpty()
             select new
             {
@@ -230,7 +222,7 @@ public class FunctionsController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
     {
-        var commandInFunction = await _context.CommandInFunctions
+        var commandInFunction = await context.CommandInFunctions
             .SingleOrDefaultAsync(x => x.CommandId == request.CommandId && x.FunctionId ==  request.FunctionId);
         if (commandInFunction != null)
             return BadRequest(new ApiBadRequestResponse("This command has been added to function"));
@@ -240,8 +232,8 @@ public class FunctionsController : BaseController
             CommandId = request.CommandId,
             FunctionId = request.FunctionId
         };
-        _context.CommandInFunctions.Add(entity);
-        var result = await _context.SaveChangesAsync();
+        context.CommandInFunctions.Add(entity);
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -256,7 +248,7 @@ public class FunctionsController : BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> DeleteCommandToFunction(string functionId, string commandId)
     {
-        var commandInFunction = await _context.CommandInFunctions
+        var commandInFunction = await context.CommandInFunctions
             .SingleOrDefaultAsync(x => x.CommandId == commandId && x.FunctionId ==  functionId);
         if (commandInFunction is null)
             return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
@@ -266,8 +258,8 @@ public class FunctionsController : BaseController
             CommandId = commandId,
             FunctionId = functionId
         };
-        _context.CommandInFunctions.Remove(entity);
-        var result = await _context.SaveChangesAsync();
+        context.CommandInFunctions.Remove(entity);
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {

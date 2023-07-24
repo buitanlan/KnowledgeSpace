@@ -8,21 +8,14 @@ using Npgsql;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class PermissionsController : BaseController
+public class PermissionsController(IConfiguration configuration) : BaseController
 {
-	private readonly IConfiguration _configuration;
-
-	public PermissionsController(IConfiguration configuration)
-	{
-		_configuration = configuration;
-	}
-
 	[HttpGet]
 	[ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
 
 	public async Task<IActionResult> GetCommandViews()
 	{
-		await using var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+		await using var conn = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
 		if (conn.State == ConnectionState.Closed)
 		{
 			await conn.OpenAsync();
@@ -42,6 +35,6 @@ public class PermissionsController : BaseController
                         order by f.ParentId";
 
 		var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
-		return Ok(result.ToList());
+		return Ok(result);
 	}
 }
