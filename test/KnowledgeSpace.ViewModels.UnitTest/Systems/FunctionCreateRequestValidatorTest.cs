@@ -5,21 +5,15 @@ namespace KnowledgeSpace.ViewModels.UnitTest.Systems;
 
 public class FunctionCreateRequestValidatorTest
 {
-    private FunctionCreateRequestValidator _validator;
-    private FunctionCreateRequest _request;
-
-    public FunctionCreateRequestValidatorTest()
+    private FunctionCreateRequestValidator _validator = new();
+    private FunctionCreateRequest _request = new()
     {
-        _request = new FunctionCreateRequest
-        {
-            Id = "test6",
-            ParentId = null,
-            Name = "test6",
-            SortOrder = 6,
-            Url = "/test6"
-        };
-        _validator = new FunctionCreateRequestValidator();
-    }
+        Id = "test6",
+        ParentId = null,
+        Name = "test6",
+        SortOrder = 6,
+        Url = "/test6"
+    };
 
     [Fact]
     public void Should_Valid_Result_When_Valid_Request()

@@ -11,22 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class UsersController : BaseController
-{
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly ApplicationDbContext _context;
-    public UsersController(
-        UserManager<User> userManager,
+public class UsersController(UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager,
         ApplicationDbContext context)
-    {
-        _context = context;
-        _roleManager = roleManager;
-        _userManager = userManager;
-    }
-
-        
+    : BaseController
+{
     [HttpPost]
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Create)]
     [ApiValidationFilter]
@@ -43,7 +32,7 @@ public class UsersController : BaseController
             PhoneNumber = request.PhoneNumber
                 
         };
-        var result = await _userManager.CreateAsync(user);
+        var result = await userManager.CreateAsync(user);
         if(result.Succeeded)
         {
             return CreatedAtAction(nameof(GetById), new {id = user.Id}, request);
@@ -56,7 +45,7 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
     public async Task<IActionResult> GetUsers()
     {
-        var users = _userManager.Users;
+        var users = userManager.Users;
 
         var userVms = await users
             .AsNoTracking()
@@ -79,7 +68,7 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
     public async Task<ActionResult<Pagination<RoleVm>>> GetUsersPaging(string filter, int pageSize, int pageIndex)
     {
-        var query = _userManager.Users;
+        var query = userManager.Users;
         if( !string.IsNullOrEmpty(filter))
         {
             query = query.Where(x => 
@@ -117,7 +106,7 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
     public async Task<IActionResult> GetById(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(id);
         if (user is null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
         var userVm = new UserVm
         {
@@ -137,7 +126,7 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Update)]
     public async Task<IActionResult> PutUser(string id, [FromBody] UserCreateRequest request)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(id);
         if(user is null) return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
         user.FirstName = request.FirstName;
@@ -145,7 +134,7 @@ public class UsersController : BaseController
         user.Dob = request.Dob;
         user.PhoneNumber = request.PhoneNumber;
 
-        var result = await _userManager.UpdateAsync(user);
+        var result = await userManager.UpdateAsync(user);
 
         if (result.Succeeded) return NoContent();
         return BadRequest(new ApiBadRequestResponse(result));
@@ -156,11 +145,11 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Update)]
     public async Task<IActionResult> PutUserPassword(string id, [FromBody]UserPasswordChangeRequest request)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(id);
         if (user is null)
             return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
-        var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+        var result = await userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
         if (result.Succeeded)
         {
@@ -174,10 +163,10 @@ public class UsersController : BaseController
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Delete)]
     public async Task<IActionResult> DeleteUser(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(id);
         if (user is null) return NotFound();
 
-        var result = await _userManager.DeleteAsync(user);
+        var result = await userManager.DeleteAsync(user);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
         var userVm = new UserVm
@@ -197,13 +186,13 @@ public class UsersController : BaseController
     [HttpGet("{userId}/menu")]
     public async Task<IActionResult> GetMenuByUserPermission(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        var roles = await _userManager.GetRolesAsync(user);
-        var query = from f in _context.Functions
-            join p in _context.Permissions
+        var user = await userManager.FindByIdAsync(userId);
+        var roles = await userManager.GetRolesAsync(user);
+        var query = from f in context.Functions
+            join p in context.Permissions
                 on f.Id equals p.FunctionId
-            join r in _roleManager.Roles on p.RoleId equals r.Id
-            join a in _context.Commands
+            join r in roleManager.Roles on p.RoleId equals r.Id
+            join a in context.Commands
                 on p.CommandId equals a.Id
             where roles.Contains(r.Name) && a.Id == "VIEW"
             select new FunctionVm

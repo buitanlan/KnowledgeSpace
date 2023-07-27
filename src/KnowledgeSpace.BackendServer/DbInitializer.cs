@@ -3,36 +3,26 @@ using KnowledgeSpace.BackendServer.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 namespace KnowledgeSpace.BackendServer;
 
-public class DbInitializer
+public class DbInitializer(ApplicationDbContext context,
+    UserManager<User> userManager,
+    RoleManager<IdentityRole> roleManager)
 {
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private const string AdminRoleName = "Admin";
     private const string UserRoleName = "Member";
-
-    public DbInitializer(ApplicationDbContext context,
-        UserManager<User> userManager,
-        RoleManager<IdentityRole> roleManager)
-    {
-        _context = context;
-        _userManager = userManager;
-        _roleManager = roleManager;
-    }
 
     public async Task Seed()
     {
         #region Quyền
 
-        if (!_roleManager.Roles.Any())
+        if (!roleManager.Roles.Any())
         {
-            await _roleManager.CreateAsync(new IdentityRole
+            await roleManager.CreateAsync(new IdentityRole
             {
                 Id = AdminRoleName,
                 Name = AdminRoleName,
                 NormalizedName = AdminRoleName.ToUpper(),
             });
-            await _roleManager.CreateAsync(new IdentityRole
+            await roleManager.CreateAsync(new IdentityRole
             {
                 Id = UserRoleName,
                 Name = UserRoleName,
@@ -44,9 +34,9 @@ public class DbInitializer
 
         #region Người dùng
 
-        if (!_userManager.Users.Any())
+        if (!userManager.Users.Any())
         {
-            var result = await _userManager.CreateAsync(new User
+            var result = await userManager.CreateAsync(new User
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = "admin",
@@ -57,8 +47,8 @@ public class DbInitializer
             }, "Admin@123");
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync("admin");
-                await _userManager.AddToRoleAsync(user, AdminRoleName);
+                var user = await userManager.FindByNameAsync("admin");
+                await userManager.AddToRoleAsync(user, AdminRoleName);
             }
         }
 
@@ -86,14 +76,14 @@ public class DbInitializer
                 new() {Id = "SystemPermission", Name = "Quyền hạn",ParentId = "System",Url = "/systems/permissions",Icon="fa-desktop"},
             };
 
-        if (!_context.Functions.Any())
+        if (!context.Functions.Any())
         {   
-            _context.Functions.AddRange(listFunction);
+            context.Functions.AddRange(listFunction);
         }
 
-        if (!_context.Commands.Any())
+        if (!context.Commands.Any())
         {
-            _context.Commands.AddRange(new List<Command>
+            context.Commands.AddRange(new List<Command>
             {
                 new() {Id = "View", Name = "Xem"},
                 new() {Id = "Create", Name = "Thêm"},
@@ -105,9 +95,9 @@ public class DbInitializer
 
         #endregion Chức năng
 
-        var functions = _context.Functions;
+        var functions = context.Functions;
 
-        if (!_context.CommandInFunctions.Any())
+        if (!context.CommandInFunctions.Any())
         {
             foreach (var function in listFunction)
             {
@@ -116,42 +106,42 @@ public class DbInitializer
                     CommandId = "Create",
                     FunctionId = function.Id
                 };
-                _context.CommandInFunctions.Add(createAction);
+                context.CommandInFunctions.Add(createAction);
 
                 var updateAction = new CommandInFunction
                 {
                     CommandId = "Update",
                     FunctionId = function.Id
                 };
-                _context.CommandInFunctions.Add(updateAction);
+                context.CommandInFunctions.Add(updateAction);
                 var deleteAction = new CommandInFunction
                 {
                     CommandId = "Delete",
                     FunctionId = function.Id
                 };
-                _context.CommandInFunctions.Add(deleteAction);
+                context.CommandInFunctions.Add(deleteAction);
 
                 var viewAction = new CommandInFunction
                 {
                     CommandId = "View",
                     FunctionId = function.Id
                 };
-                _context.CommandInFunctions.Add(viewAction);
+                context.CommandInFunctions.Add(viewAction);
             }
         }
 
-        if (!_context.Permissions.Any())
+        if (!context.Permissions.Any())
         {
-            var adminRole = await _roleManager.FindByNameAsync(AdminRoleName);
+            var adminRole = await roleManager.FindByNameAsync(AdminRoleName);
             foreach (var function in listFunction)
             {
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Create"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Update"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Delete"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "View"));
+                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Create"));
+                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Update"));
+                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Delete"));
+                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "View"));
             }
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

@@ -14,21 +14,10 @@ using Microsoft.AspNetCore.Server.IISIntegration;
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LogoutModel : PageModel
-{
-    private readonly SignInManager<User> _signInManager;
-    private readonly ILogger<LogoutModel> _logger;
-    private readonly IIdentityServerInteractionService _interaction;
-    private readonly IEventService _eventService;
-
-    public LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel> logger,
+public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel> logger,
         IIdentityServerInteractionService interaction, IEventService eventService)
-    {
-        _signInManager = signInManager;
-        _logger = logger;
-        _interaction = interaction;
-        _eventService = eventService;
-    }
+    : PageModel
+{
     public LogoutViewModel LogoutVm { get; set; }
     public LoggedOutViewModel LoggedOutVm { get; set; }
 
@@ -49,17 +38,17 @@ public class LogoutModel : PageModel
     }
     public async Task<IActionResult> OnPost(LogoutInputModel model)
     {
-        await _signInManager.SignOutAsync();
-        _logger.LogInformation("User logged out.");
+        await signInManager.SignOutAsync();
+        logger.LogInformation("User logged out.");
         var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
         if (User?.Identity?.IsAuthenticated == true)
         {
             // delete local authentication cookie
-            await _signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
 
             // raise the logout event
-            await _eventService.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            await eventService.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
         }
             
         // check if we need to trigger sign-out at an upstream identity provider
@@ -89,7 +78,7 @@ public class LogoutModel : PageModel
             return vm;
         }
 
-        var context = await _interaction.GetLogoutContextAsync(logoutId);
+        var context = await interaction.GetLogoutContextAsync(logoutId);
         if (context?.ShowSignoutPrompt != false) return vm;
         // it's safe to automatically sign-out
         vm.ShowLogoutPrompt = false;
@@ -101,7 +90,7 @@ public class LogoutModel : PageModel
 
     private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
     {
-        var logout = await _interaction.GetLogoutContextAsync(logoutId);
+        var logout = await interaction.GetLogoutContextAsync(logoutId);
 
         var vm = new LoggedOutViewModel
         {
@@ -117,7 +106,7 @@ public class LogoutModel : PageModel
         if (idp is null or IdentityServerConstants.LocalIdentityProvider) return vm;
         var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
         if (!providerSupportsSignout) return vm;
-        vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
+        vm.LogoutId ??= await interaction.CreateLogoutContextAsync();
         vm.ExternalAuthenticationScheme = idp;
         return vm;
             

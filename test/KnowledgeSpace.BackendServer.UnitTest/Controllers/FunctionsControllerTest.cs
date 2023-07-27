@@ -13,48 +13,44 @@ namespace KnowledgeSpace.BackendServer.UnitTest.Controllers;
 
 public class FunctionsControllerTest
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context = new InMemoryDbContextFactory().GetApplicationDbContext();
 
-    public FunctionsControllerTest()
-    {
-        _context = new InMemoryDbContextFactory().GetApplicationDbContext();
-        // _context.Functions.AddRange(new List<Function>
-        // {
-        //     new()
-        //     {
-        //         Id = "test1",
-        //         ParentId = null,
-        //         Name = "test1",
-        //         SortOrder = 1 ,
-        //         Url = "/te"
-        //     },
-        //     new()
-        //     {
-        //         Id = "test2",
-        //         ParentId = null,
-        //         Name = "test2",
-        //         SortOrder = 2 ,
-        //         Url = "/te"
-        //     },
-        //     new()
-        //     {
-        //         Id = "test3",
-        //         ParentId = null,
-        //         Name = "test3",
-        //         SortOrder = 3 ,
-        //         Url = "/te"
-        //     },
-        //     new()
-        //     {
-        //         Id = "test4",
-        //         ParentId = null,
-        //         Name = "test4",
-        //         SortOrder = 4,
-        //         Url = "/te"
-        //     },
-        // });
-        // _context.SaveChangesAsync().ConfigureAwait(true);
-    }
+    // _context.Functions.AddRange(new List<Function>
+    // {
+    //     new()
+    //     {
+    //         Id = "test1",
+    //         ParentId = null,
+    //         Name = "test1",
+    //         SortOrder = 1 ,
+    //         Url = "/te"
+    //     },
+    //     new()
+    //     {
+    //         Id = "test2",
+    //         ParentId = null,
+    //         Name = "test2",
+    //         SortOrder = 2 ,
+    //         Url = "/te"
+    //     },
+    //     new()
+    //     {
+    //         Id = "test3",
+    //         ParentId = null,
+    //         Name = "test3",
+    //         SortOrder = 3 ,
+    //         Url = "/te"
+    //     },
+    //     new()
+    //     {
+    //         Id = "test4",
+    //         ParentId = null,
+    //         Name = "test4",
+    //         SortOrder = 4,
+    //         Url = "/te"
+    //     },
+    // });
+    // _context.SaveChangesAsync().ConfigureAwait(true);
 
     [Fact]
     public void ShouldCreateInstance_NotNull_Success()

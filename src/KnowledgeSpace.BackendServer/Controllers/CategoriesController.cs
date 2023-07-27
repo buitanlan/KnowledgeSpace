@@ -10,15 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class CategoriesController: BaseController
+public class CategoriesController(ApplicationDbContext context) : BaseController
 {
-    private readonly ApplicationDbContext _context;
-    public CategoriesController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-        
     [HttpPost]
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Create)]
     [ApiValidationFilter]
@@ -32,8 +25,8 @@ public class CategoriesController: BaseController
             SeoAlias = request.SeoAlias,
             SeoDescription = request.SeoDescription
         };
-        _context.Categories.Add(category);
-        var result = await _context.SaveChangesAsync();
+        context.Categories.Add(category);
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -47,7 +40,7 @@ public class CategoriesController: BaseController
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
     public async Task<IActionResult> GetCategories()
     {
-        var categories = await _context.Categories.AsNoTracking().ToListAsync();
+        var categories = await context.Categories.AsNoTracking().ToListAsync();
         var categoryVms = categories.Select(CreateCategoryVm).ToList();
         return Ok(categoryVms);
     }
@@ -57,7 +50,7 @@ public class CategoriesController: BaseController
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.View)]
     public async Task<IActionResult> GetCategoriesPaging(string filter, int pageIndex, int pageSize)
     {
-        var query = _context.Categories.AsQueryable();
+        var query = context.Categories.AsQueryable();
         if (!string.IsNullOrEmpty(filter))
         {
             query = query.Where(x => x.Name.Contains(filter)
@@ -86,7 +79,7 @@ public class CategoriesController: BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> GetById(int id)
     {
-        var category = await _context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var category = await context.Categories.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         if (category is null)
             return NotFound(new ApiNotFoundResponse($"Category with id: {id} is not found"));
 
@@ -100,7 +93,7 @@ public class CategoriesController: BaseController
     [ApiValidationFilter]
     public async Task<IActionResult> PutCategory(int id, [FromBody]CategoryCreateRequest request)
     {
-        var category = await _context.Categories.SingleOrDefaultAsync(x => x.Id == id);
+        var category = await context.Categories.SingleOrDefaultAsync(x => x.Id == id);
         if (category is null)
             return NotFound();
 
@@ -115,8 +108,8 @@ public class CategoriesController: BaseController
         category.SeoDescription = request.SeoDescription;
         category.SeoAlias = request.SeoAlias;
 
-        _context.Categories.Update(category);
-        var result = await _context.SaveChangesAsync();
+        context.Categories.Update(category);
+        var result = await context.SaveChangesAsync();
 
         if (result > 0)
         {
@@ -130,12 +123,12 @@ public class CategoriesController: BaseController
     [ClaimRequirement(FunctionCode.ContentCategory, CommandCode.Delete)]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var category = await _context.Categories.SingleOrDefaultAsync(x => x.Id == id);
+        var category = await context.Categories.SingleOrDefaultAsync(x => x.Id == id);
         if (category is null)
             return NotFound();
 
-        _context.Categories.Remove(category);
-        var result = await _context.SaveChangesAsync();
+        context.Categories.Remove(category);
+        var result = await context.SaveChangesAsync();
         if (result <= 0) return BadRequest(new ApiNotFoundResponse($"Category with id: {id} is not found"));
         var categoryVm = CreateCategoryVm(category);
         return Ok(categoryVm);
