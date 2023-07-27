@@ -7,7 +7,7 @@ using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidationAutoValidation()
@@ -45,6 +45,7 @@ var logger = new LoggerConfiguration()
             .CreateLogger();
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(hostingContext.Configuration));
+
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -70,11 +71,11 @@ if (!app.Environment.IsDevelopment())
 app.UseErrorWrapping();
 app.UseStaticFiles();
 app.UseIdentityServer();
-app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseAuthorization();
 app.UseCors("CorsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 app.UseSwaggerDocument();
