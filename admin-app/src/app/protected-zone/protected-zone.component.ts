@@ -9,12 +9,12 @@ import { SidebarComponent } from '@app/protected-zone/components/sidebar/sidebar
   template: `
     <app-header></app-header>
     <app-sidebar (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
-    <section [ngClass]="{ collapsed: collapsedSideBar }" class="main-container">
+    <section [class]="{ collapsed: collapsedSideBar }" class="main-container">
       <router-outlet></router-outlet>
     </section>
   `,
   styleUrls: ['./protected-zone.component.scss'],
-  imports: [RouterOutlet, NgClass, HeaderComponent, SidebarComponent],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
   standalone: true
 })
 export class ProtectedZoneComponent {

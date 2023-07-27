@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
   @Output() collapsedEvent = new EventEmitter<boolean>();
   readonly authService = inject(AuthService);
   readonly router = inject(Router);
-  userService = inject(UserService);
+  readonly userService = inject(UserService);
 
   ngOnInit() {
     this.isActive = false;

@@ -32,10 +32,14 @@
             "assets": ["src/assets", "src/favicon.ico"],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/alertifyjs/build/css/alertify.css",
+              "node_modules/alertifyjs/build/css/themes/default.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/app.scss"
             ],
-            "scripts": []
+            "scripts": ["node_modules/chart.js/dist/Chart.js", "node_modules/alertifyjs/build/alertify.js"]
           },
           "configurations": {
             "production": {
@@ -117,16 +121,19 @@
   },
   "schematics": {
     "@schematics/angular:component": {
-      "skipTests": true
+      "skipTests": true,
+      "standalone": true
     },
     "@schematics/angular:class": {
       "skipTests": true
     },
     "@schematics/angular:directive": {
-      "skipTests": true
+      "skipTests": true,
+      "standalone": true
     },
     "@schematics/angular:pipe": {
-      "skipTests": true
+      "skipTests": true,
+      "standalone": true
     },
     "@schematics/angular:service": {
       "skipTests": true
