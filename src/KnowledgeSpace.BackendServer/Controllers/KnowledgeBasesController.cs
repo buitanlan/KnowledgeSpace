@@ -25,7 +25,7 @@ public partial class KnowledgeBasesController
     {
         var knowledgeBase = CreateKnowledgeBaseEntity(request);
         knowledgeBase.Id = await sequenceService.GetKnowledgeBaseNewId();
-        if (request.Attachments is not null && request.Attachments.Count > 0)
+        if (request?.Attachments?.Count > 0)
         {
             foreach (var attachment in request.Attachments)
             {
