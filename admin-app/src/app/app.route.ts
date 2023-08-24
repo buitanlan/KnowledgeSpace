@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/shared/guards/auth.guard';
 
-export const AppRoutes: Routes = [
+export const appRoutes: Routes = [
   {
     path: '',
     loadChildren: () => import('./protected-zone/protected-zone.route').then((m) => m.routes),

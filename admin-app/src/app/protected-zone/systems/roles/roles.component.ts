@@ -8,7 +8,14 @@ import { NgIf } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Subscription } from 'rxjs';
+import { RolesService } from '@app/shared/services/roles.service';
+import { NotificationService } from '@app/shared/services/notification.servive';
+import { Pagination } from '@app/shared/models/pagination';
+import { Role } from '@app/shared/models/role';
+import { RolesDetailComponent } from '@app/protected-zone/systems/roles/roles-detail/roles-detail.component';
+import { MessageConstants } from '@app/protected-zone/systems/constants';
 
 @Component({
   selector: 'app-roles',
@@ -100,7 +107,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
             </tr>
           </ng-template>
           <ng-template pTemplate="summary">
-            <div style="text-align: left">Tổng số bản ghi: {{ totalRecords | number }}</div>
+            <div style="text-align: left">Tổng số bản ghi: {{ totalRecords }}</div>
           </ng-template>
         </p-table>
         <p-footer>
@@ -138,7 +145,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class RolesComponent {
   private subscription = new Subscription();
   // Default
-  public bsModalRef: BsModalRef;
+  public bsModalRef!: BsModalRef;
   public blockedPanel = false;
   /**
    * Paging
@@ -146,11 +153,11 @@ export class RolesComponent {
   public pageIndex = 1;
   public pageSize = 10;
   public pageDisplay = 10;
-  public totalRecords: number;
+  public totalRecords!: number;
   public keyword = '';
   // Role
-  public items: any[];
-  public selectedItems = [];
+  public items!: any[];
+  public selectedItems: any[] = [];
   constructor(
     private rolesService: RolesService,
     private notificationService: NotificationService,
@@ -202,7 +209,7 @@ export class RolesComponent {
       class: 'modal-lg',
       backdrop: 'static'
     });
-    this.bsModalRef.content.savedEvent.subscribe((response) => {
+    this.bsModalRef.content.savedEvent.subscribe(() => {
       this.bsModalRef.hide();
       this.loadData();
       this.selectedItems = [];
@@ -223,7 +230,7 @@ export class RolesComponent {
     });
 
     this.subscription.add(
-      this.bsModalRef.content.savedEvent.subscribe((response) => {
+      this.bsModalRef.content.savedEvent.subscribe((response: { id: null | undefined }) => {
         this.bsModalRef.hide();
         this.loadData(response.id);
       })
@@ -234,7 +241,7 @@ export class RolesComponent {
     const id = this.selectedItems[0].id;
     this.notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () => this.deleteItemsConfirm(id));
   }
-  deleteItemsConfirm(id) {
+  deleteItemsConfirm(id: any) {
     this.blockedPanel = true;
     this.subscription.add(
       this.rolesService.delete(id).subscribe(

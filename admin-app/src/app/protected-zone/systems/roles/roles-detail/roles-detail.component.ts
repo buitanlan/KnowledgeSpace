@@ -7,6 +7,10 @@ import { ChipsModule } from 'primeng/chips';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RolesService } from '@app/shared/services/roles.service';
+import { NotificationService } from '@app/shared/services/notification.servive';
+import { MessageConstants } from '@app/protected-zone/systems/constants';
+import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
 
 @Component({
   selector: 'app-roles-detail-root',
@@ -72,13 +76,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    BsModalRef,
     PanelModule,
     ReactiveFormsModule,
     ChipsModule,
     KeyFilterModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ValidationMessageComponent
   ]
 })
 export class RolesDetailComponent {
@@ -91,7 +95,7 @@ export class RolesDetailComponent {
   public blockedPanel = false;
 
   readonly bsModalRef = inject(BsModalRef);
-  readonly roleService = inject(RolesService);
+  readonly rolesService = inject(RolesService);
   readonly notificationService = inject(NotificationService);
   readonly fb = inject(FormBuilder);
 

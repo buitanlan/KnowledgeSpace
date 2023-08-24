@@ -76,9 +76,9 @@ export class NotificationService {
       // global hooks
       hooks: {
         // invoked before initializing any dialog
-        preinit: function (instance) {},
+        preinit: function () {},
         // invoked after initializing any dialog
-        postinit: function (instance) {}
+        postinit: function () {}
       }
     };
   }
@@ -91,7 +91,7 @@ export class NotificationService {
   }
 
   showConfirmation(message: string, okCallback: () => any) {
-    this._notifier.confirm(message, function (e) {
+    this._notifier.confirm(message, function (e: any) {
       if (e) {
         okCallback();
       } else {

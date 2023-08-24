@@ -1,6 +1,6 @@
 import { environment } from '@environments/environment';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs';
+import { map } from 'rxjs';
 import { Role } from '@app/shared/models/role';
 import { HttpClient } from '@angular/common/http';
 import { Pagination } from '@app/shared/models/pagination';

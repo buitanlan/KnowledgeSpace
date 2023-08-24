@@ -3,6 +3,7 @@ import { routerTransition } from '@app/router.animations';
 import { ChatComponent, NotificationComponent, TimelineComponent } from '@app/protected-zone/dashboard/components';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { StatComponent } from '@app/shared/modules/stat/stat.component';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +26,7 @@ import { StatComponent } from '@app/shared/modules/stat/stat.component';
         </div>
       </div>
       <hr />
-      <ngb-alert (close)="closeAlert(alert)" *ngFor="let alert of alerts" [type]="alert.type">{{
+      <ngb-alert (closed)="closeAlert(alert)" *ngFor="let alert of alerts" [type]="alert.type">{{
         alert.message
       }}</ngb-alert>
       <hr />
@@ -57,7 +58,7 @@ import { StatComponent } from '@app/shared/modules/stat/stat.component';
     </div>
   `,
   animations: [routerTransition()],
-  imports: [ChatComponent, NotificationComponent, NgbAlert, TimelineComponent, StatComponent],
+  imports: [ChatComponent, NotificationComponent, NgbAlert, TimelineComponent, StatComponent, NgForOf],
   standalone: true
 })
 export class DashboardComponent {

@@ -189,12 +189,10 @@ public class UsersController(UserManager<User> userManager,
         var user = await userManager.FindByIdAsync(userId);
         var roles = await userManager.GetRolesAsync(user);
         var query = from f in context.Functions
-            join p in context.Permissions
-                on f.Id equals p.FunctionId
+            join p in context.Permissions on f.Id equals p.FunctionId
             join r in roleManager.Roles on p.RoleId equals r.Id
-            join a in context.Commands
-                on p.CommandId equals a.Id
-            where roles.Contains(r.Name) && a.Id == "VIEW"
+            join c in context.Commands.Where(x => x.Id == "View") on p.CommandId equals c.Id
+            where roles.Contains(r.Name)
             select new FunctionVm
             {
                 Id = f.Id,

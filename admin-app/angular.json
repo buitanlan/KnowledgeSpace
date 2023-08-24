@@ -1,8 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "1f4e8eec-0c5d-4efe-89ff-82dad880caa3",
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "analytics": "1f4e8eec-0c5d-4efe-89ff-82dad880caa3"
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -14,10 +13,23 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
+          "standalone": true,
+          "skipTests": true,
           "style": "scss"
         },
-        "@schematics/angular:application": {
-          "strict": true
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
         }
       },
       "architect": {
@@ -104,12 +116,6 @@
             "assets": ["src/assets", "src/favicon.ico"]
           }
         },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
-          }
-        },
         "analyze": {
           "builder": "@ngx-builders/analyze:analyze",
           "options": {
@@ -117,26 +123,6 @@
           }
         }
       }
-    }
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "skipTests": true,
-      "standalone": true
-    },
-    "@schematics/angular:class": {
-      "skipTests": true
-    },
-    "@schematics/angular:directive": {
-      "skipTests": true,
-      "standalone": true
-    },
-    "@schematics/angular:pipe": {
-      "skipTests": true,
-      "standalone": true
-    },
-    "@schematics/angular:service": {
-      "skipTests": true
     }
   }
 }
