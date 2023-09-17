@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KnowledgeSpace.BackendServer.Controllers;
+﻿using KnowledgeSpace.BackendServer.Controllers;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.ViewModels;
@@ -231,6 +227,15 @@ public class UsersControllerTest
                 UserName = "test"
             });
 
+        _mockUserManager.Setup(x => x.GetUsersInRoleAsync(It.IsAny<string>()))
+            .ReturnsAsync(new List<User>
+            {
+                new()
+                {
+                    UserName = "test1"
+                }
+            });
+
         _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
             .ReturnsAsync(IdentityResult.Success);
         var usersController = new UsersController(_mockUserManager.Object, _mockRoleManager.Object, _context);
@@ -247,6 +252,13 @@ public class UsersControllerTest
             {
                 UserName = "test"
             });
+        _mockUserManager.Setup(x => x.GetUsersInRoleAsync(It.IsAny<string>()))
+            .ReturnsAsync(new List<User>
+            {
+                new()
+                {
+                    UserName = "test1"
+                }});
 
         _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
             .ReturnsAsync(IdentityResult.Failed());

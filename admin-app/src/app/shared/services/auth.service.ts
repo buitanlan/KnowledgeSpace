@@ -56,7 +56,7 @@ export function getClientSettings(): UserManagerSettings {
     authority: 'https://localhost:5000',
     client_id: 'angular_admin',
     redirect_uri: 'http://localhost:4200/auth-callback',
-    post_logout_redirect_uri: 'http://localhost:4200/',
+    post_logout_redirect_uri: 'http://localhost:4200',
     response_type: 'code',
     scope: 'api.knowledgespace openid profile',
     filterProtocolClaims: true,

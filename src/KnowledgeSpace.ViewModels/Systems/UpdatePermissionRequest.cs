@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace KnowledgeSpace.ViewModels.Systems;
+﻿namespace KnowledgeSpace.ViewModels.Systems;
 
 public class UpdatePermissionRequest
 {

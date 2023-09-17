@@ -14,8 +14,11 @@ using Microsoft.AspNetCore.Server.IISIntegration;
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel> logger,
-        IIdentityServerInteractionService interaction, IEventService eventService)
+public class LogoutModel(
+        SignInManager<User> signInManager,
+        ILogger<LogoutModel> logger,
+        IIdentityServerInteractionService interaction,
+        IEventService eventService)
     : PageModel
 {
     public LogoutViewModel LogoutVm { get; set; }
@@ -26,7 +29,7 @@ public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel>
     {
         var vm = await BuildLogoutViewModelAsync(logoutId);
 
-        if (vm.ShowLogoutPrompt == false)
+        if (!vm.ShowLogoutPrompt)
         {
             // if the request for logout was properly authenticated from IdentityServer, then
             // we don't need to show the prompt and can just log the user out directly.
@@ -38,8 +41,8 @@ public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel>
     }
     public async Task<IActionResult> OnPost(LogoutInputModel model)
     {
-        await signInManager.SignOutAsync();
-        logger.LogInformation("User logged out.");
+        // await signInManager.SignOutAsync();
+        // logger.LogInformation("User logged out.");
         var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
         if (User?.Identity?.IsAuthenticated == true)
@@ -69,7 +72,11 @@ public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel>
 
     private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
     {
-        var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
+        var vm = new LogoutViewModel
+        {
+            LogoutId = logoutId,
+            ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt
+        };
 
         if (User?.Identity is not {IsAuthenticated: true})
         {
@@ -101,16 +108,30 @@ public class LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel>
             LogoutId = logoutId
         };
 
-        if (User?.Identity is not {IsAuthenticated: true}) return vm;
-        var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-        if (idp is null or IdentityServerConstants.LocalIdentityProvider) return vm;
-        var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
-        if (!providerSupportsSignout) return vm;
-        vm.LogoutId ??= await interaction.CreateLogoutContextAsync();
-        vm.ExternalAuthenticationScheme = idp;
+        if (User?.Identity.IsAuthenticated is true)
+        {
+            var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
+            {
+                var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                if (providerSupportsSignout)
+                {
+                    if (vm.LogoutId == null)
+                    {
+                        // if there's no current logout context, we need to create one
+                        // this captures necessary info from the current logged in user
+                        // before we signout and redirect away to the external IdP for signout
+                        vm.LogoutId = await interaction.CreateLogoutContextAsync();
+                    }
+
+                    vm.ExternalAuthenticationScheme = idp;
+                }
+            }
+        }
+
         return vm;
-            
     }
+            
 }
 public class LogoutInputModel
 {
@@ -142,7 +163,7 @@ public class AccountOptions
     public static TimeSpan RememberMeLoginDuration = TimeSpan.FromDays(30);
 
     public static bool ShowLogoutPrompt = true;
-    public static bool AutomaticRedirectAfterSignOut = false;
+    public static bool AutomaticRedirectAfterSignOut = true;
 
     // specify the Windows authentication scheme being used
     public static readonly string WindowsAuthenticationSchemeName = IISDefaults.AuthenticationScheme;

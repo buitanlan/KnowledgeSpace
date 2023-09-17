@@ -25,7 +25,7 @@ public partial class KnowledgeBasesController
         var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
-            .Skip(pageIndex - 1 * pageSize)
+            .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
             .Select(c => new CommentVm
             {
@@ -47,7 +47,7 @@ public partial class KnowledgeBasesController
     }
         
 
-    [HttpGet("{knowledgeBaseId:int}/comments/{commentId}")]
+    [HttpGet("{knowledgeBaseId:int}/comments/{commentId:int}")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
     public async Task<IActionResult> GetCommentDetail(int commentId, int knowledgeBaseId)
     {

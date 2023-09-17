@@ -11,10 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class UsersController(UserManager<User> userManager,
+public class UsersController(
+        UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager,
-        ApplicationDbContext context)
-    : BaseController
+        ApplicationDbContext context) : BaseController
 {
     [HttpPost]
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Create)]
@@ -25,7 +25,7 @@ public class UsersController(UserManager<User> userManager,
         {
             Id = Guid.NewGuid().ToString(),
             Email = request.Email,
-            Dob = request.Dob,
+            Dob = DateTime.Parse(request.Dob),
             UserName = request.UserName,
             LastName = request.LastName,
             FirstName = request.FirstName,
@@ -78,7 +78,7 @@ public class UsersController(UserManager<User> userManager,
         var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
-            .Skip(pageIndex - 1 * pageSize)
+            .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
             .Select(u => new UserVm
             {
@@ -131,7 +131,7 @@ public class UsersController(UserManager<User> userManager,
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
-        user.Dob = request.Dob;
+        user.Dob = DateTime.Parse(request.Dob);
         user.PhoneNumber = request.PhoneNumber;
 
         var result = await userManager.UpdateAsync(user);
@@ -210,5 +210,56 @@ public class UsersController(UserManager<User> userManager,
             .ThenBy(x => x.SortOrder)
             .ToListAsync();
         return Ok(data);
+    }
+    
+    [HttpGet("{userId}/roles")]
+    [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
+    public async Task<IActionResult> GetUserRoles(string userId)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null)
+            return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {userId}"));
+        var roles = await userManager.GetRolesAsync(user);
+        return Ok(roles);
+    }
+
+    [HttpPost("{userId}/roles")]
+    [ClaimRequirement(FunctionCode.SystemUser, CommandCode.Update)]
+    public async Task<IActionResult> PostRolesToUserUser(string userId, [FromBody] RoleAssignRequest request)
+    {
+        if (request.RoleNames?.Length == 0)
+        {
+            return BadRequest(new ApiBadRequestResponse("Role names cannot empty"));
+        }
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null)
+            return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {userId}"));
+        var result = await userManager.AddToRolesAsync(user, request.RoleNames);
+        if (result.Succeeded)
+            return Ok();
+
+        return BadRequest(new ApiBadRequestResponse(result));
+    }
+
+    [HttpDelete("{userId}/roles")]
+    [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
+    public async Task<IActionResult> RemoveRolesFromUser(string userId, [FromQuery] RoleAssignRequest request)
+    {
+        if (request.RoleNames?.Length == 0)
+        {
+            return BadRequest(new ApiBadRequestResponse("Role names cannot empty"));
+        }
+        if (request.RoleNames.Length == 1 && request.RoleNames[0] == SystemConstants.Roles.Admin)
+        {
+            return BadRequest(new ApiBadRequestResponse($"Cannot remove {SystemConstants.Roles.Admin} role"));
+        }
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null)
+            return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {userId}"));
+        var result = await userManager.RemoveFromRolesAsync(user, request.RoleNames);
+        if (result.Succeeded)
+            return Ok();
+
+        return BadRequest(new ApiBadRequestResponse(result));
     }
 }

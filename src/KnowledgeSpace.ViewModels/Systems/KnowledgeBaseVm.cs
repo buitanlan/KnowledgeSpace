@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KnowledgeSpace.ViewModels.Systems;
+﻿namespace KnowledgeSpace.ViewModels.Systems;
 
 public class KnowledgeBaseVm
 {

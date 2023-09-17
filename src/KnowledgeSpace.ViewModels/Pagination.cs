@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace KnowledgeSpace.ViewModels;
 
 public class Pagination<T>

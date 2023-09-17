@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KnowledgeSpace.ViewModels.Contents;
+﻿namespace KnowledgeSpace.ViewModels.Contents;
 
 public class ReportVm
 {
