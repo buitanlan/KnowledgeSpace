@@ -5,30 +5,18 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(retry(1), catchError(handleErrors));
 };
 const handleErrors = (error: HttpErrorResponse) => {
-  let errorMessage = '';
-  if (error.error instanceof ErrorEvent) {
-    // client-side error
-    errorMessage = `Error: ${error.error.message}`;
-  } else {
-    const applicationError = error.headers.get('Application-Error');
+  if (error.error.message) {
+    return throwError(() => error.error.message || 'Server error');
+  }
 
-    // either application-error in header or model error in body
-    if (applicationError) {
-      return throwError(() => applicationError);
-    }
-
+  if (error.error.errors) {
     let modelStateErrors = '';
 
     // for now just concatenate the error descriptions, alternative we could simply pass the entire error response upstream
-    for (const key in error.error) {
-      if (error.error[key]) {
-        modelStateErrors += error.error[key].description + '\n';
-      }
+    for (const errorMsg of error.error.errors) {
+      modelStateErrors += errorMsg + '<br/>';
     }
-
-    modelStateErrors = modelStateErrors === '' ? 'Server error' : modelStateErrors;
-    return throwError(() => modelStateErrors);
+    return throwError(() => modelStateErrors || 'Server error');
   }
-  console.error('error', errorMessage);
-  return throwError(() => errorMessage);
+  return throwError(() => 'Server error');
 };

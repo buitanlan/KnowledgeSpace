@@ -8,9 +8,9 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RolesService } from '@app/shared/services/roles.service';
-import { NotificationService } from '@app/shared/services/notification.servive';
 import { MessageConstants } from '@app/protected-zone/systems/constants';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-roles-detail-root',
@@ -86,6 +86,7 @@ import { ValidationMessageComponent } from '@app/shared/modules/validation-messa
   ]
 })
 export class RolesDetailComponent {
+  readonly #messageService = inject(MessageService);
   private subscription = new Subscription();
   public entityForm!: FormGroup;
   public dialogTitle!: string;
@@ -96,7 +97,6 @@ export class RolesDetailComponent {
 
   readonly bsModalRef = inject(BsModalRef);
   readonly rolesService = inject(RolesService);
-  readonly notificationService = inject(NotificationService);
   readonly fb = inject(FormBuilder);
 
   // Validate
@@ -160,7 +160,11 @@ export class RolesDetailComponent {
         this.rolesService.update(this.entityId, this.entityForm.getRawValue()).subscribe(
           () => {
             this.savedEvent.emit(this.entityForm.value);
-            this.notificationService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Service Message',
+              detail: MessageConstants.CREATED_OK_MSG
+            });
             this.btnDisabled = false;
             setTimeout(() => {
               this.blockedPanel = false;

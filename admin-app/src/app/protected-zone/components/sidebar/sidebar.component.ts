@@ -3,7 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Function } from '@app/shared/models/function';
 import { AuthService } from '@app/shared/services/auth.service';
-import { UserService } from '@app/shared/services/user.service';
+import { UsersService } from '@app/shared/services/users.service';
 import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 
 @Component({
@@ -11,22 +11,26 @@ import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
   template: `
     <nav [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar">
       <div class="list-group">
-        <div class="nested-menu" *ngFor="let item of functions$ | async">
-          <a class="list-group-item" (click)="addExpandClass(item.id)">
-            <i class="fa {{ item.icon }}"></i>&nbsp;
-            <span>{{ item.name }}</span>
-          </a>
-          <li class="nested" [class.expand]="showMenu === item.id" *ngFor="let subItem of item.children">
-            <ul class="submenu">
-              <li>
-                <a routerLink="{{ subItem.url }}" [routerLinkActive]="['router-link-active']">
-                  <i class="fa {{ subItem.icon }}"></i>&nbsp;
-                  <span>{{ subItem.name }}</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </div>
+        @for (item of functions$ | async; track item) {
+          <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass(item.id)">
+              <i class="fa {{ item.icon }}"></i>&nbsp;
+              <span>{{ item.name }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === item.id">
+              <ul class="submenu">
+                @for (subItem of item.children; track subItem) {
+                  <li>
+                    <a routerLink="{{ subItem.url }}" [routerLinkActive]="['router-link-active']">
+                      <i class="fa {{ subItem.icon }}"></i>&nbsp;
+                      <span>{{ subItem.name }}</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </li>
+          </div>
+        }
       </div>
       <div (click)="toggleCollapsed()" [ngClass]="{ collapsed: collapsed }" class="toggle-button">
         <i class="fas fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>&nbsp;
@@ -48,7 +52,7 @@ export class SidebarComponent implements OnInit {
   @Output() collapsedEvent = new EventEmitter<boolean>();
   readonly authService = inject(AuthService);
   readonly router = inject(Router);
-  readonly userService = inject(UserService);
+  readonly userService = inject(UsersService);
 
   ngOnInit() {
     this.isActive = false;

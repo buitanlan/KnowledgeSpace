@@ -113,10 +113,12 @@ public class LogoutModel(
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
             if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
             {
-                var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                var provider = HttpContext.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+                var handler = await provider.GetHandlerAsync(HttpContext, idp);
+                var providerSupportsSignout = (handler is IAuthenticationSignOutHandler);
                 if (providerSupportsSignout)
                 {
-                    if (vm.LogoutId == null)
+                    if (vm.LogoutId is null)
                     {
                         // if there's no current logout context, we need to create one
                         // this captures necessary info from the current logged in user
