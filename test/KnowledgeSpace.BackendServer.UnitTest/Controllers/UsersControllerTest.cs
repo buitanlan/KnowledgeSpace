@@ -16,13 +16,13 @@ public class UsersControllerTest
     private readonly Mock<UserManager<User>> _mockUserManager;
     private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
     private readonly ApplicationDbContext _context;
-    private readonly List<User> _userSources = new()
-    {
-        new ("1","test1","Test 1","LastTest 1","test1@gmail.com","001111",DateTime.Now),
-        new ("2","test2","Test 2","LastTest 2","test2@gmail.com","001111",DateTime.Now),
-        new("3", "test3", "Test 3", "LastTest 3", "test3@gmail.com", "001111", DateTime.Now),
-        new("4", "test4", "Test 4", "LastTest 4", "test4@gmail.com", "001111", DateTime.Now),
-    };
+    private readonly List<User> _userSources =
+    [
+        new User("1", "test1", "Test 1", "LastTest 1", "test1@gmail.com", "001111", DateTime.Now),
+        new User("2", "test2", "Test 2", "LastTest 2", "test2@gmail.com", "001111", DateTime.Now),
+        new User("3", "test3", "Test 3", "LastTest 3", "test3@gmail.com", "001111", DateTime.Now),
+        new User("4", "test4", "Test 4", "LastTest 4", "test4@gmail.com", "001111", DateTime.Now)
+    ];
   
     public UsersControllerTest()
     {

@@ -52,7 +52,7 @@ public static class SwaggerServiceExtensions
             });
         });
     }
-    public static IApplicationBuilder UseSwaggerDocument(this IApplicationBuilder app)
+    public static void UseSwaggerDocument(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -60,7 +60,6 @@ public static class SwaggerServiceExtensions
             c.OAuthClientId("swagger");
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeBase API v1");
         });
-        return app;
     }
 
 }

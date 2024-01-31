@@ -2,5 +2,5 @@
 
 public class UpdatePermissionRequest
 {
-    public List<PermissionVm> Permissions { get; set; } = new();
+    public List<PermissionVm> Permissions { get; set; } = [];
 }

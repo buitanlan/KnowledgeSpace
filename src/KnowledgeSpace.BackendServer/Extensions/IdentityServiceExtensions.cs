@@ -11,10 +11,8 @@ public static class IdentityServiceExtensions
     public static void AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
         //1. Set up Ef core
-        services.AddDbContext<ApplicationDbContext>(opt =>
-        {
-            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        });
+        services.AddNpgsql<ApplicationDbContext>(config.GetConnectionString("DefaultConnection"));
+
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
         services.Configure<IdentityOptions>(options =>
@@ -30,7 +28,7 @@ public static class IdentityServiceExtensions
             options.Password.RequireDigit = true;
             options.Password.RequireUppercase = true;
             options.User.RequireUniqueEmail = true;
-        }); 
+        });
         services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
@@ -42,8 +40,8 @@ public static class IdentityServiceExtensions
             .AddInMemoryClients(config.GetSection("IdentityServer:Clients"))
             .AddInMemoryIdentityResources(Config.Ids)
             .AddAspNetIdentity<User>()
-            .AddProfileService<IdentityProfileService>()
-            .AddDeveloperSigningCredential();
+            .AddProfileService<IdentityProfileService>();
+
         services.AddAuthentication()
             .AddLocalApi("Bearer", options =>
             {
