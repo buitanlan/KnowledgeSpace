@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgClass } from '@angular/common';
 import { HeaderComponent } from '@app/protected-zone/components/header/header.component';
 import { SidebarComponent } from '@app/protected-zone/components/sidebar/sidebar.component';
 

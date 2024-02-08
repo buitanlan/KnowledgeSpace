@@ -11,6 +11,7 @@ import { RolesService } from '@app/shared/services/roles.service';
 import { MessageConstants } from '@app/protected-zone/systems/constants';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
 import { MessageService } from 'primeng/api';
+import { NotificationService } from '@app/shared/services/notification.servive';
 
 @Component({
   selector: 'app-roles-detail-root',
@@ -86,7 +87,6 @@ import { MessageService } from 'primeng/api';
   ]
 })
 export class RolesDetailComponent {
-  readonly #messageService = inject(MessageService);
   private subscription = new Subscription();
   public entityForm!: FormGroup;
   public dialogTitle!: string;
@@ -98,6 +98,8 @@ export class RolesDetailComponent {
   readonly bsModalRef = inject(BsModalRef);
   readonly rolesService = inject(RolesService);
   readonly fb = inject(FormBuilder);
+  readonly #messageService = inject(MessageService);
+  readonly #notificationService = inject(NotificationService);
 
   // Validate
   validation_messages = {
@@ -160,7 +162,7 @@ export class RolesDetailComponent {
         this.rolesService.update(this.entityId, this.entityForm.getRawValue()).subscribe(
           () => {
             this.savedEvent.emit(this.entityForm.value);
-            this.messageService.add({
+            this.#messageService.add({
               severity: 'success',
               summary: 'Service Message',
               detail: MessageConstants.CREATED_OK_MSG
@@ -184,7 +186,7 @@ export class RolesDetailComponent {
         this.rolesService.add(this.entityForm.getRawValue()).subscribe(
           () => {
             this.savedEvent.emit(this.entityForm.value);
-            this.notificationService.showSuccess(MessageConstants.CREATED_OK_MSG);
+            this.#notificationService.showSuccess(MessageConstants.CREATED_OK_MSG);
             this.btnDisabled = false;
             setTimeout(() => {
               this.blockedPanel = false;

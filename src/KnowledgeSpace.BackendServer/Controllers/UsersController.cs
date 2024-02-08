@@ -167,7 +167,12 @@ public class UsersController(
         if (user is null) return NotFound();
 
         var result = await userManager.DeleteAsync(user);
-
+        var adminUsers = await userManager.GetUsersInRoleAsync(SystemConstants.Roles.Admin);
+        var otherUsers = adminUsers.Where(x => x.Id != id).ToList();
+        if (otherUsers.Count == 0)
+        {
+            return BadRequest(new ApiBadRequestResponse("You cannot remove the only admin user remaining."));
+        }
         if (!result.Succeeded) return BadRequest(result.Errors);
         var userVm = new UserVm
         {

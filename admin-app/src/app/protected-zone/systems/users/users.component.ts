@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { User } from '@app/shared/models/user';
 import { Observable, of } from 'rxjs';
 import { UsersService } from '@app/shared/services/users.service';
-import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf, NgIfContext } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { Pagination } from '@app/shared/models/pagination';
@@ -15,6 +15,9 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { PaginatorModule } from 'primeng/paginator';
 import { CheckboxModule } from 'primeng/checkbox';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-users',
@@ -141,7 +144,7 @@ import { CheckboxModule } from 'primeng/checkbox';
           (onPageChange)="pageChanged($event)"
           [rowsPerPageOptions]="[10, 20, 50, 100]"
         ></p-paginator>
-        <p-blockUI [target]="pnl" [blocked]="blockedPanel">
+        <p-blockUI [target]="pnl" [blocked]="false">
           <p-progressSpinner
             [style]="{ width: '100px', height: '100px', position: 'absolute', top: '25%', left: '50%' }"
             strokeWidth="2"
@@ -236,7 +239,9 @@ import { CheckboxModule } from 'primeng/checkbox';
     CheckboxModule,
     DatePipe,
     DecimalPipe,
-    NgIf
+    NgIf,
+    ButtonModule,
+    InputTextModule
   ],
   standalone: true
 })
@@ -244,7 +249,8 @@ export class UsersComponent implements OnInit {
   public users$: Observable<User[]> = of([]);
   usersService = inject(UsersService);
   modalService = inject(BsModalService);
-
+  readonly #messageService = inject(MessageService);
+  readonly #notificationService = inject(NotificationService);
   // Default
   public bsModalRef!: BsModalRef;
   public blockedPanel = false;
@@ -355,8 +361,8 @@ export class UsersComponent implements OnInit {
   }
   showEditModal() {
     if (this.selectedItems.length === 0) {
-      this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
-      this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
+      this.#notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      this.#messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
 
       return;
     }
@@ -377,21 +383,21 @@ export class UsersComponent implements OnInit {
 
   deleteItems() {
     if (this.selectedItems.length === 0) {
-      this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
-      this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
+      this.#notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      this.#messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
 
       return;
     }
     const id = this.selectedItems[0].id;
-    this.notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () => this.deleteItemsConfirm(id));
+    this.#notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () => this.deleteItemsConfirm(id));
   }
 
   deleteItemsConfirm(ids: string) {
     this.blockedPanel = true;
     this.usersService.delete(ids).subscribe(
       () => {
-        this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
+        this.#notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
+        this.#messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
 
         this.loadData();
         this.selectedItems = [];
@@ -401,8 +407,8 @@ export class UsersComponent implements OnInit {
         }, 1000);
       },
       (error) => {
-        this.notificationService.showError(error);
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
+        this.#notificationService.showError(error);
+        this.#messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
 
         setTimeout(() => {
           this.blockedPanel = false;
@@ -444,7 +450,7 @@ export class UsersComponent implements OnInit {
   removeRoles() {
     const selectedRoleNames = this.selectedRoleItems;
 
-    this.notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () =>
+    this.#notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () =>
       this.deleteRolesConfirm(selectedRoleNames)
     );
   }
@@ -455,13 +461,13 @@ export class UsersComponent implements OnInit {
       () => {
         this.loadUserRoles();
         this.selectedRoleItems = [];
-        this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
+        this.#notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
         setTimeout(() => {
           this.blockedPanelRole = false;
         }, 1000);
       },
       (error) => {
-        this.notificationService.showError(error);
+        this.#notificationService.showError(error);
         setTimeout(() => {
           this.blockedPanelRole = false;
         }, 1000);
@@ -471,7 +477,7 @@ export class UsersComponent implements OnInit {
 
   addUserRole() {
     if (this.selectedItems.length === 0) {
-      this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      this.#notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
       return;
     }
     const initialState = {
