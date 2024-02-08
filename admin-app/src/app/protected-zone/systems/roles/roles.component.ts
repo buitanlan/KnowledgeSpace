@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { ChipsModule } from 'primeng/chips';
@@ -11,11 +11,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { RolesService } from '@app/shared/services/roles.service';
-import { NotificationService } from '@app/shared/services/notification.servive';
 import { Pagination } from '@app/shared/models/pagination';
 import { Role } from '@app/shared/models/role';
 import { RolesDetailComponent } from '@app/protected-zone/systems/roles/roles-detail/roles-detail.component';
 import { MessageConstants } from '@app/protected-zone/systems/constants';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-roles',
@@ -35,30 +37,32 @@ import { MessageConstants } from '@app/protected-zone/systems/constants';
               icon="fa fa-plus"
               (click)="showAddModal()"
             ></button>
-            <button
-              appPermission
-              appFunction="SYSTEM_ROLE"
-              appAction="DELETE"
-              pButton
-              type="button"
-              label="Xóa"
-              icon="fa fa-trash"
-              class="ui-button-danger"
-              *ngIf="selectedItems.length > 0"
-              (click)="deleteItems()"
-            ></button>
-            <button
-              appPermission
-              appFunction="SYSTEM_ROLE"
-              appAction="UPDATE"
-              pButton
-              type="button"
-              label="Sửa"
-              icon="fa fa-edit"
-              class="ui-button-warning"
-              *ngIf="selectedItems.length == 1"
-              (click)="showEditModal()"
-            ></button>
+            @if (selectedItems.length > 0) {
+              <button
+                appPermission
+                appFunction="SYSTEM_ROLE"
+                appAction="DELETE"
+                pButton
+                type="button"
+                label="Xóa"
+                icon="fa fa-trash"
+                class="ui-button-danger"
+                (click)="deleteItems()"
+              ></button>
+            }
+            @if (selectedItems.length == 1) {
+              <button
+                appPermission
+                appFunction="SYSTEM_ROLE"
+                appAction="UPDATE"
+                pButton
+                type="button"
+                label="Sửa"
+                icon="fa fa-edit"
+                class="ui-button-warning"
+                (click)="showEditModal()"
+              ></button>
+            }
           </div>
           <div class="ui-g-6">
             <input
@@ -139,10 +143,12 @@ import { MessageConstants } from '@app/protected-zone/systems/constants';
     NgIf,
     PaginatorModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ConfirmDialogModule,
+    MessageModule
   ]
 })
-export class RolesComponent {
+export class RolesComponent implements OnInit {
   private subscription = new Subscription();
   // Default
   public bsModalRef!: BsModalRef;
@@ -158,11 +164,11 @@ export class RolesComponent {
   // Role
   public items!: any[];
   public selectedItems: any[] = [];
-  constructor(
-    private rolesService: RolesService,
-    private notificationService: NotificationService,
-    private modalService: BsModalService
-  ) {}
+  private rolesService = inject(RolesService);
+  // private notificationService: NotificationService,
+  private modalService = inject(BsModalService);
+  private messageService = inject(MessageService);
+  private confirmMessage = inject(ConfirmationService);
 
   ngOnInit(): void {
     this.loadData();
@@ -178,7 +184,7 @@ export class RolesComponent {
             this.blockedPanel = false;
           }, 1000);
         },
-        (error) => {
+        () => {
           setTimeout(() => {
             this.blockedPanel = false;
           }, 1000);
@@ -217,7 +223,8 @@ export class RolesComponent {
   }
   showEditModal() {
     if (this.selectedItems.length === 0) {
-      this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      this.messageService.add({ severity: 'error', detail: MessageConstants.NOT_CHOOSE_ANY_RECORD });
+
       return;
     }
     const initialState = {
@@ -239,14 +246,22 @@ export class RolesComponent {
 
   deleteItems() {
     const id = this.selectedItems[0].id;
-    this.notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG, () => this.deleteItemsConfirm(id));
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Service Message',
+      detail: MessageConstants.CREATED_OK_MSG
+    });
   }
   deleteItemsConfirm(id: any) {
     this.blockedPanel = true;
     this.subscription.add(
       this.rolesService.delete(id).subscribe(
         () => {
-          this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Service Message',
+            detail: MessageConstants.DELETED_OK_MSG
+          });
           this.loadData();
           this.selectedItems = [];
           setTimeout(() => {

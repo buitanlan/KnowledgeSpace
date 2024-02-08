@@ -34,11 +34,11 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "./dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "polyfills": ["zone.js"],
             "assets": ["src/assets", "src/favicon.ico"],
@@ -46,12 +46,10 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/alertifyjs/build/css/alertify.css",
-              "node_modules/alertifyjs/build/css/themes/default.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/app.scss"
             ],
-            "scripts": ["node_modules/chart.js/dist/Chart.js", "node_modules/alertifyjs/build/alertify.js"]
+            "scripts": ["node_modules/chart.js/dist/Chart.js"]
           },
           "configurations": {
             "production": {
@@ -76,12 +74,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -90,10 +85,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "admin-app:build:production"
+              "buildTarget": "admin-app:build:production"
             },
             "development": {
-              "browserTarget": "admin-app:build:development"
+              "buildTarget": "admin-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -101,7 +96,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "admin-app:build"
+            "buildTarget": "admin-app:build"
           }
         },
         "test": {

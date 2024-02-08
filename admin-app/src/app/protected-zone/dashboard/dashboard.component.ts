@@ -26,9 +26,9 @@ import { NgForOf } from '@angular/common';
         </div>
       </div>
       <hr />
-      <ngb-alert (closed)="closeAlert(alert)" *ngFor="let alert of alerts" [type]="alert.type">{{
-        alert.message
-      }}</ngb-alert>
+      @for (alert of alerts; track alert) {
+        <ngb-alert (closed)="closeAlert(alert)" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
       <hr />
       <div class="row">
         <div class="col-lg-8">

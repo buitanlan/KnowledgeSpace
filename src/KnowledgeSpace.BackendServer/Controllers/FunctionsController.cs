@@ -74,7 +74,7 @@ public class FunctionsController(ApplicationDbContext context) : BaseController
 
         var totalRecords = await query.CountAsync();
         var items = await query
-            .Skip(pageIndex - 1 * pageSize)
+            .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
             .Select(u => new FunctionVm
             {

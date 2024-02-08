@@ -1,6 +1,5 @@
 import { environment } from '@environments/environment';
 import { inject, Injectable } from '@angular/core';
-import { map } from 'rxjs';
 import { Role } from '@app/shared/models/role';
 import { HttpClient } from '@angular/common/http';
 import { Pagination } from '@app/shared/models/pagination';
@@ -21,18 +20,16 @@ export class RolesService {
   }
 
   getAllPaging(filter: any, pageIndex: any, pageSize: any) {
-    return this.http
-      .get<Pagination<Role>>(
-        `${environment.apiUrl}/api/roles/filter?pageIndex=${pageIndex}&pageSize=${pageSize}&filter=${filter}`
-      )
-      .pipe(
-        map((response: Pagination<Role>) => {
-          return response;
-        })
-      );
+    return this.http.get<Pagination<Role>>(
+      `${environment.apiUrl}/api/roles/filter?pageIndex=${pageIndex}&pageSize=${pageSize}&filter=${filter}`
+    );
   }
 
   delete(id: any) {
     return this.http.delete(environment.apiUrl + '/api/roles/' + id);
+  }
+
+  getAll() {
+    return this.http.get<Role[]>(`${environment.apiUrl}/api/roles`);
   }
 }

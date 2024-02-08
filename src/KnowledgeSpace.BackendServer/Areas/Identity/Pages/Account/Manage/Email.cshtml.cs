@@ -10,13 +10,12 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace KnowledgeSpace.BackendServer.Areas.Identity.Pages.Account.Manage;
 
-public class EmailModel(UserManager<User> userManager,
-        SignInManager<User> signInManager,
-        IEmailSender emailSender)
+public class EmailModel(
+    UserManager<User> userManager,
+    SignInManager<User> signInManager,
+    IEmailSender emailSender)
     : PageModel
 {
-    private readonly SignInManager<User> _signInManager = signInManager;
-
     public string Username { get; set; }
 
     public string Email { get; set; }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KnowledgeSpace.BackendServer.Controllers;
+﻿using KnowledgeSpace.BackendServer.Controllers;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
@@ -18,13 +14,13 @@ public class RolesControllerTest
 {
     private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
 
-    private readonly List<IdentityRole> _roleSources = new()
-    {
+    private readonly List<IdentityRole> _roleSources =
+    [
         new IdentityRole("test1"),
         new IdentityRole("test2"),
         new IdentityRole("test3"),
         new IdentityRole("test4")
-    };
+    ];
 
     private readonly ApplicationDbContext _context;
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KnowledgeSpace.ViewModels.Systems;
+﻿namespace KnowledgeSpace.ViewModels.Systems;
 
 public class UserCreateRequest
 {
@@ -16,5 +14,5 @@ public class UserCreateRequest
 
     public string LastName { get; set; }
 
-    public DateTime Dob { get; set; }
+    public string Dob { get; set; }
 }

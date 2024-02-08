@@ -79,7 +79,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @if (Model.LoggedOutVm != null && Model.LoggedOutVm.AutomaticRedirectAfterSignOut)
+    @if (Model.LoggedOutVm is {AutomaticRedirectAfterSignOut: true })
     {
         <script src="~/js/signout-redirect.js"></script>
     }

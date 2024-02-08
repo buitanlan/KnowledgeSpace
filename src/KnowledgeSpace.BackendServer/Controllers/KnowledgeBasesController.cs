@@ -141,7 +141,7 @@ public partial class KnowledgeBasesController
         var totalRecords = await query.CountAsync();
         var items = await query
             .AsNoTracking()
-            .Skip(pageIndex - 1 * pageSize)
+            .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
             .Select(u => new KnowledgeBaseQuickVm
             {
