@@ -58,11 +58,31 @@ public class FunctionsController(ApplicationDbContext context) : BaseController
             .ToListAsync();
         return Ok(functionVms);
     }
- 
+
+
+
+    [HttpGet("{functionId}/parents")]
+    [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
+    public async Task<IActionResult> GetFunctionsByParentId(string functionId)
+    {
+        var functions = context.Functions.Where(x => x.ParentId == functionId);
+
+        var functionvms = await functions.Select(u => new FunctionVm()
+        {
+            Id = u.Id,
+            Name = u.Name,
+            Url = u.Url,
+            SortOrder = u.SortOrder,
+            ParentId = u.ParentId,
+            Icon = u.Icon
+        }).ToListAsync();
+
+        return Ok(functionvms);
+    }
+
 
     [HttpGet("filter")]
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
-
     public async Task<ActionResult<Pagination<RoleVm>>> GetFunctionsPaging(string filter, int pageSize, int pageIndex)
     {
         var query = context.Functions.AsQueryable();
@@ -141,12 +161,17 @@ public class FunctionsController(ApplicationDbContext context) : BaseController
     public async Task<IActionResult> DeleteFunction(string id)
     {
         var function = await context.Functions.SingleOrDefaultAsync(x => x.Id == id);
-        if (function is null) return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
+        if (function is null)
+            return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
         context.Functions.Remove(function);
+        var commands = context.CommandInFunctions.Where(x => x.FunctionId == id);
+        context.CommandInFunctions.RemoveRange(commands);
         var result = await context.SaveChangesAsync();
 
-        if (result <= 0) return BadRequest(new ApiBadRequestResponse("Delete function failed"));
+        if (result <= 0)
+            return BadRequest(new ApiBadRequestResponse("Delete function failed"));
+
         var functionVm = new FunctionVm
         {
             Id = function.Id,
@@ -186,79 +211,69 @@ public class FunctionsController(ApplicationDbContext context) : BaseController
             .ToListAsync();
         return Ok(data);
     }
-        
-        
-    [HttpGet("{functionId}/commands/not-in-function")]
-    [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.View)]
-    public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
-    {
-        var query =
-            from c in context.Commands
-            join cif in context.CommandInFunctions on c.Id equals cif.CommandId into result1
-            from commandInFunction in result1.DefaultIfEmpty()
-            join f in context.Functions on commandInFunction.FunctionId equals f.Id into result2
-            from function in result2.DefaultIfEmpty()
-            select new
-            {
-                c.Id,
-                c.Name,
-                commandInFunction.FunctionId
-            };
-        query = query.Where(x => x.FunctionId != functionId);
-        var data = await query
-            .AsNoTracking()
-            .Select(x => new CommandVm
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .ToListAsync();
-        return Ok(data);
-    }
-        
-        
+
+
     [HttpPost("{functionId}/commands")]
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Create)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
+    public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] CommandAssignRequest request)
     {
-        var commandInFunction = await context.CommandInFunctions
-            .SingleOrDefaultAsync(x => x.CommandId == request.CommandId && x.FunctionId ==  request.FunctionId);
-        if (commandInFunction != null)
-            return BadRequest(new ApiBadRequestResponse("This command has been added to function"));
-
-        var entity = new CommandInFunction
+        foreach (var commandId in request.CommandIds)
         {
-            CommandId = request.CommandId,
-            FunctionId = request.FunctionId
-        };
-        context.CommandInFunctions.Add(entity);
+            if (await context.CommandInFunctions.FindAsync(commandId, functionId) != null)
+                return BadRequest(new ApiBadRequestResponse("This command has been existed in function"));
+            var entity = new CommandInFunction()
+            {
+                CommandId = commandId,
+                FunctionId = functionId
+            };
+
+            context.CommandInFunctions.Add(entity);
+        }
+
+        if (request.AddToAllFunctions)
+        {
+            var otherFunctions = context.Functions.Where(x => x.Id != functionId);
+            foreach (var function in otherFunctions)
+            {
+                foreach (var commandId in request.CommandIds)
+                {
+                    if (await context.CommandInFunctions.FindAsync(request.CommandIds, function.Id) == null)
+                    {
+                        context.CommandInFunctions.Add(new CommandInFunction()
+                        {
+                            CommandId = commandId,
+                            FunctionId = function.Id
+                        });
+                    }
+                }
+            }
+        }
         var result = await context.SaveChangesAsync();
 
-        if (result > 0)
+        return result switch
         {
-            return CreatedAtAction(nameof(GetById), new { commandId = request.CommandId, functionId = request.FunctionId }, request);
-        }
-        return BadRequest(new ApiBadRequestResponse("Add comment function failed"));
+            > 0 => CreatedAtAction(nameof(GetById), new { request.CommandIds, functionId }),
+            _ => BadRequest(new ApiBadRequestResponse("Add command to function failed"))
+        };
     }
 
 
-    [HttpDelete("{functionId}/commands/{commandId}")]
+    [HttpDelete("{functionId}/commands")]
     [ClaimRequirement(FunctionCode.SystemFunction, CommandCode.Update)]
     [ApiValidationFilter]
-    public async Task<IActionResult> DeleteCommandToFunction(string functionId, string commandId)
+    public async Task<IActionResult> DeleteCommandToFunction(string functionId, [FromQuery] CommandAssignRequest request)
     {
-        var commandInFunction = await context.CommandInFunctions
-            .SingleOrDefaultAsync(x => x.CommandId == commandId && x.FunctionId ==  functionId);
-        if (commandInFunction is null)
-            return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
-
-        var entity = new CommandInFunction
+        foreach (var commandId in request.CommandIds)
         {
-            CommandId = commandId,
-            FunctionId = functionId
-        };
-        context.CommandInFunctions.Remove(entity);
+            var entity = await context.CommandInFunctions
+                .SingleOrDefaultAsync(x => x.FunctionId == functionId && x.CommandId == commandId);
+            if (entity is null)
+                return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
+
+            context.CommandInFunctions.Remove(entity);
+        }
+
         var result = await context.SaveChangesAsync();
 
         if (result > 0)

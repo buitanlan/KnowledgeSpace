@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 
 namespace KnowledgeSpace.BackendServer.Helpers;
 
@@ -17,7 +18,7 @@ public class ErrorWrappingMiddleware(RequestDelegate next, ILogger<ErrorWrapping
             context.Response.StatusCode = 500;
         }
 
-        if (!context.Response.HasStarted && context.Response.StatusCode != 204)
+        if (!context.Response.HasStarted && context.Response.StatusCode != (int)HttpStatusCode.NoContent)
         {
             context.Response.ContentType = "application/json";
 
