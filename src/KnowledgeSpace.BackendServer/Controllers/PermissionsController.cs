@@ -10,31 +10,30 @@ namespace KnowledgeSpace.BackendServer.Controllers;
 
 public class PermissionsController(IConfiguration configuration) : BaseController
 {
-	[HttpGet]
-	[ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
+    [HttpGet]
+    [ClaimRequirement(FunctionCode.SystemPermission, CommandCode.View)]
+    public async Task<IActionResult> GetCommandViews()
+    {
+        await using var conn = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        if (conn.State is ConnectionState.Closed)
+        {
+            await conn.OpenAsync();
+        }
 
-	public async Task<IActionResult> GetCommandViews()
-	{
-		await using var conn = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
-		if (conn.State == ConnectionState.Closed)
-		{
-			await conn.OpenAsync();
-		}
+        const string sql = """
+                           SELECT f.Id,f.Name,f.ParentId,
+                           sum(case when sa.Id = 'Create' then 1 else 0 end) as HasCreate,
+                           sum(case when sa.Id = 'Update' then 1 else 0 end) as HasUpdate,
+                           sum(case when sa.Id = 'Delete' then 1 else 0 end) as HasDelete,
+                           sum(case when sa.Id = 'View' then 1 else 0 end) as HasView,
+                           sum(case when sa.Id = 'Approve' then 1 else 0 end) as HasApprove
+                           from Functions f join CommandInFunctions cif on f.Id = cif.FunctionId
+                           	left join Commands sa on cif.CommandId = sa.Id
+                           group by f.Id,f.Name, f.ParentId
+                           order by f.ParentId
+                           """;
 
-		var sql = @"SELECT f.Id,
-	                       f.Name,
-	                       f.ParentId,
-	                       sum(case when sa.Id = 'Create' then 1 else 0 end) as HasCreate,
-	                       sum(case when sa.Id = 'Update' then 1 else 0 end) as HasUpdate,
-	                       sum(case when sa.Id = 'Delete' then 1 else 0 end) as HasDelete,
-	                       sum(case when sa.Id = 'View' then 1 else 0 end) as HasView,
-	                       sum(case when sa.Id = 'Approve' then 1 else 0 end) as HasApprove
-                        from Functions f join CommandInFunctions cif on f.Id = cif.FunctionId
-		                    left join Commands sa on cif.CommandId = sa.Id
-                        group by f.Id,f.Name, f.ParentId
-                        order by f.ParentId";
-
-		var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
-		return Ok(result);
-	}
+        var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
+        return Ok(result);
+    }
 }

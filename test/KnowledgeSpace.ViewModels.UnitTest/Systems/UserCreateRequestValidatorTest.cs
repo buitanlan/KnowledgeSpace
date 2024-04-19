@@ -1,4 +1,5 @@
-﻿using KnowledgeSpace.ViewModels.Systems;
+﻿using System.Globalization;
+using KnowledgeSpace.ViewModels.Systems;
 using Xunit;
 
 namespace KnowledgeSpace.ViewModels.UnitTest.Systems;
@@ -8,7 +9,7 @@ public class UserCreateRequestValidatorTest
     private UserCreateRequestValidator validator = new();
     private UserCreateRequest request = new()
     {
-        Dob = DateTime.Now.ToString(),
+        Dob = DateTime.Now.ToString(CultureInfo.InvariantCulture),
         Email = "tedu.international@gmail.com",
         FirstName = "Test",
         LastName = "test",

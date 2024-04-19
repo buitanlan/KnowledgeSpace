@@ -59,25 +59,15 @@ public partial class KnowledgeBasesController
         return new KnowledgeBase
         {
             CategoryId = request.CategoryId,
-
             Title = request.Title,
-
             SeoAlias = request.SeoAlias,
-
             Description = request.Description,
-
             Environment = request.Environment,
-
             Problem = request.Problem,
-
             StepToReproduce = request.StepToReproduce,
-
             ErrorMessage = request.ErrorMessage,
-
             Workaround = request.Workaround,
-
             Note = request.Note,
-
             Labels = request.Labels,
         };
     }

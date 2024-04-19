@@ -250,11 +250,11 @@ public class UsersController(
     [ClaimRequirement(FunctionCode.SystemUser, CommandCode.View)]
     public async Task<IActionResult> RemoveRolesFromUser(string userId, [FromQuery] RoleAssignRequest request)
     {
-        if (request.RoleNames?.Length == 0)
+        if (request.RoleNames.Length == 0)
         {
             return BadRequest(new ApiBadRequestResponse("Role names cannot empty"));
         }
-        if (request.RoleNames.Length == 1 && request.RoleNames[0] == SystemConstants.Roles.Admin)
+        if (request.RoleNames is [SystemConstants.Roles.Admin])
         {
             return BadRequest(new ApiBadRequestResponse($"Cannot remove {SystemConstants.Roles.Admin} role"));
         }

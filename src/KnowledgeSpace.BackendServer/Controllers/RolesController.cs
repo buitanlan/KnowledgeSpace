@@ -169,12 +169,45 @@ public class RolesController(RoleManager<IdentityRole> roleManager, ApplicationD
 
         var existingPermissions = context.Permissions.Where(x => x.RoleId == roleId);
         context.Permissions.RemoveRange(existingPermissions);
-        context.Permissions.AddRange(newPermissions);
+        context.Permissions.AddRange(newPermissions.Distinct(new MyPermissionComparer()));
         var result = await context.SaveChangesAsync();
         if (result > 0)
         {
             return NoContent();
         }
         return BadRequest(new ApiBadRequestResponse("Save permission failed"));
+    }
+
+
+}
+
+internal class MyPermissionComparer : IEqualityComparer<Permission>
+{
+    // Items are equal if their ids are equal.
+    public bool Equals(Permission x, Permission y)
+    {
+        // Check whether the compared objects reference the same data.
+        if (ReferenceEquals(x, y)) return true;
+
+        // Check whether any of the compared objects is null.
+        if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+            return false;
+
+        //Check whether the items properties are equal.
+        return x.CommandId == y.CommandId && x.FunctionId == x.FunctionId && x.RoleId == x.RoleId;
+    }
+
+    // If Equals() returns true for a pair of objects
+    // then GetHashCode() must return the same value for these objects.
+
+    public int GetHashCode(Permission permission)
+    {
+        //Check whether the object is null
+        if (ReferenceEquals(permission, null)) return 0;
+
+        //Get hash code for the ID field.
+        var hashProductId = (permission.CommandId + permission.FunctionId + permission.RoleId).GetHashCode();
+
+        return hashProductId;
     }
 }
