@@ -1,4 +1,6 @@
-﻿namespace KnowledgeSpace.ViewModels.Systems;
+﻿using KnowledgeSpace.ViewModels.Contents;
+
+namespace KnowledgeSpace.ViewModels.Systems;
 
 public class KnowledgeBaseVm
 {
@@ -28,7 +30,7 @@ public class KnowledgeBaseVm
 
     public string OwnerUserId { get; set; }
 
-    public string Labels { get; set; }
+    public string[]? Labels { get; set; }
 
     public DateTime CreateDate { get; set; }
 
@@ -39,4 +41,7 @@ public class KnowledgeBaseVm
     public int? NumberOfVotes { get; set; }
 
     public int? NumberOfReports { get; set; }
+
+    public List<AttachmentVm> Attachments { set; get; }
+
 }

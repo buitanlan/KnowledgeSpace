@@ -53,7 +53,7 @@ public partial class KnowledgeBasesController
         var name = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
         if (name is null) return null;
         var originalFileName = name.Trim('"');
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+        var fileName = $"{originalFileName[..originalFileName.LastIndexOf('.')]}{Path.GetExtension(originalFileName)}";
         await storageService.SaveFileAsync(file.OpenReadStream(), fileName);
         var attachmentEntity = new Attachment
         {

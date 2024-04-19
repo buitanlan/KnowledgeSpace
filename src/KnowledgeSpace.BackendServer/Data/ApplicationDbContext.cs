@@ -1,12 +1,34 @@
 ﻿using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace KnowledgeSpace.BackendServer.Data;
 
 public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<User>(options)
 {
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+    {
+        var modified = ChangeTracker.Entries()
+            .Where(e => e.State is EntityState.Modified or EntityState.Added);
+        foreach (var item in modified)
+        {
+            if (item.Entity is IDateTracking changedOrAddedItem)
+            {
+                if (item.State == EntityState.Added)
+                {
+                    changedOrAddedItem.CreateDate = DateTime.Now;
+                }
+                else
+                {
+                    changedOrAddedItem.LastModifiedDate = DateTime.Now;
+                }
+            }
+        }
+        return base.SaveChangesAsync(cancellationToken);
+    }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
