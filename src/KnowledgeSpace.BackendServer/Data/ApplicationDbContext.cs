@@ -9,7 +9,7 @@ namespace KnowledgeSpace.BackendServer.Data;
 
 public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<User>(options)
 {
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var modified = ChangeTracker.Entries()
             .Where(e => e.State is EntityState.Modified or EntityState.Added);
@@ -17,7 +17,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         {
             if (item.Entity is IDateTracking changedOrAddedItem)
             {
-                if (item.State == EntityState.Added)
+                if (item.State is EntityState.Added)
                 {
                     changedOrAddedItem.CreateDate = DateTime.Now;
                 }

@@ -15,7 +15,7 @@ public partial class KnowledgeBasesController
 
     [HttpGet("{knowledgeBaseId:int}/comments/filter")]
     [ClaimRequirement(FunctionCode.ContentComment, CommandCode.View)]
-    public async Task<IActionResult> GetCommentsPaging(int knowledgeBaseId, string filter, int pageIndex, int pageSize)
+    public async Task<IActionResult> GetCommentsPaging(int? knowledgeBaseId, string filter, int pageIndex, int pageSize)
     {
         var query = context.Comments.Where(x => x.KnowledgeBaseId == knowledgeBaseId).AsQueryable();
         if (!string.IsNullOrEmpty(filter))
@@ -34,7 +34,7 @@ public partial class KnowledgeBasesController
                 CreateDate = c.CreateDate,
                 KnowledgeBaseId = c.KnowledgeBaseId,
                 LastModifiedDate = c.LastModifiedDate,
-                OwnwerUserId = c.OwnerUserId
+                OwnerUserId = c.OwnerUserId
             })
             .ToListAsync();
 
@@ -62,7 +62,7 @@ public partial class KnowledgeBasesController
             CreateDate = comment.CreateDate,
             KnowledgeBaseId = comment.KnowledgeBaseId,
             LastModifiedDate = comment.LastModifiedDate,
-            OwnwerUserId = comment.OwnerUserId
+            OwnerUserId = comment.OwnerUserId
         };
 
         return Ok(commentVm);
@@ -146,7 +146,7 @@ public partial class KnowledgeBasesController
             CreateDate = comment.CreateDate,
             KnowledgeBaseId = comment.KnowledgeBaseId,
             LastModifiedDate = comment.LastModifiedDate,
-            OwnwerUserId = comment.OwnerUserId
+            OwnerUserId = comment.OwnerUserId
         };
         return Ok(commentVm);
     }

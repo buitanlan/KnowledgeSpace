@@ -3,7 +3,6 @@ import { User } from '@app/shared/models/user';
 import { Observable, of } from 'rxjs';
 import { UsersService } from '@app/shared/services/users.service';
 import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { Pagination } from '@app/shared/models/pagination';
 import { UsersDetailComponent } from '@app/protected-zone/systems/users/users-detail.component';
@@ -18,6 +17,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-users',
@@ -241,18 +241,20 @@ import { InputTextModule } from 'primeng/inputtext';
     DecimalPipe,
     NgIf,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    DynamicDialogModule
   ],
-  standalone: true
+  standalone: true,
+  providers: [DialogService]
 })
 export class UsersComponent implements OnInit {
   public users$: Observable<User[]> = of([]);
   usersService = inject(UsersService);
-  modalService = inject(BsModalService);
+  dialogService = inject(DialogService);
   readonly #messageService = inject(MessageService);
   readonly #notificationService = inject(NotificationService);
   // Default
-  public bsModalRef!: BsModalRef;
+  ref: DynamicDialogRef | undefined;
   public blockedPanel = false;
   public blockedPanelRole = false;
   /**
@@ -349,12 +351,14 @@ export class UsersComponent implements OnInit {
   }
 
   showAddModal() {
-    this.bsModalRef = this.modalService.show(UsersDetailComponent, {
-      class: 'modal-lg',
-      backdrop: 'static'
+    this.ref = this.dialogService.open(UsersDetailComponent, {
+      header: 'Add a Product',
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true
     });
-    this.bsModalRef.content.saved.subscribe(() => {
-      this.bsModalRef.hide();
+    this.ref.onClose.subscribe(() => {
       this.loadData();
       this.selectedItems = [];
     });
@@ -369,15 +373,21 @@ export class UsersComponent implements OnInit {
     const initialState = {
       entityId: this.selectedItems[0].id
     };
-    this.bsModalRef = this.modalService.show(UsersDetailComponent, {
-      initialState: initialState,
-      class: 'modal-lg',
-      backdrop: 'static'
+    this.ref = this.dialogService.open(UsersDetailComponent, {
+      data: {
+        initialState: initialState
+      },
+      header: 'Edit a Product',
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true
     });
 
-    this.bsModalRef.content.saved.subscribe((response: any) => {
-      this.bsModalRef.hide();
-      this.loadData(response.id);
+    this.ref.onClose.subscribe((response: any) => {
+      if (response) {
+        this.loadData(response.id);
+      }
     });
   }
 
@@ -484,13 +494,17 @@ export class UsersComponent implements OnInit {
       existingRoles: this.userRoles,
       userId: this.selectedItems[0].id
     };
-    this.bsModalRef = this.modalService.show(RolesAssignComponent, {
-      initialState: initialState,
-      class: 'modal-lg',
-      backdrop: 'static'
+    this.ref = this.dialogService.open(RolesAssignComponent, {
+      data: {
+        initialState: initialState
+      },
+      header: 'Edit a Product',
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true
     });
-    this.bsModalRef.content.chosenEvent.subscribe((response: any[]) => {
-      this.bsModalRef.hide();
+    this.ref.onClose.subscribe(() => {
       this.loadUserRoles();
       this.selectedRoleItems = [];
     });

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
 import { KeyFilterModule } from 'primeng/keyfilter';
@@ -8,12 +8,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageConstants } from '@app/protected-zone/systems/constants';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { UsersService } from '@app/shared/services/users.service';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-users-detail',
@@ -21,7 +21,7 @@ import { MessageModule } from 'primeng/message';
     <!--Modal add and edit-->
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ dialogTitle }}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -146,7 +146,7 @@ import { MessageModule } from 'primeng/message';
           Lưu lại
         </button>
         &nbsp;
-        <button type="button" pButton class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+        <button type="button" pButton class="btn btn-default" (click)="closeModal()">Đóng</button>
       </div>
     </form>
   `,
@@ -162,10 +162,12 @@ import { MessageModule } from 'primeng/message';
     ConfirmDialogModule,
     MessageModule
   ],
+  providers: [DialogService],
   standalone: true
 })
-export class UsersDetailComponent {
-  public bsModalRef = inject(BsModalRef);
+export class UsersDetailComponent implements OnInit {
+  public ref = inject(DynamicDialogRef);
+  private dialogService = inject(DialogService); // for dialog
   private usersService = inject(UsersService);
   private fb = inject(FormBuilder);
   private datePipe = inject(DatePipe);
@@ -369,5 +371,9 @@ export class UsersDetailComponent {
         }
       );
     }
+  }
+
+  closeModal() {
+    this.ref.close();
   }
 }

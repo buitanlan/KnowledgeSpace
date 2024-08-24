@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { UsersService } from '@app/shared/services/users.service';
 import { RolesService } from '@app/shared/services/roles.service';
 import { NgIf } from '@angular/common';

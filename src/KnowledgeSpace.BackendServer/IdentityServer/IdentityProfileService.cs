@@ -22,10 +22,7 @@ public class IdentityProfileService(
     {
         var sub = context.Subject.GetSubjectId();
         var user = await userManager.FindByIdAsync(sub);
-        if (user is null)
-        {
-            throw new ArgumentException("");
-        }
+        ArgumentNullException.ThrowIfNull(user);
 
         var principal = await claimsFactory.CreateAsync(user);
         var claims = principal.Claims.ToList();

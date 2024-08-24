@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="MockQueryable.Moq" Version="7.0.1" />
     <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="xunit" Version="2.7.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.8">
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -27,5 +27,4 @@
     <ProjectReference Include="..\..\src\KnowledgeSpace.BackendServer\KnowledgeSpace.BackendServer.csproj" />
     <ProjectReference Include="..\..\src\KnowledgeSpace.ViewModels\KnowledgeSpace.ViewModels.csproj" />
   </ItemGroup>
-
 </Project>

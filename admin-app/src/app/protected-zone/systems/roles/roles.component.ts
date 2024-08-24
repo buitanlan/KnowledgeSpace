@@ -8,7 +8,6 @@ import { NgIf } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { RolesService } from '@app/shared/services/roles.service';
 import { Pagination } from '@app/shared/models/pagination';

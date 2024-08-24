@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
@@ -95,7 +94,6 @@ export class RolesDetailComponent {
   public btnDisabled = false;
   public blockedPanel = false;
 
-  readonly bsModalRef = inject(BsModalRef);
   readonly rolesService = inject(RolesService);
   readonly fb = inject(FormBuilder);
   readonly #messageService = inject(MessageService);

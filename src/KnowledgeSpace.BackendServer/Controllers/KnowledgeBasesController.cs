@@ -98,7 +98,7 @@ public partial class KnowledgeBasesController
                 };
                 context.Labels.Add(labelEntity);
             }
-            if (await context.LabelInKnowledgeBases.FindAsync(labelId, knowledgeBase.Id) == null)
+            if (await context.LabelInKnowledgeBases.FindAsync(labelId, knowledgeBase.Id) is null)
             {
                 context.LabelInKnowledgeBases.Add(new LabelInKnowledgeBase()
                 {
@@ -234,7 +234,10 @@ public partial class KnowledgeBasesController
             foreach (var attachment in request.Attachments)
             {
                 var attachmentEntity = await SaveFile(knowledgeBase.Id, attachment);
-                context.Attachments.Add(attachmentEntity);
+                if (attachmentEntity is not null)
+                {
+                    context.Attachments.Add(attachmentEntity);
+                }
             }
         }
         context.KnowledgeBases.Update(knowledgeBase);
