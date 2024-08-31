@@ -7,7 +7,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { CalendarModule } from 'primeng/calendar';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { MessageConstants } from '@app/protected-zone/systems/constants';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 import { UsersService } from '@app/shared/services/users.service';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

@@ -5,6 +5,7 @@ using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using Serilog;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
@@ -32,7 +33,7 @@ public class PermissionsController(IConfiguration configuration) : BaseControlle
                            group by f.Id,f.Name, f.ParentId
                            order by f.ParentId
                            """;
-
+        Log.Information($"Query: {sql}") ;
         var result = await conn.QueryAsync<PermissionScreenVm>(sql, null, null, 120, CommandType.Text);
         return Ok(result);
     }

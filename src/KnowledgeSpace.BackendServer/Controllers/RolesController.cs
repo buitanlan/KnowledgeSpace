@@ -11,8 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeSpace.BackendServer.Controllers;
 
-public class RolesController(RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
-    : BaseController
+public class RolesController(RoleManager<IdentityRole> roleManager, ApplicationDbContext context) : BaseController
 {
     [HttpPost]
     [ClaimRequirement(FunctionCode.SystemRole, CommandCode.Create)]
@@ -194,7 +193,7 @@ internal class MyPermissionComparer : IEqualityComparer<Permission>
             return false;
 
         //Check whether the items properties are equal.
-        return x.CommandId == y.CommandId && x.FunctionId == x.FunctionId && x.RoleId == x.RoleId;
+        return x.CommandId == y.CommandId && x.FunctionId == y.FunctionId && x.RoleId == y.RoleId;
     }
 
     // If Equals() returns true for a pair of objects

@@ -5,6 +5,9 @@ export const appRoutes: Routes = [
   {
     path: '',
     loadChildren: () => import('./protected-zone/protected-zone.route').then((m) => m.routes),
+    data: {
+      functionCode: 'Dashboard'
+    },
     canActivate: [authGuard]
   },
   {

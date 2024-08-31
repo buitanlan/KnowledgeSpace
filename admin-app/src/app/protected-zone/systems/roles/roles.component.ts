@@ -13,10 +13,11 @@ import { RolesService } from '@app/shared/services/roles.service';
 import { Pagination } from '@app/shared/models/pagination';
 import { Role } from '@app/shared/models/role';
 import { RolesDetailComponent } from '@app/protected-zone/systems/roles/roles-detail/roles-detail.component';
-import { MessageConstants } from '@app/protected-zone/systems/constants';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-roles',
@@ -150,7 +151,7 @@ import { MessageModule } from 'primeng/message';
 export class RolesComponent implements OnInit {
   private subscription = new Subscription();
   // Default
-  public bsModalRef!: BsModalRef;
+  // public bsModalRef!: BsModalRef;
   public blockedPanel = false;
   /**
    * Paging
@@ -165,9 +166,11 @@ export class RolesComponent implements OnInit {
   public selectedItems: any[] = [];
   private rolesService = inject(RolesService);
   // private notificationService: NotificationService,
-  private modalService = inject(BsModalService);
+  // private modalService = inject(BsModalService);
   private messageService = inject(MessageService);
   private confirmMessage = inject(ConfirmationService);
+  private dialogService = inject(DialogService);
+  private ref = inject(DynamicDialogRef);
 
   ngOnInit(): void {
     this.loadData();
@@ -210,12 +213,16 @@ export class RolesComponent implements OnInit {
   }
 
   showAddModal() {
-    this.bsModalRef = this.modalService.show(RolesDetailComponent, {
-      class: 'modal-lg',
-      backdrop: 'static'
+    this.ref = this.dialogService.open(RolesDetailComponent, {
+      header: 'Add role detail',
+      width: '50vw',
+      modal:true,
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
+      }
     });
-    this.bsModalRef.content.savedEvent.subscribe(() => {
-      this.bsModalRef.hide();
+    this.ref.onClose.subscribe(() => {
       this.loadData();
       this.selectedItems = [];
     });
@@ -229,18 +236,19 @@ export class RolesComponent implements OnInit {
     const initialState = {
       entityId: this.selectedItems[0].id
     };
-    this.bsModalRef = this.modalService.show(RolesDetailComponent, {
-      initialState: initialState,
-      class: 'modal-lg',
-      backdrop: 'static'
+    this.ref = this.dialogService.open(RolesDetailComponent, {
+      header: 'Edit role detail',
+      width: '50vw',
+      modal:true,
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
+      }
     });
 
-    this.subscription.add(
-      this.bsModalRef.content.savedEvent.subscribe((response: { id: null | undefined }) => {
-        this.bsModalRef.hide();
+      this.ref.onClose.subscribe((response: { id: null | undefined }) => {
         this.loadData(response.id);
       })
-    );
   }
 
   deleteItems() {

@@ -7,17 +7,17 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RolesService } from '@app/shared/services/roles.service';
-import { MessageConstants } from '@app/protected-zone/systems/constants';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@app/shared/services/notification.servive';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 
 @Component({
   selector: 'app-roles-detail-root',
   template: `
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ dialogTitle }}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <button type="button" class="close pull-right" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -69,7 +69,7 @@ import { NotificationService } from '@app/shared/services/notification.servive';
       <div class="modal-footer">
         <button type="button" (click)="saveChange()" class="btn btn-primary">Lưu lại</button>
         &nbsp;
-        <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+        <button type="button" class="btn btn-default">Đóng</button>
       </div>
     </form>
   `,

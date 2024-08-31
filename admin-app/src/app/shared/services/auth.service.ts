@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   async signOut() {
-    await this.manager.signoutRedirect();
+    await this.manager.signoutRedirectCallback();
   }
 }
 
@@ -61,7 +61,7 @@ export function getClientSettings(): UserManagerSettings {
     scope: 'api.knowledgespace openid profile',
     filterProtocolClaims: true,
     loadUserInfo: true,
-    automaticSilentRenew: true,
+    automaticSilentRenew: false,
     silent_redirect_uri: 'http://localhost:4200/silent-refresh.html'
   };
 }

@@ -6,7 +6,7 @@ import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf } from '@angular/common
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { Pagination } from '@app/shared/models/pagination';
 import { UsersDetailComponent } from '@app/protected-zone/systems/users/users-detail.component';
-import { MessageConstants } from '@app/protected-zone/systems/constants';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 import { RolesAssignComponent } from '@app/protected-zone/systems/users/roles-assign.component';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -18,6 +18,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
 
 @Component({
   selector: 'app-users',
@@ -242,7 +243,8 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
     NgIf,
     ButtonModule,
     InputTextModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    PermissionDirective
   ],
   standalone: true,
   providers: [DialogService]
@@ -292,8 +294,6 @@ export class UsersComponent implements OnInit {
     this.usersService.getAllPaging(this.keyword, this.pageIndex, this.pageSize).subscribe(
       (response: Pagination<User>) => {
         this.items = response.items;
-        this.pageIndex = this.pageIndex;
-        this.pageSize = this.pageSize;
         this.totalRecords = response.totalRecords;
         if (this.selectedItems.length === 0 && this.items.length > 0) {
           this.selectedItems.push(this.items[0]);

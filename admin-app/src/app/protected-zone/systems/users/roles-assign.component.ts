@@ -10,7 +10,7 @@ import { TableModule } from 'primeng/table';
     <!--Modal add and edit-->
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ title }}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <button type="button" class="close pull-right" aria-label="Close" >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -57,14 +57,13 @@ import { TableModule } from 'primeng/table';
         <button type="submit" class="btn btn-success" (click)="chooseRoles()">Chọn</button>
       }
       &nbsp
-      <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+      <button type="button" class="btn btn-default">Đóng</button>
     </div>
   `,
   standalone: true,
   imports: [NgIf, TableModule]
 })
 export class RolesAssignComponent implements OnInit {
-  bsModalRef = inject(BsModalRef);
   usersService = inject(UsersService);
   rolesService = inject(RolesService);
 
