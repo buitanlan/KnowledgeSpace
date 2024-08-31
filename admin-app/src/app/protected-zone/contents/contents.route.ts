@@ -10,7 +10,7 @@ export const routes: Routes = [
     path: 'knowledge-bases',
     component: KnowledgeBaseComponent,
     data: {
-      functionCode: 'CONTENT_KNOWLEDGEBASE'
+      functionCode: 'ContentKnowledgeBase'
     },
     canActivate: [authGuard]
   },
@@ -18,7 +18,7 @@ export const routes: Routes = [
     path: 'comments',
     component: CommentsComponent,
     data: {
-      functionCode: 'CONTENT_COMMENT'
+      functionCode: 'ContentComment'
     },
     canActivate: [authGuard]
   },
@@ -26,7 +26,7 @@ export const routes: Routes = [
     path: 'reports',
     component: ReportsComponent,
     data: {
-      functionCode: 'CONTENT_REPORT'
+      functionCode: 'ContentReport'
     },
     canActivate: [authGuard]
   },
@@ -34,7 +34,7 @@ export const routes: Routes = [
     path: 'categories',
     component: CategoriesComponent,
     data: {
-      functionCode: 'CONTENT_CATEGORY'
+      functionCode: 'ContentCategory'
     },
     canActivate: [authGuard]
   },
@@ -42,7 +42,7 @@ export const routes: Routes = [
     path: '',
     component: KnowledgeBaseComponent,
     data: {
-      functionCode: 'CONTENT_KNOWLEDGEBASE'
+      functionCode: 'ContentKnowledgeBase'
     },
     canActivate: [authGuard]
   }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, OnInit } from '@angular/core';
 import { UsersService } from '@app/shared/services/users.service';
 import { RolesService } from '@app/shared/services/roles.service';
-import { NgIf } from '@angular/common';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -61,7 +60,7 @@ import { TableModule } from 'primeng/table';
     </div>
   `,
   standalone: true,
-  imports: [NgIf, TableModule]
+  imports: [TableModule]
 })
 export class RolesAssignComponent implements OnInit {
   usersService = inject(UsersService);

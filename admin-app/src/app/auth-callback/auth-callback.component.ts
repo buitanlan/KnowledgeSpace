@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-auth-callback',
@@ -16,7 +15,7 @@ import { NgIf } from '@angular/common';
       </div>
     }
   `,
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink],
   standalone: true
 })
 export class AuthCallbackComponent implements OnInit {

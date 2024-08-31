@@ -12,6 +12,6 @@ public class Config
 
     public static IEnumerable<ApiScope> Apis =
     [
-        new ApiScope("api.knowledgespace", "KnowledgeSpace API")
+        new("api.knowledgespace", "KnowledgeSpace API")
     ];
 }

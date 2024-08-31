@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: 'monthly-new-knowledge-bases',
     component: MonthlyNewKnowledgeBasesComponent,
     data: {
-      functionCode: 'STATISTIC_MONTHLY_NEWKB'
+      functionCode: 'StatisticMonthlyNewMember'
     },
     canActivate: [authGuard]
   },
@@ -17,7 +17,7 @@ export const routes: Routes = [
     path: 'monthly-new-comments',
     component: MonthlyNewCommentsComponent,
     data: {
-      functionCode: 'STATISTIC_MONTHLY_COMMENT'
+      functionCode: 'StatisticMonthlyComment'
     },
     canActivate: [authGuard]
   },
@@ -25,12 +25,16 @@ export const routes: Routes = [
     path: 'monthly-new-members',
     component: MonthlyNewMembersComponent,
     data: {
-      functionCode: 'STATISTIC_MONTHLY_NEWMEMBER'
+      functionCode: 'StatisticMonthlyNewMember'
     },
     canActivate: [authGuard]
   },
   {
     path: '',
-    component: MonthlyNewKnowledgeBasesComponent
+    component: MonthlyNewKnowledgeBasesComponent,
+    data: {
+      functionCode: 'StatisticMonthlyNewKnowledgeBase'
+    },
+    canActivate: [authGuard]
   }
 ];

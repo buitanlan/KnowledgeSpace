@@ -7,7 +7,6 @@ using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.BackendServer.Services;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Contents;
-using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

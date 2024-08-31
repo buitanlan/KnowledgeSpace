@@ -4,7 +4,7 @@ using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MockQueryable.Moq;
+using MockQueryable.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -16,10 +16,10 @@ public class RolesControllerTest
 
     private readonly List<IdentityRole> _roleSources =
     [
-        new IdentityRole("test1"),
-        new IdentityRole("test2"),
-        new IdentityRole("test3"),
-        new IdentityRole("test4")
+        new("test1"),
+        new("test2"),
+        new("test3"),
+        new("test4")
     ];
 
     private readonly ApplicationDbContext _context;

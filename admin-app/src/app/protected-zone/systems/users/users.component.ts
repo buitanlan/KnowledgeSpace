@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { User } from '@app/shared/models/user';
 import { Observable, of } from 'rxjs';
 import { UsersService } from '@app/shared/services/users.service';
-import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { Pagination } from '@app/shared/models/pagination';
 import { UsersDetailComponent } from '@app/protected-zone/systems/users/users-detail.component';
@@ -230,7 +230,6 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
     </div>
   `,
   imports: [
-    NgForOf,
     AsyncPipe,
     BlockUIModule,
     ProgressSpinnerModule,
@@ -240,7 +239,6 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
     CheckboxModule,
     DatePipe,
     DecimalPipe,
-    NgIf,
     ButtonModule,
     InputTextModule,
     DynamicDialogModule,

@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-validation-message',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (entityForm.controls[fieldName].invalid && entityForm.controls[fieldName].dirty) {
       <div class="ui-message ui-widget ui-corner-all ui-message-error">

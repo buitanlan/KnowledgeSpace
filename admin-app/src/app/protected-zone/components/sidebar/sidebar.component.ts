@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Function } from '@app/shared/models/function';
 import { AuthService } from '@app/shared/services/auth.service';
 import { UsersService } from '@app/shared/services/users.service';
-import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
@@ -39,7 +39,7 @@ import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
     </nav>
   `,
   styleUrls: ['./sidebar.component.scss'],
-  imports: [NgClass, AsyncPipe, RouterLinkActive, NgForOf, RouterLink],
+  imports: [NgClass, AsyncPipe, RouterLinkActive, RouterLink],
   standalone: true
 })
 export class SidebarComponent implements OnInit {

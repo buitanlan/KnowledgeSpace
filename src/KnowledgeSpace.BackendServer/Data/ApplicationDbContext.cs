@@ -3,7 +3,6 @@ using KnowledgeSpace.BackendServer.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace KnowledgeSpace.BackendServer.Data;
 

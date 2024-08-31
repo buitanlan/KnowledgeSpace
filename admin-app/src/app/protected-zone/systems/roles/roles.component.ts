@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ChipsModule } from 'primeng/chips';
 import { PanelModule } from 'primeng/panel';
 import { CalendarModule } from 'primeng/calendar';
-import { NgIf } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -18,6 +17,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
 
 @Component({
   selector: 'app-roles',
@@ -140,12 +140,12 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
     ChipsModule,
     PanelModule,
     CalendarModule,
-    NgIf,
     PaginatorModule,
     BlockUIModule,
     ProgressSpinnerModule,
     ConfirmDialogModule,
-    MessageModule
+    MessageModule,
+    PermissionDirective
   ]
 })
 export class RolesComponent implements OnInit {
