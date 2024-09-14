@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Role } from '@app/shared/models/role';
 import { HttpClient } from '@angular/common/http';
 import { Pagination } from '@app/shared/models/pagination';
+import { Permission } from '@app/shared/models/permission';
 
 @Injectable({ providedIn: 'root' })
 export class RolesService {
@@ -31,5 +32,8 @@ export class RolesService {
 
   getAll() {
     return this.http.get<Role[]>(`${environment.apiUrl}/api/roles`);
+  }
+  getRolePermissions(roleId : any) {
+    return this.http.get<Permission[]>(`${environment.apiUrl}/api/roles/${roleId}/permissions`)
   }
 }

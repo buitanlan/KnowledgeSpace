@@ -45,7 +45,7 @@ public partial class KnowledgeBasesController
 
         context.KnowledgeBases.Add(knowledgeBase);
         //Process label
-        if (request.Labels is { Length: > 0})
+        if (request?.Labels is { Length: > 0})
         {
             await ProcessLabel(request, knowledgeBase);
         }
