@@ -21,7 +21,7 @@ public class ApiBadRequestResponse: ApiResponse
     public ApiBadRequestResponse(IdentityResult identityResult) : base(400)
     {
         Errors = identityResult.Errors
-            .Select(x => x.Code + " - " + x.Description).ToArray();
+            .Select(x => x.Code + " - " + x.Description);
     }
 
     public ApiBadRequestResponse(string message) : base(400, message)

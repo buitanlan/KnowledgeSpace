@@ -10,7 +10,6 @@ public static class ApplicationServiceExtensions
     {
         services.AddTransient<DbInitializer>();
         services.AddTransient<IEmailSender, EmailSenderService>();
-        services.AddTransient<ISequenceService, SequenceService>();
         services.AddTransient<IStorageService, StorageService>();
         services.Configure<ApiBehaviorOptions>(options =>
         {

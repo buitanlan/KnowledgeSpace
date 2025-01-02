@@ -46,7 +46,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         builder.Entity<CommandInFunction>()
             .HasKey(c => new { c.CommandId, c.FunctionId });
 
-        builder.HasSequence("KnowledgeBaseSequence");
+        // builder.HasSequence("KnowledgeBaseSequence");
+        builder.Entity<KnowledgeBase>().Property(x => x.Id).UseHiLo();
     }
     public DbSet<Command> Commands { set; get; }
     public DbSet<CommandInFunction> CommandInFunctions { set; get; }

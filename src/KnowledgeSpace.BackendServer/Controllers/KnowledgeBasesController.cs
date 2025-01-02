@@ -14,7 +14,6 @@ namespace KnowledgeSpace.BackendServer.Controllers;
 
 public partial class KnowledgeBasesController
     (ApplicationDbContext context, 
-    ISequenceService sequenceService,
     IStorageService storageService) : BaseController
 {
 
@@ -29,7 +28,7 @@ public partial class KnowledgeBasesController
         {
             knowledgeBase.SeoAlias = TextHelper.ToUnsignedString(knowledgeBase.Title);
         }
-        knowledgeBase.Id = await sequenceService.GetKnowledgeBaseNewId();
+        // knowledgeBase.Id = await sequenceService.GetKnowledgeBaseNewId();
         if (request?.Attachments?.Count > 0)
         {
             foreach (var attachment in request.Attachments)

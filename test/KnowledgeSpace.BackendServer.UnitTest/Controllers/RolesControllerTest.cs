@@ -4,7 +4,7 @@ using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MockQueryable.EntityFrameworkCore;
+using MockQueryable;
 using Moq;
 using Xunit;
 
@@ -102,7 +102,7 @@ public class RolesControllerTest
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging(null, 1, 2);
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
         if (okResult is {Value: Pagination<RoleVm> roleVms})
         {
             Assert.Equal(4, roleVms.TotalRecords);
@@ -118,7 +118,7 @@ public class RolesControllerTest
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging("test3", 1, 2);
-        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
         if (okResult.Value is Pagination<RoleVm> roleVms)
         {
             Assert.Equal(1, roleVms.TotalRecords);

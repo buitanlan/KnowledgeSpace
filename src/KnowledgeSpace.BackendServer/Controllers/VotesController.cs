@@ -14,7 +14,6 @@ public partial class KnowledgeBasesController
     public async Task<IActionResult> GetVotes(int knowledgeBaseId)
     {
         var votes = await context.Votes
-            .AsNoTracking()
             .Where(x => x.KnowledgeBaseId == knowledgeBaseId)
             .Select(x => new VoteVm
             {
