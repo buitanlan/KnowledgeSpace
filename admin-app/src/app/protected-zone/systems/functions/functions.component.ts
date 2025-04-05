@@ -1,12 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api/treenode';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FunctionsService } from '@app/shared/services/functions.service';
 import { NotificationService, UtilitiesService } from '@app/shared/services';
 import { FunctionsDetailComponent } from './functions-detail/functions-detail.component';
-import { MessageConstants } from '@app/shared/constants';
 import { CommandAssign } from '@app/shared/models';
 import { CommandsAssignComponent } from './commands-assign/commands-assign.component';
+import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
+import { ButtonDirective } from 'primeng/button';
+import { NgIf } from '@angular/common';
+import { Checkbox } from 'primeng/checkbox';
+import { TreeTableModule } from 'primeng/treetable';
+import { BlockUI } from 'primeng/blockui';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { Panel } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
+import { FormsModule } from '@angular/forms';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 
 @Component({
   selector: 'app-functions',
@@ -18,7 +27,8 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="CREATE" pButton type="button" label="Thêm"
                     icon="fa fa-plus" (click)="showAddModal()"></button>
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="DELETE" pButton type="button" label="Xóa"
-                    icon="fa fa-trash" class="ui-button-danger" *ngIf="selectedItems.length > 0" (click)="deleteItems()"></button>
+                    icon="fa fa-trash" class="ui-button-danger" *ngIf="selectedItems.length > 0"
+                    (click)="deleteItems()"></button>
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="UPDATE" pButton type="button" label="Sửa"
                     icon="fa fa-edit" class="ui-button-warning" *ngIf="selectedItems.length== 1"
                     (click)="showEditModal()"></button>
@@ -30,7 +40,8 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
 
         </p-header>
         <p-treeTable *ngIf="items" [value]="items" selectionMode="multiple" [(selection)]="selectedItems"
-                     [metaKeySelection]="true" (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnSelect($event)"
+                     [metaKeySelection]="true" (onNodeSelect)="nodeSelect($event)"
+                     (onNodeUnselect)="nodeUnSelect($event)"
                      [scrollable]="true">
           <ng-template pTemplate="header">
             <tr>
@@ -49,13 +60,13 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
                 <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
               </td>
               <td>
-                {{rowData.name}}
+                {{ rowData.name }}
               </td>
               <td class="pgrid-hidden-xs">
-                {{rowData.id}}
+                {{ rowData.id }}
               </td>
               <td class="pgrid-hidden-sm">
-                {{rowData.sortOrder}}
+                {{ rowData.sortOrder }}
               </td>
 
             </tr>
@@ -77,7 +88,7 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
           </div>
         </p-header>
         <p-table #dt [value]="commands" selectionMode="multiple" [metaKeySelection]="true"
-                 [(selection)]="selectionCommandItems" [responsive]="true" [scrollable]="true">
+                 [(selection)]="selectionCommandItems" [scrollable]="true">
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 35px">
@@ -95,8 +106,8 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
                 <span class="ui-column-title">Lựa chọn</span>
                 <p-tableCheckbox [value]="row"></p-tableCheckbox>
               </td>
-              <td>{{row.id}}</td>
-              <td>{{row.name}}</td>
+              <td>{{ row.id }}</td>
+              <td>{{ row.name }}</td>
             </tr>
           </ng-template>
         </p-table>
@@ -107,24 +118,34 @@ import { CommandsAssignComponent } from './commands-assign/commands-assign.compo
       </p-panel>
     </div>
   `,
+  imports: [
+    PermissionDirective,
+    ButtonDirective,
+    NgIf,
+    Checkbox,
+    TreeTableModule,
+    BlockUI,
+    ProgressSpinner,
+    Panel,
+    TableModule,
+    FormsModule
+  ],
   styleUrls: ['./functions.component.css']
 })
 export class FunctionsComponent implements OnInit {
 
-  public bsModalRef: BsModalRef;
   public blockedPanel = false;
   public blockedPanelCommand = false;
   public showCommandGrid = false;
   // -----------------Function-----------------
   public items: TreeNode[] = [];
-  public selectedItems = [];
+  public selectedItems: any[] = [];
 
   // ---------------Command------------------------------
   public commands: any[] = [];
-  public selectedCommandItems = [];
+  public selectedCommandItems : any[] = [];
 
   constructor(
-    private modalService: BsModalService,
     private functionsService: FunctionsService,
     private notificationService: NotificationService,
     private utilitiesService: UtilitiesService) {
@@ -158,7 +179,7 @@ export class FunctionsComponent implements OnInit {
         }
 
         setTimeout(() => { this.blockedPanel = false; }, 1000);
-      }, error => {
+      }, (error: any) => {
         setTimeout(() => { this.blockedPanel = false; }, 1000);
       });
   }
@@ -170,8 +191,7 @@ export class FunctionsComponent implements OnInit {
         backdrop: 'static'
       });
 
-    this.bsModalRef.content.saved.subscribe(response => {
-      this.bsModalRef.hide();
+    this.bsModalRef.content.saved.subscribe((response: any) => {
       this.loadData();
       this.selectedItems = [];
     });
@@ -183,6 +203,7 @@ export class FunctionsComponent implements OnInit {
       return;
     }
     const initialState = {
+      // @ts-ignore
       entityId: this.selectedItems[0].data.id
     };
     this.bsModalRef = this.modalService.show(FunctionsDetailComponent,
@@ -193,7 +214,7 @@ export class FunctionsComponent implements OnInit {
       });
 
 
-    this.bsModalRef.content.saved.subscribe((response) => {
+    this.bsModalRef.content.saved.subscribe((response: any) => {
       this.bsModalRef.hide();
       this.loadData(response.id);
     });
@@ -246,13 +267,13 @@ export class FunctionsComponent implements OnInit {
           this.selectedCommandItems.push(this.commands[0]);
         }
         this.blockedPanelCommand = false;
-      }, error => {
+      }, (error: any) => {
         this.blockedPanelCommand = false;
       });
   }
 
   removeCommands() {
-    const selectedCommandIds = [];
+    const selectedCommandIds: any[] = [];
     this.selectedCommandItems.forEach(element => {
       selectedCommandIds.push(element.id);
     });
@@ -269,7 +290,7 @@ export class FunctionsComponent implements OnInit {
       this.selectedCommandItems = [];
       this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
       this.blockedPanelCommand = false;
-    }, error => {
+    }, (error: any) => {
       this.blockedPanelCommand = false;
     });
   }

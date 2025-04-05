@@ -11,15 +11,13 @@ public class ClaimRequirementFilter(FunctionCode functionCode, CommandCode comma
     {
         var permissionsClaim = context.HttpContext.User.Claims
             .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);
-        if (permissionsClaim is not null)
+        if (permissionsClaim is null)
         {
-            var permissions = JsonSerializer.Deserialize<List<string>>(permissionsClaim.Value);
-            if (permissions is not null && !permissions.Contains(functionCode + "_" + commandCode))
-            {
-                context.Result = new ForbidResult();
-            }
+            context.Result = new ForbidResult();
         }
-        else
+
+        var permissions = JsonSerializer.Deserialize<List<string>>(permissionsClaim!.Value);
+        if (permissions is not null && !permissions.Contains(functionCode + "_" + commandCode))
         {
             context.Result = new ForbidResult();
         }

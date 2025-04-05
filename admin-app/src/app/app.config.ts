@@ -8,12 +8,21 @@ import { errorInterceptor } from '@app/shared/interceptors/errors.interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { DatePipe } from '@angular/common';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     importProvidersFrom([RouterModule.forRoot(appRoutes), BrowserAnimationsModule]),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
+    provideAnimationsAsync(),
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    }),
     MessageService,
     NotificationService,
     ConfirmationService,

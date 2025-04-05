@@ -160,11 +160,7 @@ public class RolesController(RoleManager<IdentityRole> roleManager, ApplicationD
     public async Task<IActionResult> PutPermissionByRoleId(string roleId, [FromBody] UpdatePermissionRequest request)
     {
         //create new permission list from user changed
-        var newPermissions = new List<Permission>();
-        foreach (var p in request.Permissions)
-        {
-            newPermissions.Add(new Permission(p.FunctionId, roleId, p.CommandId));
-        }
+        var newPermissions = request.Permissions.Select(p => new Permission(p.FunctionId, roleId, p.CommandId)).ToList();
 
         var existingPermissions = context.Permissions.Where(x => x.RoleId == roleId);
         context.Permissions.RemoveRange(existingPermissions);

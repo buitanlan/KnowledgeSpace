@@ -1,9 +1,8 @@
-@import 'spinner';
-@import 'utils';
-@import 'rtl';
-@import 'responsive';
-@import "primeng/resources/themes/lara-light-blue/theme.css";
-@import "primeng/resources/primeng.css";
+@use 'spinner';
+@use 'utils';
+@use 'rtl';
+@use 'responsive';
+
 
 @media print {
   .breadcrumb {

@@ -76,17 +76,19 @@ public class FunctionsControllerTest
     [Fact]
     public async Task PostUser_ValidInput_Failed()
     {
-        _context.Functions.AddRange(new List<Function>
-        {
-            new(){
+        _context.Functions.AddRange(
+        [
+            new()
+            {
                 Id = "PostUser_ValidInput_Failed",
                 ParentId = null,
                 Name = "PostUser_ValidInput_Failed",
-                SortOrder =1,
-                Url ="/PostUser_ValidInput_Failed"
+                SortOrder = 1,
+                Url = "/PostUser_ValidInput_Failed"
             }
-        });
-        await _context.SaveChangesAsync();
+        ]);
+
+    await _context.SaveChangesAsync();
         var functionsController = new FunctionsController(_context);
 
         var result = await functionsController.PostFunction(new FunctionCreateRequest
@@ -104,8 +106,8 @@ public class FunctionsControllerTest
     [Fact]
     public async Task GetFunction_HasData_ReturnSuccess()
     {
-        _context.Functions.AddRange(new List<Function>
-        {
+        _context.Functions.AddRange(
+        [
             new(){
                 Id = "GetFunction_HasData_ReturnSuccess",
                 ParentId = null,
@@ -113,7 +115,8 @@ public class FunctionsControllerTest
                 SortOrder =1,
                 Url ="/GetFunction_HasData_ReturnSuccess"
             }
-        });
+        ]);
+
         await _context.SaveChangesAsync();
         var functionsController = new FunctionsController(_context);
         var result = await functionsController.GetFunctions();
@@ -193,8 +196,8 @@ public class FunctionsControllerTest
     [Fact]
     public async Task GetById_HasData_ReturnSuccess()
     {
-        _context.Functions.AddRange(new List<Function>
-        {
+        _context.Functions.AddRange(
+        [
             new(){
                 Id = "GetById_HasData_ReturnSuccess",
                 ParentId = null,
@@ -202,7 +205,7 @@ public class FunctionsControllerTest
                 SortOrder =1,
                 Url ="/GetById_HasData_ReturnSuccess"
             }
-        });
+        ]);
         await _context.SaveChangesAsync();
         var functionsController = new FunctionsController(_context);
         var result = await functionsController.GetById("GetById_HasData_ReturnSuccess");
@@ -218,8 +221,8 @@ public class FunctionsControllerTest
     [Fact]
     public async Task PutUser_ValidInput_Success()
     {
-        _context.Functions.AddRange(new List<Function>
-        {
+        _context.Functions.AddRange(
+        [
             new(){
                 Id = "PutUser_ValidInput_Success",
                 ParentId = null,
@@ -227,7 +230,7 @@ public class FunctionsControllerTest
                 SortOrder =1,
                 Url ="/PutUser_ValidInput_Success"
             }
-        });
+        ]);
         await _context.SaveChangesAsync();
         var functionsController = new FunctionsController(_context);
         var result = await functionsController.PutFunction("PutUser_ValidInput_Success", new FunctionCreateRequest
@@ -258,8 +261,8 @@ public class FunctionsControllerTest
     [Fact]
     public async Task DeleteUser_ValidInput_Success()
     {
-        _context.Functions.AddRange(new List<Function>
-        {
+        _context.Functions.AddRange(
+        [
             new(){
                 Id = "DeleteUser_ValidInput_Success",
                 ParentId = null,
@@ -267,7 +270,8 @@ public class FunctionsControllerTest
                 SortOrder =1,
                 Url ="/DeleteUser_ValidInput_Success"
             }
-        });
+        ]);
+
         await _context.SaveChangesAsync();
         var functionsController = new FunctionsController(_context);
         var result = await functionsController.DeleteFunction("DeleteUser_ValidInput_Success");

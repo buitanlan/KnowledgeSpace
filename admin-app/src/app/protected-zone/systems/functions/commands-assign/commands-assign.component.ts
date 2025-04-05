@@ -1,7 +1,4 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { FunctionsService, CommandsService } from '@app/shared/services';
-import { CommandAssign } from '@app/shared/models';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 
@@ -61,16 +58,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class CommandsAssignComponent implements OnInit {
   public blockedPanel = false;
-  public items: any[];
+  public items!: any[];
   public selectedItems: any[] = [];
-  public dialogTitle: string;
-  public functionId: string;
+  public dialogTitle!: string;
+  public functionId!: string;
   public existingCommands: any[] = [];
   public addToAllFunctions = false;
   private chosenEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    public bsModalRef: BsModalRef,
     private functionsService: FunctionsService,
     private commandsService: CommandsService) {
   }
@@ -101,7 +97,7 @@ export class CommandsAssignComponent implements OnInit {
 
   chooseCommands() {
     this.blockedPanel = true;
-    const selectedItemIds = [];
+    const selectedItemIds: any[] = [];
     this.selectedItems.forEach(element => {
       selectedItemIds.push(element.id);
     });

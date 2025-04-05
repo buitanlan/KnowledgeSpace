@@ -1,14 +1,20 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { UtilitiesService, NotificationService, FunctionsService } from '@app/shared/services';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MessageConstants } from '@app/shared/constants';
+import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Panel } from 'primeng/panel';
+import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { KeyFilter } from 'primeng/keyfilter';
+import { InputText } from 'primeng/inputtext';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { BlockUI } from 'primeng/blockui';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
+import { NotificationService } from '@app/shared/services/notification.servive';
 
 @Component({
   selector: 'app-functions-detail',
   template: `
     <div class="modal-header">
-      <h4 class="modal-title pull-left">{{dialogTitle}}</h4>
+      <h4 class="modal-title pull-left">{{ dialogTitle }}</h4>
       <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -114,20 +120,29 @@ import { MessageConstants } from '@app/shared/constants';
       </div>
     </form>
   `,
+  imports: [
+    ReactiveFormsModule,
+    Panel,
+    ValidationMessageComponent,
+    DropdownModule,
+    KeyFilter,
+    InputText,
+    ProgressSpinner,
+    BlockUI
+  ],
   styleUrls: ['./functions-detail.component.scss']
 })
 export class FunctionsDetailComponent implements OnInit {
 
   constructor(private utilityService: UtilitiesService,
-              public bsModalRef: BsModalRef,
               private functionsService: FunctionsService,
               private notificationService: NotificationService,
               private fb: FormBuilder) {
   }
   public blockedPanel = false;
-  public entityForm: FormGroup;
-  public dialogTitle: string;
-  public entityId: string;
+  public entityForm!: FormGroup;
+  public dialogTitle!: string;
+  public entityId!: string;
   public btnDisabled = false;
 
   saved: EventEmitter<any> = new EventEmitter();
@@ -199,11 +214,11 @@ export class FunctionsDetailComponent implements OnInit {
       });
   }
 
-  loadParents(id) {
+  loadParents(id: string | null) {
     this.functionsService.getAllByParentId(id)
       .subscribe((response: any) => {
         this.rootFunctions = [];
-        response.forEach(element => {
+        response.forEach((element: { id: any; name: any; }) => {
           this.rootFunctions.push({
             value: element.id,
             label: element.name

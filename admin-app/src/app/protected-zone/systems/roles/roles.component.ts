@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
-import { ChipsModule } from 'primeng/chips';
 import { PanelModule } from 'primeng/panel';
 import { CalendarModule } from 'primeng/calendar';
 import { PaginatorModule } from 'primeng/paginator';
@@ -18,6 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'app-roles',
@@ -137,7 +137,6 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
   imports: [
     TableModule,
     FormsModule,
-    ChipsModule,
     PanelModule,
     CalendarModule,
     PaginatorModule,
@@ -145,7 +144,8 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
     ProgressSpinnerModule,
     ConfirmDialogModule,
     MessageModule,
-    PermissionDirective
+    PermissionDirective,
+    ButtonDirective
   ]
 })
 export class RolesComponent implements OnInit {
@@ -196,8 +196,6 @@ export class RolesComponent implements OnInit {
   }
   private processLoadData(selectedId = null, response: Pagination<Role>) {
     this.items = response.items;
-    this.pageIndex = this.pageIndex;
-    this.pageSize = this.pageSize;
     this.totalRecords = response.totalRecords;
     if (this.selectedItems.length === 0 && this.items.length > 0) {
       this.selectedItems.push(this.items[0]);

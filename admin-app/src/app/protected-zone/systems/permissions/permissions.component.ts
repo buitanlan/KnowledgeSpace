@@ -2,12 +2,17 @@ import { Component } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { TreeTableModule } from 'primeng/treetable';
-import { CheckboxModule } from 'primeng/checkbox';
+import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TreeNode } from 'primeng/api';
 import { SystemConstants } from '@app/protected-zone/systems/constants/systems.constant';
+import { Permission } from '@app/shared/models/permission';
+import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
+import { NotificationService } from '@app/shared/services/notification.servive';
+import { RolesService } from '@app/shared/services/roles.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-permissions',
@@ -38,7 +43,7 @@ import { SystemConstants } from '@app/protected-zone/systems/constants/systems.c
             <tr>
               <th>Chức năng</th>
               <th style="width: 130px; text-align: center">
-                <p-checkbox (onChange)="selectAll($event,'VIEW')" [(ngModel)]="isSelectedAllViews" name="CheckAll">
+                <p-checkbox (onChange)="selectAll($event  ,'VIEW')" [(ngModel)]="isSelectedAllViews" name="CheckAll">
                 </p-checkbox>
                 Xem
               </th>
@@ -131,10 +136,9 @@ import { SystemConstants } from '@app/protected-zone/systems/constants/systems.c
 export class PermissionsComponent {
   private subscription = new Subscription();
 
-  public bsModalRef: BsModalRef;
   public blockedPanel = false;
 
-  public functions: any[];
+  public functions: any[] = [];
   public flattenFunctions: any[] = [];
   public selectedRole: any = {
     id: null
@@ -228,11 +232,11 @@ export class PermissionsComponent {
         this._notificationService.showSuccess(MessageConstants.UPDATED_OK_MSG);
 
         setTimeout(() => { this.blockedPanel = false; }, 1000);
-      }, error => {
+      }, (error: any) => {
         setTimeout(() => { this.blockedPanel = false; }, 1000);
       }));
   }
-  loadData(roleId) {
+  loadData(roleId: any) {
     if (roleId != null) {
       this.blockedPanel = true;
       this.subscription.add(this.permissionsService.getFunctionWithCommands()
@@ -242,13 +246,14 @@ export class PermissionsComponent {
           this.flattenFunctions = response;
           this.fillPermissions(roleId);
           setTimeout(() => { this.blockedPanel = false; }, 1000);
-        }, error => {
+        }, (error: any) => {
           setTimeout(() => { this.blockedPanel = false; }, 1000);
         }));
     }
 
   }
-  checkChanged(checked: boolean, commandId: string, functionId: string, parentId: string) {
+  checkChanged($event: CheckboxChangeEvent, commandId: string, functionId: string, parentId: string) {
+    let checked = $event.checked;
     if (commandId === SystemConstants.VIEW_ACTION) {
       this.selectedViews = [];
       if (checked) {
@@ -360,7 +365,9 @@ export class PermissionsComponent {
     }
 
   }
-  selectAll(checked: boolean, uniqueCode: string) {
+  selectAll($event: CheckboxChangeEvent, uniqueCode: string) {
+    let checked = $event.checked;
+
     if (uniqueCode === SystemConstants.VIEW_ACTION) {
       this.selectedViews = [];
       if (checked) {
@@ -416,7 +423,7 @@ export class PermissionsComponent {
           setTimeout(() => { this.blockedPanel = false; }, 1000);
         });
 
-      }, error => {
+      }, (error: any) => {
         setTimeout(() => { this.blockedPanel = false; }, 1000);
       }));
   }

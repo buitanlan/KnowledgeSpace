@@ -19,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -230,7 +231,6 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
     </div>
   `,
   imports: [
-    AsyncPipe,
     BlockUIModule,
     ProgressSpinnerModule,
     TableModule,
@@ -242,7 +242,8 @@ import { PermissionDirective } from '@app/shared/directives/permission-directive
     ButtonModule,
     InputTextModule,
     DynamicDialogModule,
-    PermissionDirective
+    PermissionDirective,
+    FormsModule
   ],
   standalone: true,
   providers: [DialogService]

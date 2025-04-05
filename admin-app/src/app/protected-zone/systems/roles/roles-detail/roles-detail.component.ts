@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject } from '@angul
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
-import { ChipsModule } from 'primeng/chips';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -11,6 +10,7 @@ import { ValidationMessageComponent } from '@app/shared/modules/validation-messa
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@app/shared/services/notification.servive';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-roles-detail-root',
@@ -78,11 +78,11 @@ import { MessageConstants } from '@app/protected-zone/systems/constants/messages
   imports: [
     PanelModule,
     ReactiveFormsModule,
-    ChipsModule,
     KeyFilterModule,
     BlockUIModule,
     ProgressSpinnerModule,
-    ValidationMessageComponent
+    ValidationMessageComponent,
+    InputText
   ]
 })
 export class RolesDetailComponent {

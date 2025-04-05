@@ -103,7 +103,7 @@ public class RolesControllerTest
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging(null, 1, 2);
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        if (okResult is {Value: Pagination<RoleVm> roleVms})
+        if (okResult.Value is Pagination<RoleVm> roleVms)
         {
             Assert.Equal(4, roleVms.TotalRecords);
             Assert.Equal(2, roleVms.Items.Count);
