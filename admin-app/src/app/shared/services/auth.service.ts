@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.user && !this.user.expired;
+    return !!this.user && !this.user?.expired;
   }
 
   get authorizationHeaderValue(): string | null {

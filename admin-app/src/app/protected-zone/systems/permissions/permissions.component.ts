@@ -10,9 +10,13 @@ import { TreeNode } from 'primeng/api';
 import { SystemConstants } from '@app/protected-zone/systems/constants/systems.constant';
 import { Permission } from '@app/shared/models/permission';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
-import { NotificationService } from '@app/shared/services/notification.servive';
+import { NotificationService } from '@app/shared/services/notification.service';
 import { RolesService } from '@app/shared/services/roles.service';
 import { Subscription } from 'rxjs';
+import { PermissionsService } from '@app/shared/services/permissions.service';
+import { CommandsService } from '@app/shared/services/commands.service';
+import { unflatteringForTree } from '@app/shared/utils/util';
+import { PermissionUpdateRequest } from '@app/shared/models/permission-update-request';
 
 @Component({
   selector: 'app-permissions',
@@ -163,8 +167,7 @@ export class PermissionsComponent {
     private permissionsService: PermissionsService,
     private rolesService: RolesService,
     private commandsService: CommandsService,
-    private _notificationService: NotificationService,
-    private _utilityService: UtilitiesService) {
+    private _notificationService: NotificationService) {
   }
 
 
@@ -225,7 +228,7 @@ export class PermissionsComponent {
         commandId: SystemConstants.APPROVE_ACTION
       });
     });
-    const permissionsUpdateRequest = new PermissionUpdateRequest();
+    const permissionsUpdateRequest = {} as PermissionUpdateRequest;
     permissionsUpdateRequest.permissions = listPermissions;
     this.subscription.add(this.permissionsService.save(this.selectedRole.id, permissionsUpdateRequest)
       .subscribe(() => {
@@ -241,7 +244,7 @@ export class PermissionsComponent {
       this.blockedPanel = true;
       this.subscription.add(this.permissionsService.getFunctionWithCommands()
         .subscribe((response: any) => {
-          const unflattering = this._utilityService.UnflatteringForTree(response);
+          const unflattering = unflatteringForTree(response);
           this.functions = <TreeNode[]>unflattering;
           this.flattenFunctions = response;
           this.fillPermissions(roleId);

@@ -1,13 +1,16 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
+import { CommandAssign } from '@app/shared/models/CommandAssign';
+import { FunctionsService } from '@app/shared/services/functions.service';
+import { CommandsService } from '@app/shared/services/commands.service';
 
 @Component({
   selector: 'app-commands-assign',
   template: `
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ dialogTitle }}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <button type="button" class="close pull-right" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -46,10 +49,9 @@ import { FormsModule } from '@angular/forms';
       <button type="submit" class="btn btn-success" *ngIf="selectedItems.length > 0" (click)="chooseCommands()">Chọn
       </button>
       &nbsp;
-      <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+      <button type="button" class="btn btn-default">Đóng</button>
     </div>
   `,
-  styleUrls: ['./commands-assign.component.scss'],
   standalone: true,
   imports: [
     TableModule,
@@ -82,9 +84,9 @@ export class CommandsAssignComponent implements OnInit {
         this.items = [];
 
         const existingCommands = this.existingCommands;
-        const notExistingCommands = response.filter(function (item) {
-          return existingCommands.indexOf(item.Id) === -1;
-        });
+        const notExistingCommands = response.filter((item: any) =>
+           existingCommands.indexOf(item.Id) === -1
+        );
 
         this.items = notExistingCommands;
         if (this.selectedItems.length === 0 && this.items.length > 0) {
@@ -101,7 +103,7 @@ export class CommandsAssignComponent implements OnInit {
     this.selectedItems.forEach(element => {
       selectedItemIds.push(element.id);
     });
-    const entity = new CommandAssign();
+    const entity = {} as CommandAssign;
     entity.addToAllFunctions = this.addToAllFunctions;
     entity.commandIds = selectedItemIds;
 

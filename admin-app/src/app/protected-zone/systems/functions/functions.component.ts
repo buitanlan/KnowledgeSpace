@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api/treenode';
 import { FunctionsService } from '@app/shared/services/functions.service';
-import { NotificationService, UtilitiesService } from '@app/shared/services';
 import { FunctionsDetailComponent } from './functions-detail/functions-detail.component';
-import { CommandAssign } from '@app/shared/models';
 import { CommandsAssignComponent } from './commands-assign/commands-assign.component';
 import { PermissionDirective } from '@app/shared/directives/permission-directive.directive';
-import { ButtonDirective } from 'primeng/button';
+import { ButtonDirective, ButtonIcon } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { Checkbox } from 'primeng/checkbox';
 import { TreeTableModule } from 'primeng/treetable';
@@ -16,6 +14,10 @@ import { Panel } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { NotificationService } from '@app/shared/services/notification.service';
+import { unflatteringForTree } from '@app/shared/utils/util';
+import { CommandAssign } from '@app/shared/models/CommandAssign';
 
 @Component({
   selector: 'app-functions',
@@ -25,12 +27,12 @@ import { MessageConstants } from '@app/protected-zone/systems/constants/messages
         <p-header>
           <div class="ui-g-4">
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="CREATE" pButton type="button" label="Thêm"
-                    icon="fa fa-plus" (click)="showAddModal()"></button>
+                    pButtonIcon="fa fa-plus" (click)="showAddModal()"></button>
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="DELETE" pButton type="button" label="Xóa"
-                    icon="fa fa-trash" class="ui-button-danger" *ngIf="selectedItems.length > 0"
+                    pButtonIcon="fa fa-trash" class="ui-button-danger" *ngIf="selectedItems.length > 0"
                     (click)="deleteItems()"></button>
             <button appPermission appFunction="SYSTEM_FUNCTION" appAction="UPDATE" pButton type="button" label="Sửa"
-                    icon="fa fa-edit" class="ui-button-warning" *ngIf="selectedItems.length== 1"
+                    pButtonIcon="fa fa-edit" class="ui-button-warning" *ngIf="selectedItems.length== 1"
                     (click)="showEditModal()"></button>
           </div>
           <div class="ui-g-4">
@@ -128,9 +130,9 @@ import { MessageConstants } from '@app/protected-zone/systems/constants/messages
     ProgressSpinner,
     Panel,
     TableModule,
-    FormsModule
-  ],
-  styleUrls: ['./functions.component.css']
+    FormsModule,
+    ButtonIcon
+  ]
 })
 export class FunctionsComponent implements OnInit {
 
@@ -144,11 +146,14 @@ export class FunctionsComponent implements OnInit {
   // ---------------Command------------------------------
   public commands: any[] = [];
   public selectedCommandItems : any[] = [];
+  dialogService = inject(DialogService);
+  dialogRef: DynamicDialogRef | undefined;
+  selectionCommandItems: any;
+  blockedPanelAction: unknown;
 
   constructor(
     private functionsService: FunctionsService,
-    private notificationService: NotificationService,
-    private utilitiesService: UtilitiesService) {
+    private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -167,7 +172,7 @@ export class FunctionsComponent implements OnInit {
     this.blockedPanel = true;
     this.functionsService.getAll()
       .subscribe((response: any) => {
-        const functionTree = this.utilitiesService.UnflatteringForTree(response);
+        const functionTree = unflatteringForTree(response);
         this.items = <TreeNode[]>functionTree;
         if (this.selectedItems.length === 0 && this.items.length > 0) {
           this.selectedItems.push(this.items[0]);
@@ -185,13 +190,11 @@ export class FunctionsComponent implements OnInit {
   }
 
   showAddModal() {
-    this.bsModalRef = this.modalService.show(FunctionsDetailComponent,
-      {
-        class: 'modal-lg',
-        backdrop: 'static'
-      });
+    this.dialogRef = this.dialogService.open(FunctionsDetailComponent, {
+      header : 'AddModal',
+    });
 
-    this.bsModalRef.content.saved.subscribe((response: any) => {
+    this.dialogRef?.onClose.subscribe((response: any) => {
       this.loadData();
       this.selectedItems = [];
     });
@@ -206,16 +209,17 @@ export class FunctionsComponent implements OnInit {
       // @ts-ignore
       entityId: this.selectedItems[0].data.id
     };
-    this.bsModalRef = this.modalService.show(FunctionsDetailComponent,
+    this.dialogRef = this.dialogService.open(FunctionsDetailComponent,
       {
-        initialState: initialState,
-        class: 'modal-lg',
-        backdrop: 'static'
+        inputValues: {
+          // @ts-ignore
+          entityId: this.selectedItems[0].data.id
+        },
+        header : 'AddModal',
       });
 
 
-    this.bsModalRef.content.saved.subscribe((response: any) => {
-      this.bsModalRef.hide();
+    this.dialogRef.onClose.subscribe((response: any) => {
       this.loadData(response.id);
     });
   }
@@ -253,7 +257,7 @@ export class FunctionsComponent implements OnInit {
       this.loadData();
       this.selectedItems = [];
       setTimeout(() => { this.blockedPanel = false; }, 1000);
-    }, error => {
+    }, () => {
       setTimeout(() => { this.blockedPanel = false; }, 1000);
     });
   }
@@ -283,7 +287,7 @@ export class FunctionsComponent implements OnInit {
 
   removeCommandsConfirm(ids: string[]) {
     this.blockedPanelCommand = true;
-    const entity = new CommandAssign();
+    const entity = {} as CommandAssign;
     entity.commandIds = ids;
     this.functionsService.deleteCommandsFromFunction(this.selectedItems[0].id, entity).subscribe(() => {
       this.loadDataCommand();
@@ -300,18 +304,16 @@ export class FunctionsComponent implements OnInit {
       this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
       return;
     }
-    const initialState = {
-      existingCommands: this.commands.map(x => x.Id),
-      functionId: this.selectedItems[0].id
-    };
-    this.bsModalRef = this.modalService.show(CommandsAssignComponent,
+
+    this.dialogRef = this.dialogService.open(CommandsAssignComponent,
       {
-        initialState: initialState,
-        class: 'modal-lg',
-        backdrop: 'static'
+        inputValues: {
+          existingCommands: this.commands.map(x => x.Id),
+          functionId: this.selectedItems[0].id
+        }
+
       });
-    this.bsModalRef.content.chosenEvent.subscribe((response: any[]) => {
-      this.bsModalRef.hide();
+    this.dialogRef.onClose.subscribe((response: any[]) => {
       this.loadDataCommand();
       this.selectedCommandItems = [];
     });

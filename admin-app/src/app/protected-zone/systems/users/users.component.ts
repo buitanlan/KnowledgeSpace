@@ -3,7 +3,7 @@ import { User } from '@app/shared/models/user';
 import { Observable, of } from 'rxjs';
 import { UsersService } from '@app/shared/services/users.service';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
-import { NotificationService } from '@app/shared/services/notification.servive';
+import { NotificationService } from '@app/shared/services/notification.service';
 import { Pagination } from '@app/shared/models/pagination';
 import { UsersDetailComponent } from '@app/protected-zone/systems/users/users-detail.component';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';

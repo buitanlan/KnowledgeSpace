@@ -8,7 +8,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RolesService } from '@app/shared/services/roles.service';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
 import { MessageService } from 'primeng/api';
-import { NotificationService } from '@app/shared/services/notification.servive';
+import { NotificationService } from '@app/shared/services/notification.service';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
 import { InputText } from 'primeng/inputtext';
 

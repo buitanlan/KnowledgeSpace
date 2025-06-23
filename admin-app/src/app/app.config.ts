@@ -6,7 +6,7 @@ import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/
 import { authInterceptor } from '@app/shared/interceptors/jwt.interceptor';
 import { errorInterceptor } from '@app/shared/interceptors/errors.interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { NotificationService } from '@app/shared/services/notification.servive';
+import { NotificationService } from '@app/shared/services/notification.service';
 import { DatePipe } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';

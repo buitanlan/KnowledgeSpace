@@ -135,10 +135,10 @@ public class DbInitializer(ApplicationDbContext context,
             var adminRole = await roleManager.FindByNameAsync(AdminRoleName);
             foreach (var function in listFunction)
             {
-                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Create"));
-                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Update"));
-                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "Delete"));
-                context.Permissions.Add(new Permission(function.Id, adminRole.Id, "View"));
+                context.Permissions.Add(new (function.Id, adminRole.Id, "Create"));
+                context.Permissions.Add(new (function.Id, adminRole.Id, "Update"));
+                context.Permissions.Add(new (function.Id, adminRole.Id, "Delete"));
+                context.Permissions.Add(new (function.Id, adminRole.Id, "View"));
             }
         }
 

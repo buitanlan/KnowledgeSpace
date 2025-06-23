@@ -102,12 +102,10 @@ public class RolesControllerTest
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging(null, 1, 2);
-        var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        if (okResult.Value is Pagination<RoleVm> roleVms)
-        {
-            Assert.Equal(4, roleVms.TotalRecords);
-            Assert.Equal(2, roleVms.Items.Count);
-        }
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var roleVms = Assert.IsType<Pagination<RoleVm>>(okResult.Value);
+        Assert.Equal(4, roleVms.TotalRecords);
+        Assert.Equal(2, roleVms.Items.Count);
     }
 
     [Fact]
@@ -118,12 +116,10 @@ public class RolesControllerTest
 
         var rolesController = new RolesController(_mockRoleManager.Object, _context);
         var result = await rolesController.GetRolesPaging("test3", 1, 2);
-        var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        if (okResult.Value is Pagination<RoleVm> roleVms)
-        {
-            Assert.Equal(1, roleVms.TotalRecords);
-            Assert.Single(roleVms.Items);
-        }
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var roleVms = Assert.IsType<Pagination<RoleVm>>(okResult.Value);
+        Assert.Equal(1, roleVms.TotalRecords);
+        Assert.Single(roleVms.Items);
     }
 
     [Fact]

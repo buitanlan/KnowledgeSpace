@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Panel } from 'primeng/panel';
 import { ValidationMessageComponent } from '@app/shared/modules/validation-message/validation-message.component';
@@ -8,14 +8,15 @@ import { InputText } from 'primeng/inputtext';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { BlockUI } from 'primeng/blockui';
 import { MessageConstants } from '@app/protected-zone/systems/constants/messages.constant';
-import { NotificationService } from '@app/shared/services/notification.servive';
+import { NotificationService } from '@app/shared/services/notification.service';
+import { FunctionsService } from '@app/shared/services/functions.service';
 
 @Component({
   selector: 'app-functions-detail',
   template: `
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ dialogTitle }}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <button type="button" class="close pull-right" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -116,7 +117,7 @@ import { NotificationService } from '@app/shared/services/notification.servive';
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" [disabled]="!entityForm.valid || btnDisabled">Lưu lại</button>
         &nbsp;
-        <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+        <button type="button" class="btn btn-default">Đóng</button>
       </div>
     </form>
   `,
@@ -129,12 +130,11 @@ import { NotificationService } from '@app/shared/services/notification.servive';
     InputText,
     ProgressSpinner,
     BlockUI
-  ],
-  styleUrls: ['./functions-detail.component.scss']
+  ]
 })
 export class FunctionsDetailComponent implements OnInit {
 
-  constructor(private utilityService: UtilitiesService,
+  constructor(
               private functionsService: FunctionsService,
               private notificationService: NotificationService,
               private fb: FormBuilder) {
@@ -142,7 +142,7 @@ export class FunctionsDetailComponent implements OnInit {
   public blockedPanel = false;
   public entityForm!: FormGroup;
   public dialogTitle!: string;
-  public entityId!: string;
+  @Input() entityId!: string;
   public btnDisabled = false;
 
   saved: EventEmitter<any> = new EventEmitter();
@@ -206,7 +206,7 @@ export class FunctionsDetailComponent implements OnInit {
           this.btnDisabled = false;
           this.blockedPanel = false;
         }, 1000);
-      }, error => {
+      }, () => {
         setTimeout(() => {
           this.btnDisabled = false;
           this.blockedPanel = false;
@@ -215,7 +215,7 @@ export class FunctionsDetailComponent implements OnInit {
   }
 
   loadParents(id: string | null) {
-    this.functionsService.getAllByParentId(id)
+    this.functionsService.getAllByParentId(id!)
       .subscribe((response: any) => {
         this.rootFunctions = [];
         response.forEach((element: { id: any; name: any; }) => {
@@ -240,7 +240,7 @@ export class FunctionsDetailComponent implements OnInit {
             this.btnDisabled = false;
             this.blockedPanel = false;
           }, 1000);
-        }, error => {
+        }, () => {
           setTimeout(() => {
             this.btnDisabled = false;
             this.blockedPanel = false;
@@ -257,7 +257,7 @@ export class FunctionsDetailComponent implements OnInit {
             this.blockedPanel = false;
           }, 1000);
 
-        }, error => {
+        }, () => {
           setTimeout(() => {
             this.btnDisabled = false;
             this.blockedPanel = false;

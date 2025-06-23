@@ -7,7 +7,7 @@ import { PermissionScreen } from '@app/shared/models/permission-screen';
 @Injectable({
   providedIn: 'root'
 })
-export class PermissionService {
+export class PermissionsService {
   http = inject(HttpClient);
 
   save(roleId: string, request: PermissionUpdateRequest) {
