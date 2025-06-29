@@ -11,6 +11,14 @@ export const appRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'dashboard',
+    loadChildren: () => import('./protected-zone/protected-zone.route').then((m) => m.routes),
+    data: {
+      functionCode: 'Dashboard'
+    },
+    canActivate: [authGuard]
+  },
+  {
     path: 'login',
     loadChildren: () => import('./login/login.route').then((m) => m.routes)
   },
@@ -26,7 +34,6 @@ export const appRoutes: Routes = [
     path: 'error',
     loadChildren: () => import('./server-error/server-error.route').then((m) => m.routes)
   },
-
   {
     path: 'not-found',
     loadChildren: () => import('./not-found/not-found.route').then((m) => m.routes)

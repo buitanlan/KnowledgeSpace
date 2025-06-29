@@ -17,6 +17,7 @@ import { PermissionsService } from '@app/shared/services/permissions.service';
 import { CommandsService } from '@app/shared/services/commands.service';
 import { unflatteringForTree } from '@app/shared/utils/util';
 import { PermissionUpdateRequest } from '@app/shared/models/permission-update-request';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'app-permissions',
@@ -133,7 +134,8 @@ import { PermissionUpdateRequest } from '@app/shared/models/permission-update-re
     CheckboxModule,
     FormsModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ButtonDirective
   ],
   standalone: true
 })

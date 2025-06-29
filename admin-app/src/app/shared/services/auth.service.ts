@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { User, UserManager, UserManagerSettings } from 'oidc-client-ts';
-import { BehaviorSubject, defer } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { OidcSecurityService, AuthenticatedResult } from 'angular-auth-oidc-client';
 
 @Injectable({
   providedIn: 'root'
@@ -8,60 +9,98 @@ import { BehaviorSubject, defer } from 'rxjs';
 export class AuthService {
   private authNavStatusSource = new BehaviorSubject(false);
   authNavStatus$ = this.authNavStatusSource.asObservable();
-  private manager = new UserManager(getClientSettings());
-  private user: User | null = null;
+  private oidcSecurityService = inject(OidcSecurityService);
 
   constructor() {
-    defer(() => this.manager.getUser()).subscribe((user) => {
-      this.user = user;
-      this.authNavStatusSource.next(this.isAuthenticated());
+    // Subscribe to auth status changes
+    this.oidcSecurityService.isAuthenticated$
+      .pipe(
+        map(result => result.isAuthenticated)
+      )
+      .subscribe(isAuthenticated => {
+        this.authNavStatusSource.next(isAuthenticated);
+      });
+
+    // Debug: Log all events
+    this.oidcSecurityService.checkAuth().subscribe({
+      next: (result) => console.log('CheckAuth result:', result),
+      error: (error) => console.error('CheckAuth error:', error)
     });
   }
 
-  login() {
-    return this.manager.signinRedirect();
-  }
-
-  async completeAuthentication() {
-    this.user = await this.manager.signinRedirectCallback();
-    this.authNavStatusSource.next(this.isAuthenticated());
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.user && !this.user?.expired;
-  }
-
-  get authorizationHeaderValue(): string | null {
-    if (this.user) {
-      return `${this.user.token_type} ${this.user.access_token}`;
+  login(redirectUrl?: string) {
+    console.log('Login initiated with redirect:', redirectUrl);
+    
+    // Save redirect URL for after authentication
+    if (redirectUrl) {
+      sessionStorage.setItem('redirect_url', redirectUrl);
     }
-    return null;
+    
+    // Use authorize method from OidcSecurityService
+    this.oidcSecurityService.authorize();
+  }
+
+  // Synchronous method for guards
+  isAuthenticated(): boolean {
+    return this.authNavStatusSource.value;
+  }
+
+  // Reactive method for components
+  isAuthenticated$(): Observable<boolean> {
+    return this.oidcSecurityService.isAuthenticated$.pipe(
+      map(result => result.isAuthenticated)
+    );
+  }
+
+  // For backward compatibility with existing components
+  get authorizationHeaderValue(): string | null {
+    // Note: This is synchronous and might return null if token is not immediately available
+    let token: string | null = null;
+    this.oidcSecurityService.getAccessToken()
+      .pipe(take(1))
+      .subscribe(accessToken => {
+        token = accessToken ? `Bearer ${accessToken}` : null;
+      });
+    return token;
   }
 
   get name(): string {
-    return this.user?.profile.name ?? '';
+    let userName = '';
+    this.oidcSecurityService.getUserData()
+      .pipe(take(1))
+      .subscribe(userData => {
+        if (userData) {
+          userName = userData.name || userData.preferred_username || userData.given_name || '';
+        }
+      });
+    return userName;
   }
 
   getProfile() {
-    return this.user?.profile ?? null;
+    let profile: any = null;
+    this.oidcSecurityService.getUserData()
+      .pipe(take(1))
+      .subscribe(userData => {
+        profile = userData;
+      });
+    return profile;
+  }
+
+  // Observable versions (recommended for new code)
+  getAccessToken(): Observable<string> {
+    return this.oidcSecurityService.getAccessToken();
+  }
+
+  getUserData(): Observable<any> {
+    return this.oidcSecurityService.getUserData();
   }
 
   async signOut() {
-    await this.manager.signoutRedirectCallback();
+    sessionStorage.removeItem('redirect_url');
+    this.oidcSecurityService.logoff().subscribe({
+      next: (result) => console.log('Logout result:', result),
+      error: (error) => console.error('Logout error:', error)
+    });
   }
-}
 
-export function getClientSettings(): UserManagerSettings {
-  return {
-    authority: 'https://localhost:5000',
-    client_id: 'angular_admin',
-    redirect_uri: 'http://localhost:4200/auth-callback',
-    post_logout_redirect_uri: 'http://localhost:4200',
-    response_type: 'code',
-    scope: 'api.knowledgespace openid profile',
-    filterProtocolClaims: true,
-    loadUserInfo: true,
-    automaticSilentRenew: false,
-    silent_redirect_uri: 'http://localhost:4200/silent-refresh.html'
-  };
 }

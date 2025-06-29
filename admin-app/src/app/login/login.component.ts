@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { routerTransition } from '../router.animations';
 import { AuthService } from '../shared/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -25,6 +26,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class LoginComponent implements OnInit {
   readonly authService = inject(AuthService);
   readonly spinner = inject(NgxSpinnerService);
+  readonly route = inject(ActivatedRoute);
 
   ngOnInit() {
     this.login();
@@ -32,6 +34,8 @@ export class LoginComponent implements OnInit {
 
   login() {
     void this.spinner.show();
-    void this.authService.login();
+    // Get redirect URL from query parameters
+    const redirectUrl = this.route.snapshot.queryParams['redirect'] || '/dashboard';
+    void this.authService.login(redirectUrl);
   }
 }
